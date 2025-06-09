@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 230 10% 10%;
+    --foreground: 120 20% 95%;
+
+    --card: 230 10% 12%;
+    --card-foreground: 120 20% 95%;
+
+    --popover: 230 10% 12%;
+    --popover-foreground: 120 20% 95%;
+
+    --primary: 120 40% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 230 20% 20%;
+    --secondary-foreground: 120 20% 90%;
+
+    --muted: 230 10% 20%;
+    --muted-foreground: 120 10% 70%;
+
+    --accent: 120 50% 40%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 60% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 230 10% 20%;
+    --input: 230 10% 20%;
+    --ring: 120 40% 50%;
+
+    --radius: 0.25rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Courier New', Courier, monospace;
+  }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.terminal-cursor {
+  animation: blink 1s step-start infinite;
+}
+
+.terminal-wrapper {
+  @apply bg-card border border-border rounded-lg overflow-hidden shadow-lg;
+  max-width: 1000px;
+  width: 90%;
+  min-height: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.terminal-header {
+  @apply bg-muted px-4 py-2 border-b border-border flex items-center;
+}
+
+.terminal-body {
+  @apply flex-1 p-4 overflow-y-auto;
+  height: calc(100% - 40px);
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted)) transparent;
+}
+
+.terminal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.terminal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.terminal-body::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--muted));
+  border-radius: 3px;
+}
+
+.terminal-input-area {
+  @apply flex items-center p-4 border-t border-border;
+}
+
+.terminal-prompt {
+  @apply text-primary mr-2;
+}
+
+.terminal-input {
+  @apply bg-transparent flex-1 outline-none text-foreground;
+}
+
+.typewriter {
+  overflow: hidden;
+  white-space: pre-wrap;
+  animation: typing 2s steps(40, end);
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
