@@ -1,5 +1,4 @@
 
-import React from "react";
 import Terminal from "../components/Terminal";
 import { Heart } from "lucide-react";
 

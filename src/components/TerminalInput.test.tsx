@@ -1,5 +1,4 @@
-import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import TerminalInput from './TerminalInput';
 
@@ -48,8 +47,6 @@ describe('TerminalInput Component', () => {
   it('does not send empty messages', async () => {
     const user = userEvent.setup();
     render(<TerminalInput onSendMessage={mockSendMessage} />);
-    
-    const inputElement = screen.getByPlaceholderText(/Type your message/i);
     
     // Press Enter without typing anything
     await user.keyboard('{Enter}');
