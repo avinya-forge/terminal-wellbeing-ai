@@ -23,6 +23,7 @@ const DEFAULT_MODEL_INDEX = 0;
 
 // Type definition for the text generator
 type TextGenerator = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (text: string, options: any): Promise<any>;
 };
 
@@ -32,6 +33,7 @@ type GenerationOptions = {
   temperature: number;
   top_p: number;
   no_repeat_ngram_size: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 };
 
@@ -212,7 +214,10 @@ function getUniqueResponse(responses: string[]): string {
   recentResponses.add(selectedResponse);
   if (recentResponses.size > MAX_RECENT_RESPONSES) {
     // Remove oldest response (first item in the set)
-    recentResponses.delete(recentResponses.values().next().value);
+    const oldestResponse = recentResponses.values().next().value;
+    if (oldestResponse) {
+      recentResponses.delete(oldestResponse);
+    }
   }
   
   return selectedResponse;

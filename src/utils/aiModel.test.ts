@@ -22,9 +22,9 @@ describe('AI Model Utils', () => {
     });
 
     test('should return empty string for null/undefined input', () => {
-      // @ts-ignore
+      // @ts-expect-error Testing runtime check
       expect(sanitizePromptContent(null)).toBe('');
-      // @ts-ignore
+      // @ts-expect-error Testing runtime check
       expect(sanitizePromptContent(undefined)).toBe('');
     });
   });
