@@ -1,5 +1,5 @@
 // Add any global test setup here
-import '@testing-library/jest-dom';
+require('@testing-library/jest-dom');
 
 // Mock matchMedia for components that use media queries
 Object.defineProperty(window, 'matchMedia', {
@@ -30,3 +30,6 @@ Object.defineProperty(window, 'IntersectionObserver', {
   writable: true,
   value: MockIntersectionObserver,
 });
+
+// Mock scrollIntoView
+Element.prototype.scrollIntoView = jest.fn();
