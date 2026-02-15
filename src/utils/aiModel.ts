@@ -1,55 +1,18 @@
 import { pipeline } from "@huggingface/transformers";
 import { Message } from "../components/Terminal";
-
-// Available models configuration
-interface ModelConfig {
-  name: string;
-  displayName: string;
-  maxLength: number;
-  temperature: number;
-  topP: number;
-  noRepeatNgramSize: number;
-  device: "wasm" | "auto" | "gpu" | "cpu" | "webgpu";
-  description: string;
-  isConversational: boolean;
-}
-
-// Multiple model options for different conversation needs
-const AVAILABLE_MODELS: ModelConfig[] = [
-  {
-    name: "distilgpt2",
-    displayName: "DistilGPT-2",
-    maxLength: 100,
-    temperature: 0.7,
-    topP: 0.9,
-    noRepeatNgramSize: 2,
-    device: "wasm",
-    description: "Lightweight general-purpose model",
-    isConversational: true
-  },
-  {
-    name: "gpt2",
-    displayName: "GPT-2",
-    maxLength: 150,
-    temperature: 0.8,
-    topP: 0.92,
-    noRepeatNgramSize: 3,
-    device: "wasm",
-    description: "Larger general-purpose model with better context handling",
-    isConversational: true
-  },
-  {
-    name: "EleutherAI/gpt-neo-125M",
-    displayName: "GPT-Neo",
-    maxLength: 200,
-    temperature: 0.75,
-    topP: 0.95,
-    noRepeatNgramSize: 3,
-    device: "wasm",
-    description: "Open-source GPT alternative with improved reasoning",
-    isConversational: true
-  }
-];
+import { AVAILABLE_MODELS, ModelConfig } from "../config/models";
+import {
+  SENSITIVE_KEYWORDS,
+  SUICIDE_RESPONSE,
+  SELF_DEPRECATION_KEYWORDS,
+  SELF_DEPRECATION_RESPONSES,
+  GENERAL_SUPPORT_RESPONSES,
+  SYSTEM_RESPONSES,
+  CONTINUITY_PHRASES,
+  GREETING_PATTERNS,
+  GREETINGS,
+  FIRST_TIME_GREETINGS
+} from "../data/phrases";
 
 // System constants
 const MAX_RECENT_RESPONSES = 15;
@@ -98,11 +61,11 @@ export async function initializeModel(): Promise<boolean> {
       const defaultModel = AVAILABLE_MODELS[DEFAULT_MODEL_INDEX];
       console.log(`Initializing primary AI model (${defaultModel.displayName})...`);
       
-      textGenerators[defaultModel.name] = await pipeline(
+      textGenerators[defaultModel.name] = (await pipeline(
         "text-generation",
         defaultModel.name,
         { device: defaultModel.device }
-      );
+      )) as unknown as TextGenerator;
       
       console.log(`Primary AI model (${defaultModel.displayName}) initialized successfully`);
       
@@ -145,11 +108,11 @@ async function initializeAdditionalModels(): Promise<void> {
     const model = AVAILABLE_MODELS[i];
     try {
       console.log(`Initializing additional model: ${model.displayName}...`);
-      textGenerators[model.name] = await pipeline(
+      textGenerators[model.name] = (await pipeline(
         "text-generation",
         model.name,
         { device: model.device }
-      );
+      )) as unknown as TextGenerator;
       console.log(`Model ${model.displayName} initialized successfully`);
     } catch (error) {
       console.error(`Failed to initialize model ${model.displayName}:`, error);
@@ -182,7 +145,7 @@ export function getAvailableModels(): Array<{name: string, displayName: string, 
 }
 
 // Sanitize user input to prevent prompt injection by neutralizing delimiters
-function sanitizePromptContent(text: string): string {
+export function sanitizePromptContent(text: string): string {
   if (!text) return "";
   return text
     .replace(/Human:/gi, (match) => match.replace(':', '_'))
@@ -191,7 +154,7 @@ function sanitizePromptContent(text: string): string {
 }
 
 // Convert conversation history to context for the model with improved formatting
-function prepareContext(messages: Message[]): string {
+export function prepareContext(messages: Message[]): string {
   // Get more context messages for better conversation flow
   const recentMessages = messages.slice(-MAX_CONTEXT_MESSAGES);
   
@@ -203,7 +166,7 @@ function prepareContext(messages: Message[]): string {
   // Add conversation history with proper formatting
   context += recentMessages.map(msg => {
     const role = msg.sender === "user" ? "Human" : "Assistant";
-    const sanitizedContent = sanitizePromptContent(msg.content);
+    const sanitizedContent = sanitizePromptContent(msg.content || "");
     return `${role}: ${sanitizedContent}`;
   }).join("\n");
   
@@ -212,47 +175,26 @@ function prepareContext(messages: Message[]): string {
 
 // Check if the topic is sensitive and needs special handling
 export function isSensitiveTopic(input: string): boolean {
-  const sensitiveKeywords = [
-    "die", "death", "suicide", "kill", "self-harm", "end my life", 
-    "useless", "pathetic", "shit", "worthless", "hopeless", "hate myself"
-  ];
   const normalizedInput = input.toLowerCase();
-  return sensitiveKeywords.some(keyword => normalizedInput.includes(keyword));
+  return SENSITIVE_KEYWORDS.some(keyword => normalizedInput.includes(keyword));
 }
 
 // Generate supportive responses for sensitive topics
 export function getSupportiveResponse(input: string): string {
+  const normalizedInput = input.toLowerCase();
+
   // For insulting self or chatbot
-  if (input.toLowerCase().includes("pathetic") || input.toLowerCase().includes("useless") || input.toLowerCase().includes("shit")) {
-    const supportResponses = [
-      "I can see you're feeling really frustrated right now. Sometimes when we're struggling, even conversations like this can feel difficult. Would you like to talk about something that brought you a moment of peace recently, no matter how small?",
-      
-      "I understand you're having a hard time. Rather than focusing on those feelings right now, I'm wondering if you could tell me about something you enjoyed in the past - maybe a movie, a place, or even a simple meal?",
-      
-      "It sounds like things have been difficult for a long time. Let's try to shift our focus for a moment - could you share something you're curious about or interested in learning more about?",
-      
-      "I hear your frustration. Sometimes when we're feeling low, it can help to remember a small positive memory. Would you share a brief moment from your life that brought you some comfort or joy, even if it was fleeting?"
-    ];
-    return getUniqueResponse(supportResponses);
+  if (SELF_DEPRECATION_KEYWORDS.some(keyword => normalizedInput.includes(keyword))) {
+    return getUniqueResponse(SELF_DEPRECATION_RESPONSES);
   }
   
   // For suicidal thoughts
-  if (input.toLowerCase().includes("suicide") || input.toLowerCase().includes("kill myself") || input.toLowerCase().includes("end my life")) {
-    return "I'm really concerned about what you're sharing. These thoughts are serious, and you deserve immediate support. Please consider contacting a crisis helpline - in the US, you can call or text 988 to reach the Suicide & Crisis Lifeline. They have trained counselors available 24/7. Would you like me to provide more resources that might help?";
+  if (normalizedInput.includes("suicide") || normalizedInput.includes("kill myself") || normalizedInput.includes("end my life")) {
+    return SUICIDE_RESPONSE;
   }
   
   // For general negative self-talk
-  const generalSupportResponses = [
-    "I notice you're being quite hard on yourself. Remember that having difficult feelings doesn't define your worth. What's one small thing you could do today that might bring you a moment of peace?",
-    
-    "It sounds like you're going through a really tough time. Sometimes just acknowledging these feelings can be an important step. Would it help to talk about some coping strategies that others have found useful?",
-    
-    "I hear that you're struggling right now. Remember that these intense feelings won't last forever, even though they feel overwhelming in the moment. What's something gentle you could do for yourself today?",
-    
-    "When we're feeling low, our thoughts often become very critical and absolute. This is a normal part of difficult emotions, but these thoughts aren't facts. Could we explore some different perspectives together?"
-  ];
-  
-  return getUniqueResponse(generalSupportResponses);
+  return getUniqueResponse(GENERAL_SUPPORT_RESPONSES);
 }
 
 // Helper function to avoid repetitive responses
@@ -275,28 +217,6 @@ function getUniqueResponse(responses: string[]): string {
   
   return selectedResponse;
 }
-
-// Response types for better organization
-interface ResponseCategory {
-  repetitive: string[];
-  fallback: string[];
-}
-
-// Centralized response categories
-const RESPONSES: ResponseCategory = {
-  repetitive: [
-    "I notice you might be repeating yourself. Is there something specific you're looking for help with?",
-    "We seem to be covering similar ground. Would you like to explore a different aspect of what you're feeling?",
-    "I notice we're revisiting this topic. Sometimes that happens when there's something important we need to address. What do you think might be helpful to discuss?"
-  ],
-  fallback: [
-    "I'm here to listen and support you. Could you tell me more about what's been on your mind lately?",
-    "Thank you for sharing that with me. How have you been coping with these feelings?",
-    "I appreciate you opening up. What kind of support would be most helpful for you right now?",
-    "I'm here to support you. Would it help to talk about some coping strategies that others have found useful?",
-    "Sometimes putting feelings into words can be difficult. Take your time, and share whatever feels comfortable."
-  ]
-};
 
 // Generate response using the AI model or fallback methods
 export async function generateResponse(input: string, messages: Message[]): Promise<string> {
@@ -321,7 +241,7 @@ export async function generateResponse(input: string, messages: Message[]): Prom
         msg === input.toLowerCase() || 
         (msg.length > 10 && input.toLowerCase().includes(msg))
       )) {
-    return getUniqueResponse(RESPONSES.repetitive);
+    return getUniqueResponse(SYSTEM_RESPONSES.repetitive);
   }
   
   // Get the current model configuration
@@ -383,7 +303,7 @@ Assistant:`;
   }
   
   // Fallback to predefined responses if no models are available
-  return getUniqueResponse(RESPONSES.fallback);
+  return getUniqueResponse(SYSTEM_RESPONSES.fallback);
 }
 
 // Try to use other available models as fallbacks
@@ -430,11 +350,11 @@ Assistant:`;
   }
   
   // If all models fail, use predefined responses
-  return getUniqueResponse(RESPONSES.fallback);
+  return getUniqueResponse(SYSTEM_RESPONSES.fallback);
 }
 
 // Post-process the response to improve quality and conversational flow
-function postProcessResponse(response: string, input: string): string {
+export function postProcessResponse(response: string, input: string): string {
   // Remove any repetitive phrases
   const lines = response.split('\n').filter(line => line.trim() !== '');
   if (lines.length > 1) {
@@ -457,29 +377,15 @@ function postProcessResponse(response: string, input: string): string {
   
   // Add conversation continuity phrases if the response is short
   if (response.length < 30 && !response.includes('?')) {
-    const continuityPhrases = [
-      "How are you feeling about that?",
-      "Would you like to talk more about this?",
-      "Is there anything specific on your mind?",
-      "How has your day been otherwise?"
-    ];
-    response += " " + continuityPhrases[Math.floor(Math.random() * continuityPhrases.length)];
+    response += " " + CONTINUITY_PHRASES[Math.floor(Math.random() * CONTINUITY_PHRASES.length)];
   }
   
   return response;
 }
 
 // Check if input is a greeting or introduction
-function isGreeting(input: string): boolean {
-  const greetingPatterns = [
-    /^(hi|hello|hey|greetings|howdy)/i,
-    /^good (morning|afternoon|evening|day)/i,
-    /^what'?s up/i,
-    /^how are (you|things|it going)/i,
-    /^nice to (meet|see) you/i
-  ];
-  
-  return greetingPatterns.some(pattern => pattern.test(input.trim()));
+export function isGreeting(input: string): boolean {
+  return GREETING_PATTERNS.some(pattern => pattern.test(input.trim()));
 }
 
 // Generate friendly, conversational greeting responses
@@ -499,23 +405,9 @@ function getGreetingResponse(_input: string, messages: Message[]): string {
     timeGreeting = "Good evening";
   }
   
-  const greetings = [
-    `${timeGreeting}! It's nice to chat with you. How are you feeling today?`,
-    `Hey there! I'm here and ready to listen. How's your day going?`,
-    `Hi! I'm your wellbeing assistant. What's on your mind today?`,
-    `${timeGreeting}! I'm here to chat. How can I support you today?`,
-    `Hello! It's good to see you. How are you doing?`
-  ];
-  
   if (isFirstInteraction) {
-    // Add more welcoming elements for first-time interactions
-    const firstTimeGreetings = [
-      `${timeGreeting}! I'm your mental wellbeing assistant. I'm here to chat, listen, and support you. How are you feeling today?`,
-      `Welcome! I'm here to provide a space where you can express yourself freely. How are you doing?`,
-      `Hi there! I'm glad you're here. This is a safe space to talk about whatever's on your mind. How are you feeling today?`
-    ];
-    return getUniqueResponse([...firstTimeGreetings, ...greetings]);
+    return getUniqueResponse([...FIRST_TIME_GREETINGS(timeGreeting), ...GREETINGS(timeGreeting)]);
   }
   
-  return getUniqueResponse(greetings);
+  return getUniqueResponse(GREETINGS(timeGreeting));
 }
