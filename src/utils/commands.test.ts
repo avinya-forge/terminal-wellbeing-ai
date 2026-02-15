@@ -6,7 +6,6 @@ import { Message } from '../components/Terminal';
 jest.mock('../data/responses', () => ({
   getHelpResponse: jest.fn().mockReturnValue('Help information'),
   getResourcesResponse: jest.fn().mockReturnValue('Resources information'),
-  getClearResponse: jest.fn().mockReturnValue('Conversation cleared'),
   getResponseForMessage: jest.fn().mockResolvedValue('AI response')
 }));
 
@@ -63,12 +62,6 @@ describe('Commands Utility', () => {
       const result = await processCommand('resources', sampleMessages);
       expect(result).toBe('Resources information');
       expect(responses.getResourcesResponse).toHaveBeenCalled();
-    });
-
-    it('should process clear command correctly', async () => {
-      const result = await processCommand('clear', sampleMessages);
-      expect(result).toBe('Conversation cleared');
-      expect(responses.getClearResponse).toHaveBeenCalled();
     });
 
     it('should handle non-command inputs', async () => {
