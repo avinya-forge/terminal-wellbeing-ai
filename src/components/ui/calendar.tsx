@@ -52,9 +52,7 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        // @ts-ignore - day-picker components type mismatch
         IconLeft: () => <ChevronLeft className="h-4 w-4" />,
-        // @ts-ignore - day-picker components type mismatch
         IconRight: () => <ChevronRight className="h-4 w-4" />,
       }}
       {...props}

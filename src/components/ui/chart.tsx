@@ -112,7 +112,6 @@ const ChartTooltipContent = React.forwardRef<
     }
 >(
   (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
     {
       active,
       payload,
@@ -127,6 +126,7 @@ const ChartTooltipContent = React.forwardRef<
       color,
       nameKey,
       labelKey,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   }: any,
     ref
   ) => {
@@ -184,6 +184,7 @@ const ChartTooltipContent = React.forwardRef<
       >
         {!nestLabel ? tooltipLabel : null}
         <div className="grid gap-1.5">
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
         {payload.map((item: any, index: number) => {
             const key = `${nameKey || item.name || item.dataKey || "value"}`
             const itemConfig = getPayloadConfigFromPayload(config, item, key)
@@ -288,6 +289,7 @@ const ChartLegendContent = React.forwardRef<
           className
         )}
       >
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
         {payload.map((item: any) => {
           const key = `${nameKey || item.dataKey || "value"}`
           const itemConfig = getPayloadConfigFromPayload(config, item, key)
