@@ -1,4 +1,4 @@
-import { getInitialMessages, getHelpResponse, getResourcesResponse, getClearResponse, getResponseForMessage } from './responses';
+import { getInitialMessages, getHelpResponse, getResourcesResponse, getResponseForMessage } from './responses';
 import * as aiModel from '../utils/aiModel';
 
 // Mock the AI model
@@ -51,14 +51,6 @@ describe('Responses Data', () => {
       expect(resources).toContain('Mental Health Resources');
       expect(resources).toContain('Crisis Text Line');
       expect(resources).toContain('Self-Care Practices');
-    });
-  });
-
-  describe('getClearResponse', () => {
-    it('should return clear confirmation message', () => {
-      const clear = getClearResponse();
-      
-      expect(clear).toContain('Conversation cleared');
     });
   });
 

@@ -8,7 +8,6 @@ interface SystemResponses {
   welcome: string[];
   help: string;
   resources: string;
-  clear: string;
   error: string;
 }
 
@@ -47,7 +46,6 @@ Self-Care Practices:
 • Setting boundaries
 
 Remember, seeking help is a sign of strength, not weakness.`,
-  clear: "Conversation cleared. Remember that I'm here whenever you need to talk.",
   error: "I'm having trouble processing that right now. Could you try rephrasing, or type /help to see what I can do?"
 };
 
@@ -90,14 +88,6 @@ export function getHelpResponse(): string {
  */
 export function getResourcesResponse(): string {
   return SYSTEM_RESPONSES.resources;
-}
-
-/**
- * Returns message shown after clearing conversation
- * @returns Clear confirmation text
- */
-export function getClearResponse(): string {
-  return SYSTEM_RESPONSES.clear;
 }
 
 /**

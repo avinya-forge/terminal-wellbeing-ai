@@ -1,5 +1,5 @@
 import { Message } from "../components/Terminal";
-import { getResponseForMessage, getHelpResponse, getResourcesResponse, getClearResponse } from "../data/responses";
+import { getResponseForMessage, getHelpResponse, getResourcesResponse } from "../data/responses";
 import { getAvailableModels, getCurrentModel, switchModel } from "../utils/aiModel";
 
 // Define command types for better organization
@@ -8,7 +8,6 @@ type CommandHandler = (input: string, messages: Message[]) => Promise<string>;
 // Command registry for easy maintenance and extension
 const COMMANDS: Record<string, CommandHandler> = {
   help: async () => getHelpResponse(),
-  clear: async () => getClearResponse(),
   resources: async () => getResourcesResponse(),
   model: async (input) => handleModelCommand(input),
   models: async () => listAvailableModels(),
