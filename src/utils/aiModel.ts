@@ -181,6 +181,15 @@ export function getAvailableModels(): Array<{name: string, displayName: string, 
   }));
 }
 
+// Sanitize user input to prevent prompt injection by neutralizing delimiters
+function sanitizePromptContent(text: string): string {
+  if (!text) return "";
+  return text
+    .replace(/Human:/gi, (match) => match.replace(':', '_'))
+    .replace(/Assistant:/gi, (match) => match.replace(':', '_'))
+    .replace(/System:/gi, (match) => match.replace(':', '_'));
+}
+
 // Convert conversation history to context for the model with improved formatting
 function prepareContext(messages: Message[]): string {
   // Get more context messages for better conversation flow
@@ -194,7 +203,8 @@ function prepareContext(messages: Message[]): string {
   // Add conversation history with proper formatting
   context += recentMessages.map(msg => {
     const role = msg.sender === "user" ? "Human" : "Assistant";
-    return `${role}: ${msg.content}`;
+    const sanitizedContent = sanitizePromptContent(msg.content);
+    return `${role}: ${sanitizedContent}`;
   }).join("\n");
   
   return context;
@@ -322,8 +332,9 @@ export async function generateResponse(input: string, messages: Message[]): Prom
   if (modelGenerator) {
     try {
       const context = prepareContext(messages);
+      const sanitizedInput = sanitizePromptContent(input);
       const prompt = `${context}
-Human: ${input}
+Human: ${sanitizedInput}
 Assistant:`;
       
       const options: GenerationOptions = {
@@ -386,8 +397,9 @@ async function tryFallbackModels(input: string, messages: Message[], excludeMode
     
     try {
       const context = prepareContext(messages);
+      const sanitizedInput = sanitizePromptContent(input);
       const prompt = `${context}
-Human: ${input}
+Human: ${sanitizedInput}
 Assistant:`;
       
       const options: GenerationOptions = {
