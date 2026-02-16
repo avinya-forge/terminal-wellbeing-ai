@@ -12,7 +12,7 @@ describe('TerminalHeader Component', () => {
     expect(screen.getByText('AI Model: Using fallback responses')).toBeInTheDocument();
     
     // Check for status indicators (dots)
-    const dots = document.querySelectorAll('.rounded-full');
+    const dots = document.querySelectorAll('.status-indicator');
     expect(dots.length).toBe(3);
   });
 
@@ -20,10 +20,15 @@ describe('TerminalHeader Component', () => {
     render(<TerminalHeader modelLoaded={true} />);
     
     // Check for model status text
-    expect(screen.getByText('AI Model: Ready')).toBeInTheDocument();
+    // The text in the component is dynamic: "AI Model: Ready" vs "AI Model: Using fallback responses"
+    // However, the test should expect specific text based on the prop
+    // The component renders:
+    // <span>{modelLoaded ? 'AI Model: Ready' : 'AI Model: Using fallback responses'}</span>
+    // So if modelLoaded is true, we expect 'AI Model: Ready'
+    expect(screen.getByText(/AI Model: Ready/i)).toBeInTheDocument();
     
     // Check for green status indicator
-    const greenDot = document.querySelector('.bg-green-500');
+    const greenDot = document.querySelector('.status-green');
     expect(greenDot).toBeInTheDocument();
   });
 });

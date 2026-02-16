@@ -33,3 +33,9 @@ Object.defineProperty(window, 'IntersectionObserver', {
 
 // Mock scrollIntoView
 Element.prototype.scrollIntoView = jest.fn();
+
+// Global mock for transformers to avoid ESM/import.meta issues
+jest.mock('@huggingface/transformers', () => ({
+  pipeline: jest.fn().mockResolvedValue(jest.fn().mockResolvedValue([{ generated_text: 'Test response' }])),
+  env: { allowLocalModels: false }
+}), { virtual: true });

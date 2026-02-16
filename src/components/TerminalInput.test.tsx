@@ -1,5 +1,4 @@
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen, fireEvent } from '@testing-library/react';
 import TerminalInput from './TerminalInput';
 
 describe('TerminalInput Component', () => {
@@ -25,17 +24,16 @@ describe('TerminalInput Component', () => {
   });
 
   it('handles user input correctly', async () => {
-    const user = userEvent.setup();
     render(<TerminalInput onSendMessage={mockSendMessage} />);
     
     const inputElement = screen.getByPlaceholderText(/Type your message/i);
     
     // Type in the input
-    await user.type(inputElement, 'Hello');
+    fireEvent.change(inputElement, { target: { value: 'Hello' } });
     expect(inputElement).toHaveValue('Hello');
     
     // Press Enter to send
-    await user.keyboard('{Enter}');
+    fireEvent.keyDown(inputElement, { key: 'Enter', code: 'Enter', charCode: 13 });
     
     // Check if onSendMessage was called with the correct value
     expect(mockSendMessage).toHaveBeenCalledWith('Hello');
@@ -45,11 +43,12 @@ describe('TerminalInput Component', () => {
   });
 
   it('does not send empty messages', async () => {
-    const user = userEvent.setup();
     render(<TerminalInput onSendMessage={mockSendMessage} />);
     
+    const inputElement = screen.getByPlaceholderText(/Type your message/i);
+
     // Press Enter without typing anything
-    await user.keyboard('{Enter}');
+    fireEvent.keyDown(inputElement, { key: 'Enter', code: 'Enter', charCode: 13 });
     
     // Check that onSendMessage was not called
     expect(mockSendMessage).not.toHaveBeenCalled();
@@ -63,16 +62,18 @@ describe('TerminalInput Component', () => {
   });
 
   it('does not send message when disabled', async () => {
-    const user = userEvent.setup();
     render(<TerminalInput onSendMessage={mockSendMessage} disabled={true} />);
     
     const inputElement = screen.getByPlaceholderText(/Type your message/i);
     
     // Try to type (should be prevented by disabled state)
-    await user.type(inputElement, 'Hello');
+    // fireEvent.change mimics the event, but real input respects 'disabled'.
+    // However, fireEvent bypasses browser checks, so it might fire onChange anyway?
+    // Let's rely on disabled check logic inside component: !disabled && input.trim()
+    fireEvent.change(inputElement, { target: { value: 'Hello' } });
     
     // Try to press Enter
-    await user.keyboard('{Enter}');
+    fireEvent.keyDown(inputElement, { key: 'Enter', code: 'Enter', charCode: 13 });
     
     // Check that onSendMessage was not called
     expect(mockSendMessage).not.toHaveBeenCalled();

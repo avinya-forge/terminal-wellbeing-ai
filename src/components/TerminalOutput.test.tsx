@@ -52,7 +52,7 @@ describe('TerminalOutput Component', () => {
     // The animation dots should be present
     const animatedElement = screen.getByText('...');
     expect(animatedElement).toBeInTheDocument();
-    expect(animatedElement).toHaveClass('animate-pulse');
+    expect(animatedElement).toHaveClass('typing-dots');
   });
 
   it('does not show typing indicator when isTyping is false', () => {

@@ -65,19 +65,19 @@ describe('TerminalMessage Component', () => {
   it('applies different styles based on message sender', () => {
     const { rerender } = render(<TerminalMessage message={userMessage} />);
     
-    // User message should have foreground color
-    const userMessageElement = screen.getByText('Hello there').parentElement?.parentElement;
-    expect(userMessageElement).toHaveClass('text-foreground');
+    // User message should have user-message class
+    const userMessageElement = screen.getByText('Hello there').parentElement;
+    expect(userMessageElement).toHaveClass('user-message');
     
     // Rerender with bot message
     rerender(<TerminalMessage message={botMessage} />);
     
-    // Bot message should have primary color
+    // Bot message should have bot-message class
     act(() => {
       jest.advanceTimersByTime(15 * botMessage.content.length + 100);
     });
     
-    const botMessageElement = screen.getByText('Hi! How can I help you today?').parentElement?.parentElement;
-    expect(botMessageElement).toHaveClass('text-primary');
+    const botMessageElement = screen.getByText('Hi! How can I help you today?').parentElement;
+    expect(botMessageElement).toHaveClass('bot-message');
   });
 });
