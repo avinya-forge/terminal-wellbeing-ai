@@ -25,10 +25,19 @@ export async function processCommand(input: string, messages: Message[]): Promis
     const normalizedInput = input.trim().toLowerCase();
     
     // Check if input is a command (with or without slash prefix)
-    const commandText = normalizedInput.startsWith("/") ? normalizedInput.substring(1) : normalizedInput;
+    let commandText: string | undefined;
+
+    if (normalizedInput.startsWith("/")) {
+      // Remove slash and get the first word as the command key
+      const withoutSlash = normalizedInput.substring(1);
+      commandText = withoutSlash.split(/\s+/)[0];
+    } else {
+      // For non-slash commands, require exact match to avoid false positives (e.g., "help me")
+      commandText = normalizedInput;
+    }
     
     // Look for command in registry
-    const commandHandler = COMMANDS[commandText];
+    const commandHandler = commandText ? COMMANDS[commandText] : undefined;
     if (commandHandler) {
       return await commandHandler(input, messages);
     }
