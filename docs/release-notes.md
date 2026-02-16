@@ -11,3 +11,4 @@
 ## v1.0.1 (Upcoming)
 - Fixed command processing logic to correctly handle arguments for slash commands (e.g., `/model 1`).
 - Prevented conversational phrases (e.g., `help me`) from triggering commands unexpectedly.
+- Added local storage persistence for conversation history.

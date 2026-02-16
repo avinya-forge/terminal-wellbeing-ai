@@ -60,7 +60,7 @@ function createBotMessage(content: string, id?: string): Message {
     id: id || Date.now().toString(),
     content,
     sender: "bot",
-    timestamp: new Date()
+    timestamp: new Date().toISOString()
   };
 }
 
