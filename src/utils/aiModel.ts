@@ -53,8 +53,10 @@ function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }
 
+export type ProgressCallback = (status: string) => void;
+
 // Initialize the text generation pipelines with retry mechanism
-export async function initializeModel(): Promise<boolean> {
+export async function initializeModel(onProgress?: ProgressCallback): Promise<boolean> {
   let retries = 0;
   
   const attemptInitialization = async (): Promise<boolean> => {
@@ -62,6 +64,7 @@ export async function initializeModel(): Promise<boolean> {
       // Start with the default model
       const defaultModel = AVAILABLE_MODELS[DEFAULT_MODEL_INDEX];
       console.log(`Initializing primary AI model (${defaultModel.displayName})...`);
+      onProgress?.(`Loading ${defaultModel.displayName}...`);
       
       textGenerators[defaultModel.name] = (await pipeline(
         "text-generation",
@@ -70,6 +73,7 @@ export async function initializeModel(): Promise<boolean> {
       )) as unknown as TextGenerator;
       
       console.log(`Primary AI model (${defaultModel.displayName}) initialized successfully`);
+      onProgress?.(`${defaultModel.displayName} ready`);
       
       // Initialize other models in the background after the primary model is loaded
       setTimeout(() => {
@@ -80,6 +84,7 @@ export async function initializeModel(): Promise<boolean> {
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       console.error(`Error initializing AI model (attempt ${retries + 1}/${MAX_RETRIES}): ${errorMessage}`);
+      onProgress?.(`Error: ${errorMessage}. Retrying...`);
       return false;
     }
   };
@@ -91,6 +96,7 @@ export async function initializeModel(): Promise<boolean> {
   while (!success && retries < MAX_RETRIES - 1) {
     retries++;
     console.log(`Retrying model initialization in ${RETRY_DELAY}ms... (${retries}/${MAX_RETRIES - 1})`);
+    onProgress?.(`Retrying initialization (${retries}/${MAX_RETRIES - 1})...`);
     
     // Wait before retrying
     await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));

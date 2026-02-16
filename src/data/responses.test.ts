@@ -1,4 +1,4 @@
-import { getInitialMessages, getHelpResponse, getResourcesResponse, getResponseForMessage } from './responses';
+import { getInitialMessages, getHelpResponse, getResponseForMessage } from './responses';
 import * as aiModel from '../utils/aiModel';
 
 // Mock the AI model
@@ -41,16 +41,6 @@ describe('Responses Data', () => {
       expect(help).toContain('/help');
       expect(help).toContain('/resources');
       expect(help).toContain('/clear');
-    });
-  });
-
-  describe('getResourcesResponse', () => {
-    it('should return mental health resources', () => {
-      const resources = getResourcesResponse();
-      
-      expect(resources).toContain('Mental Health Resources');
-      expect(resources).toContain('Crisis Text Line');
-      expect(resources).toContain('Self-Care Practices');
     });
   });
 

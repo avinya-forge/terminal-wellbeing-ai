@@ -7,7 +7,6 @@ import { generateResponse } from "../utils/aiModel";
 interface SystemResponses {
   welcome: string[];
   help: string;
-  resources: string;
   error: string;
 }
 
@@ -24,28 +23,14 @@ const SYSTEM_RESPONSES: SystemResponses = {
 
     /help - Show this help message
     /clear - Clear the terminal
-    /resources - Show mental health resources
+    /resources - Show mental health resources (try /resources anxiety)
+    /panic - Show immediate crisis resources
     /models - List available AI models
     /model <number> - Switch to a different AI model
 
     You can also just type normally to chat with me about how you're feeling.
     I'm here to listen and support you.
   `,
-  resources: `Mental Health Resources:
-
-• Crisis Text Line: Text HOME to 741741 (US)
-• National Suicide Prevention Lifeline: 988 or 1-800-273-8255
-• International Association for Suicide Prevention: https://www.iasp.info/resources/Crisis_Centres/
-
-Self-Care Practices:
-• Deep breathing exercises
-• Mindfulness meditation
-• Physical activity
-• Maintaining social connections
-• Getting adequate sleep
-• Setting boundaries
-
-Remember, seeking help is a sign of strength, not weakness.`,
   error: "I'm having trouble processing that right now. Could you try rephrasing, or type /help to see what I can do?"
 };
 
@@ -80,14 +65,6 @@ export function getInitialMessages(): Message[] {
  */
 export function getHelpResponse(): string {
   return SYSTEM_RESPONSES.help;
-}
-
-/**
- * Returns mental health resources information
- * @returns Resources text
- */
-export function getResourcesResponse(): string {
-  return SYSTEM_RESPONSES.resources;
 }
 
 /**

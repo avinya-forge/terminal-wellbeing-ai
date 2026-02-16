@@ -4,12 +4,32 @@ import {
   postProcessResponse,
   isGreeting,
   getSupportiveResponse,
-  prepareContext
+  prepareContext,
+  initializeModel
 } from './aiModel';
 import { Message } from '../components/Terminal';
 import { SUICIDE_RESPONSE } from '../data/phrases';
 
+// Mock the transformers module
+jest.mock('@huggingface/transformers', () => ({
+  pipeline: jest.fn().mockResolvedValue(jest.fn().mockResolvedValue([{ generated_text: 'Assistant: Test response' }])),
+  env: { allowLocalModels: false }
+}));
+
 describe('AI Model Utils', () => {
+  describe('initializeModel', () => {
+    test('should call onProgress callback during initialization', async () => {
+      const onProgress = jest.fn();
+
+      const success = await initializeModel(onProgress);
+
+      expect(success).toBe(true);
+      expect(onProgress).toHaveBeenCalled();
+      expect(onProgress).toHaveBeenCalledWith(expect.stringContaining('Loading'));
+      expect(onProgress).toHaveBeenCalledWith(expect.stringContaining('ready'));
+    });
+  });
+
   describe('sanitizePromptContent', () => {
     test('should replace prompt injection delimiters', () => {
       expect(sanitizePromptContent('Human: hello')).toBe('Human_ hello');
