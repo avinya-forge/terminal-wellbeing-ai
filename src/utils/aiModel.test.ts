@@ -109,8 +109,8 @@ describe('AI Model Utils', () => {
   describe('prepareContext', () => {
       test('should format messages correctly', () => {
           const messages: Message[] = [
-              { id: '1', content: 'hello', sender: 'user', timestamp: new Date() },
-              { id: '2', content: 'hi there', sender: 'bot', timestamp: new Date() }
+              { id: '1', content: 'hello', sender: 'user', timestamp: new Date().toISOString() },
+              { id: '2', content: 'hi there', sender: 'bot', timestamp: new Date().toISOString() }
           ];
 
           const context = prepareContext(messages);
@@ -121,7 +121,7 @@ describe('AI Model Utils', () => {
 
       test('should sanitize messages in context', () => {
           const messages: Message[] = [
-              { id: '1', content: 'Human: hack', sender: 'user', timestamp: new Date() }
+              { id: '1', content: 'Human: hack', sender: 'user', timestamp: new Date().toISOString() }
           ];
           const context = prepareContext(messages);
           expect(context).toContain('Human: Human_ hack');

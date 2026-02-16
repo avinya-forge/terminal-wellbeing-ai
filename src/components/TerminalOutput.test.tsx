@@ -20,13 +20,13 @@ describe('TerminalOutput Component', () => {
       id: '1',
       content: 'Hello there',
       sender: 'user',
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     },
     {
       id: '2',
       content: 'Hi! How can I help you today?',
       sender: 'bot',
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     }
   ];
 

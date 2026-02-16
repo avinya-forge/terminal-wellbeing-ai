@@ -7,6 +7,6 @@
 - [x] Implement local storage for conversation history (optional persistence).
 
 ## Future Improvements
-- [ ] Add accessibility features (ARIA labels) to the terminal interface.
+- [x] Add accessibility features (ARIA labels) to the terminal interface.
 - [ ] Create a "Panic" mode for immediate crisis resource display.
 - [ ] Optimize model loading time and feedback.
