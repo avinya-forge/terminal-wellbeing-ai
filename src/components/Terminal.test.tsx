@@ -144,4 +144,29 @@ describe('Terminal Component', () => {
       expect(inputElement).not.toBeDisabled();
     });
   });
+
+  it('activates panic mode when /panic is typed', async () => {
+    render(<Terminal />);
+
+    // Wait for initialization
+    const inputElement = screen.getByPlaceholderText(/Type your message/i);
+    await waitFor(() => expect(inputElement).not.toBeDisabled());
+
+    // Type /panic
+    fireEvent.change(inputElement, { target: { value: '/panic' } });
+    fireEvent.keyDown(inputElement, { key: 'Enter', code: 'Enter', charCode: 13 });
+
+    // Check if Panic Overlay is displayed
+    expect(await screen.findByText('Crisis Resources')).toBeInTheDocument();
+    expect(screen.getByText('988')).toBeInTheDocument();
+
+    // Click close button
+    const closeButton = screen.getByText('RETURN TO TERMINAL');
+    fireEvent.click(closeButton);
+
+    // Check if Panic Overlay is gone
+    await waitFor(() => {
+      expect(screen.queryByText('Crisis Resources')).not.toBeInTheDocument();
+    });
+  });
 });

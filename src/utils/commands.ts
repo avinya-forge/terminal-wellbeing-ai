@@ -1,6 +1,7 @@
 import { Message } from "../components/Terminal";
-import { getResponseForMessage, getHelpResponse, getResourcesResponse } from "../data/responses";
+import { getResponseForMessage, getHelpResponse } from "../data/responses";
 import { getAvailableModels, getCurrentModel, switchModel } from "../utils/aiModel";
+import { searchResources, Resource } from "../data/resources";
 
 // Define command types for better organization
 type CommandHandler = (input: string, messages: Message[]) => Promise<string>;
@@ -8,7 +9,7 @@ type CommandHandler = (input: string, messages: Message[]) => Promise<string>;
 // Command registry for easy maintenance and extension
 const COMMANDS: Record<string, CommandHandler> = {
   help: async () => getHelpResponse(),
-  resources: async () => getResourcesResponse(),
+  resources: async (input) => handleResourcesCommand(input),
   model: async (input) => handleModelCommand(input),
   models: async () => listAvailableModels(),
 };
@@ -116,5 +117,55 @@ async function listAvailableModels(): Promise<string> {
   });
   
   response += `To switch models, type /model <number>`;
+  return response;
+}
+
+/**
+ * Handle the resources command to list or search mental health resources
+ * @param input User input containing resources command
+ * @returns Formatted list of resources
+ */
+async function handleResourcesCommand(input: string): Promise<string> {
+  // Extract query if present (remove /resources and trim)
+  const normalizedInput = input.trim();
+  let query = "";
+
+  if (normalizedInput.toLowerCase().startsWith("/resources")) {
+    query = normalizedInput.substring(10).trim();
+  } else if (normalizedInput.toLowerCase().startsWith("resources")) {
+    // Should generally be caught by the command check, but just in case
+    query = normalizedInput.substring(9).trim();
+  }
+
+  const results = searchResources(query);
+
+  if (results.length === 0) {
+    return `No resources found for "${query}".
+
+Try simpler keywords like "anxiety", "youth", "crisis", or just type /resources to see all available help.`;
+  }
+
+  const title = query
+    ? `Mental Health Resources matching "${query}":`
+    : `Mental Health Resources:`;
+
+  return formatResourceList(results, title);
+}
+
+function formatResourceList(resources: Resource[], title: string): string {
+  let response = `${title}\n\n`;
+
+  resources.forEach(resource => {
+    response += `• ${resource.name} [${resource.category}]\n`;
+    response += `  ${resource.contact}\n`;
+    response += `  ${resource.description}\n\n`;
+  });
+
+  if (resources.length > 5 && !title.includes("matching")) {
+    response += `Tip: You can search resources by typing /resources <topic> (e.g., /resources youth)`;
+  } else {
+    response += `Remember, seeking help is a sign of strength.`;
+  }
+
   return response;
 }

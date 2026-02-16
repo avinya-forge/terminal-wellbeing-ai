@@ -2,9 +2,10 @@ import { Terminal as TerminalIcon } from 'lucide-react';
 
 interface TerminalHeaderProps {
   modelLoaded?: boolean;
+  loadingStatus?: string;
 }
 
-const TerminalHeader = ({ modelLoaded = false }: TerminalHeaderProps) => {
+const TerminalHeader = ({ modelLoaded = false, loadingStatus }: TerminalHeaderProps) => {
   return (
     <header className="terminal-header" role="banner">
       <div className="terminal-title">
@@ -13,7 +14,9 @@ const TerminalHeader = ({ modelLoaded = false }: TerminalHeaderProps) => {
       </div>
       <div className="terminal-status">
         <span>
-          {modelLoaded ? 'AI Model: Ready' : 'AI Model: Using fallback responses'}
+          {modelLoaded
+            ? 'AI Model: Ready'
+            : (loadingStatus || 'AI Model: Using fallback responses')}
         </span>
         <span
           className="status-indicator status-red"

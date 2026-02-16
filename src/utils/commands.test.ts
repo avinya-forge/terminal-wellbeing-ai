@@ -1,12 +1,26 @@
 import { processCommand, formatTimestamp } from './commands';
 import * as responses from '../data/responses';
 import { Message } from '../components/Terminal';
+import { searchResources } from '../data/resources';
 
 // Mock the responses module
 jest.mock('../data/responses', () => ({
   getHelpResponse: jest.fn().mockReturnValue('Help information'),
-  getResourcesResponse: jest.fn().mockReturnValue('Resources information'),
   getResponseForMessage: jest.fn().mockResolvedValue('AI response')
+}));
+
+// Mock the resources module
+jest.mock('../data/resources', () => ({
+  searchResources: jest.fn().mockReturnValue([
+    {
+      name: 'Test Resource',
+      category: 'Test Category',
+      contact: '123-456-7890',
+      description: 'A test resource description',
+      url: 'http://test.com',
+      tags: ['test']
+    }
+  ])
 }));
 
 // Mock the aiModel module
@@ -60,8 +74,22 @@ describe('Commands Utility', () => {
 
     it('should process resources command correctly', async () => {
       const result = await processCommand('resources', sampleMessages);
-      expect(result).toBe('Resources information');
-      expect(responses.getResourcesResponse).toHaveBeenCalled();
+      expect(result).toContain('Mental Health Resources:');
+      expect(result).toContain('Test Resource');
+    });
+
+    it('should process resources command with query', async () => {
+      const result = await processCommand('/resources test', sampleMessages);
+      expect(result).toContain('Mental Health Resources matching "test":');
+      expect(result).toContain('Test Resource');
+      expect(searchResources).toHaveBeenCalledWith('test');
+    });
+
+    it('should handle no resources found', async () => {
+      (searchResources as jest.Mock).mockReturnValueOnce([]);
+
+      const result = await processCommand('/resources none', sampleMessages);
+      expect(result).toContain('No resources found for "none"');
     });
 
     it('should handle non-command inputs', async () => {
