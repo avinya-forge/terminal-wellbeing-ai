@@ -8,15 +8,15 @@ interface TerminalOutputProps {
 
 const TerminalOutput = ({ messages, isTyping }: TerminalOutputProps) => {
   return (
-    <div>
+    <div role="log" aria-live="polite">
       {messages.map((message) => (
         <TerminalMessage key={message.id} message={message} />
       ))}
       
       {isTyping && (
-        <div className="typing-indicator">
-          <span className="message-prompt bot-prompt">{'>'}</span> Thinking
-          <span className="typing-dots">...</span>
+        <div className="typing-indicator" aria-label="Thinking...">
+          <span className="message-prompt bot-prompt" aria-hidden="true">{'>'}</span> Thinking
+          <span className="typing-dots" aria-hidden="true">...</span>
         </div>
       )}
     </div>

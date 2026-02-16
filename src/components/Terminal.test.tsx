@@ -32,7 +32,7 @@ describe('Terminal Component', () => {
     render(<Terminal />);
     
     // Check for terminal elements
-    expect(screen.getByText(/WellBeing\.sh/i)).toBeInTheDocument();
+    expect(screen.getByText('WellBeing.sh')).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/Type your message/i)).toBeInTheDocument();
     
     // Check for welcome messages
@@ -107,7 +107,7 @@ describe('Terminal Component', () => {
     render(<Terminal />);
     
     // Check that the terminal still renders
-    expect(screen.getByText(/WellBeing\.sh/i)).toBeInTheDocument();
+    expect(screen.getByText('WellBeing.sh')).toBeInTheDocument();
     
     // Check that the model status shows it's using fallback
     await waitFor(() => {

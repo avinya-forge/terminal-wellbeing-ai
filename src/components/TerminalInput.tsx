@@ -18,7 +18,7 @@ const TerminalInput = forwardRef<HTMLInputElement, TerminalInputProps>(
 
     return (
       <div className="terminal-input-container">
-        <span className="input-prompt">{'>'}</span>
+        <span className="input-prompt" aria-hidden="true">{'>'}</span>
         <input
           ref={ref}
           type="text"
@@ -28,9 +28,9 @@ const TerminalInput = forwardRef<HTMLInputElement, TerminalInputProps>(
           className="terminal-input"
           placeholder="Type your message or /help for commands..."
           disabled={disabled}
-          aria-label="Enter message"
+          aria-label="Terminal Command Input"
         />
-        {!disabled && <span className="cursor">|</span>}
+        {!disabled && <span className="cursor" aria-hidden="true">|</span>}
       </div>
     );
   }
