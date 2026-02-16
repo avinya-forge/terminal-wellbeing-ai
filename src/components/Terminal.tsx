@@ -5,16 +5,17 @@ import TerminalInput from './TerminalInput';
 import { initializeModel } from '../utils/aiModel';
 import { processCommand } from '../utils/commands';
 import { getInitialMessages } from '../data/responses';
+import useLocalStorage from '../hooks/useLocalStorage';
 
 export interface Message {
   id: string;
   content: string;
   sender: 'user' | 'bot';
-  timestamp: Date;
+  timestamp: string;
 }
 
 const Terminal = () => {
-  const [messages, setMessages] = useState<Message[]>(getInitialMessages());
+  const [messages, setMessages] = useLocalStorage<Message[]>('terminal_messages', getInitialMessages() as unknown as Message[]);
   const [isTyping, setIsTyping] = useState(false);
   const [modelLoaded, setModelLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -58,12 +59,12 @@ const Terminal = () => {
       id: Date.now().toString(),
       content,
       sender: 'user',
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     };
 
     // Handle clear command directly for better UX
     if (content.trim().toLowerCase() === 'clear' || content.trim().toLowerCase() === '/clear') {
-      setMessages(getInitialMessages());
+      setMessages(getInitialMessages() as unknown as Message[]);
       return;
     }
 
@@ -80,7 +81,7 @@ const Terminal = () => {
         id: (Date.now() + 1).toString(),
         content: response,
         sender: 'bot',
-        timestamp: new Date()
+        timestamp: new Date().toISOString()
       };
 
       // Add bot message to chat
@@ -93,7 +94,7 @@ const Terminal = () => {
         id: (Date.now() + 1).toString(),
         content: 'Sorry, I encountered an error processing your message. Please try again.',
         sender: 'bot',
-        timestamp: new Date()
+        timestamp: new Date().toISOString()
       };
       
       setMessages(prev => [...prev, errorMessage]);

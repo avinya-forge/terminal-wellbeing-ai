@@ -25,6 +25,7 @@ jest.mock('../utils/commands', () => ({
 describe('Terminal Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    window.localStorage.clear();
   });
 
   it('renders the terminal with welcome messages', async () => {

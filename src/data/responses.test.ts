@@ -24,7 +24,7 @@ describe('Responses Data', () => {
         expect(message).toHaveProperty('content');
         expect(message).toHaveProperty('sender', 'bot');
         expect(message).toHaveProperty('timestamp');
-        expect(message.timestamp instanceof Date).toBe(true);
+        expect(typeof message.timestamp).toBe('string');
       });
       
       // Check message content
