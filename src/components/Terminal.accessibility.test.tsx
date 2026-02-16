@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import TerminalHeader from './TerminalHeader';
 import TerminalOutput from './TerminalOutput';
 import TerminalInput from './TerminalInput';
@@ -53,7 +53,7 @@ describe('Terminal Accessibility', () => {
       // Check for sr-only span
       const srOnlySpan = container.querySelector('.sr-only');
       expect(srOnlySpan).toBeInTheDocument();
-      expect(srOnlySpan).toHaveTextContent(/System:.*Hello World/);
+      expect(srOnlySpan?.textContent).toMatch(/System:.*Hello World/);
 
       // Check for aria-hidden on the visual part
       const visualContent = container.querySelector('.message-content');
