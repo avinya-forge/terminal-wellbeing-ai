@@ -1,5 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import Terminal from './Terminal';
 import * as aiModel from '../utils/aiModel';
 import * as commands from '../utils/commands';
@@ -28,7 +27,7 @@ describe('Terminal Component', () => {
     jest.clearAllMocks();
   });
 
-  it('renders the terminal with welcome messages', () => {
+  it('renders the terminal with welcome messages', async () => {
     render(<Terminal />);
     
     // Check for terminal elements
@@ -36,8 +35,8 @@ describe('Terminal Component', () => {
     expect(screen.getByPlaceholderText(/Type your message/i)).toBeInTheDocument();
     
     // Check for welcome messages
-    expect(screen.getByText(/Welcome to WellBeing\.sh/i)).toBeInTheDocument();
-    expect(screen.getByText(/I'm here to listen/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Welcome to WellBeing\.sh/i)).toBeInTheDocument();
+    expect(await screen.findByText(/I'm here to listen/i)).toBeInTheDocument();
   });
 
   it('initializes the AI model on mount', async () => {
@@ -49,19 +48,23 @@ describe('Terminal Component', () => {
   });
 
   it('processes user input and displays responses', async () => {
-    const user = userEvent.setup();
     render(<Terminal />);
     
-    // Type and submit a message
+    // Wait for initialization
     const inputElement = screen.getByPlaceholderText(/Type your message/i);
-    await user.type(inputElement, 'Hello there');
-    await user.keyboard('{Enter}');
+    await waitFor(() => expect(inputElement).not.toBeDisabled());
+
+    // Type and submit a message
+    fireEvent.change(inputElement, { target: { value: 'Hello there' } });
+    fireEvent.keyDown(inputElement, { key: 'Enter', code: 'Enter', charCode: 13 });
     
     // Check if user message is displayed
-    expect(screen.getByText('Hello there')).toBeInTheDocument();
+    expect(await screen.findByText('Hello there')).toBeInTheDocument();
     
     // Check if command processing was called
-    expect(commands.processCommand).toHaveBeenCalledWith('Hello there', expect.any(Array));
+    await waitFor(() => {
+      expect(commands.processCommand).toHaveBeenCalledWith('Hello there', expect.any(Array));
+    });
     
     // Check if bot response is displayed
     await waitFor(() => {
@@ -70,21 +73,22 @@ describe('Terminal Component', () => {
   });
 
   it('handles the clear command correctly', async () => {
-    const user = userEvent.setup();
     render(<Terminal />);
     
-    // Type and submit a message first
+    // Wait for initialization
     const inputElement = screen.getByPlaceholderText(/Type your message/i);
-    await user.type(inputElement, 'Hello there');
-    await user.keyboard('{Enter}');
+    await waitFor(() => expect(inputElement).not.toBeDisabled());
+
+    // Type and submit a message first
+    fireEvent.change(inputElement, { target: { value: 'Hello there' } });
+    fireEvent.keyDown(inputElement, { key: 'Enter', code: 'Enter', charCode: 13 });
     
     // Verify message is displayed
-    expect(screen.getByText('Hello there')).toBeInTheDocument();
+    expect(await screen.findByText('Hello there')).toBeInTheDocument();
     
     // Clear the conversation
-    await user.clear(inputElement);
-    await user.type(inputElement, '/clear');
-    await user.keyboard('{Enter}');
+    fireEvent.change(inputElement, { target: { value: '/clear' } });
+    fireEvent.keyDown(inputElement, { key: 'Enter', code: 'Enter', charCode: 13 });
     
     // Check that the original message is no longer displayed
     await waitFor(() => {
@@ -92,7 +96,7 @@ describe('Terminal Component', () => {
     });
     
     // Check that welcome messages are displayed again
-    expect(screen.getByText(/Welcome to WellBeing\.sh/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Welcome to WellBeing\.sh/i)).toBeInTheDocument();
   });
 
   it('handles model loading error gracefully', async () => {
@@ -111,7 +115,6 @@ describe('Terminal Component', () => {
   });
 
   it('disables input while processing a message', async () => {
-    const user = userEvent.setup();
     render(<Terminal />);
     
     // Mock a delayed response
@@ -121,13 +124,18 @@ describe('Terminal Component', () => {
       });
     });
     
-    // Type and submit a message
+    // Wait for initialization
     const inputElement = screen.getByPlaceholderText(/Type your message/i);
-    await user.type(inputElement, 'Hello');
-    await user.keyboard('{Enter}');
+    await waitFor(() => expect(inputElement).not.toBeDisabled());
+
+    // Type and submit a message
+    fireEvent.change(inputElement, { target: { value: 'Hello' } });
+    fireEvent.keyDown(inputElement, { key: 'Enter', code: 'Enter', charCode: 13 });
     
     // Input should be disabled while processing
-    expect(inputElement).toBeDisabled();
+    await waitFor(() => {
+      expect(inputElement).toBeDisabled();
+    });
     
     // After response, input should be enabled again
     await waitFor(() => {

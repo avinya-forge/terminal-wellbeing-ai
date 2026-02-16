@@ -77,6 +77,12 @@ describe('Commands Utility', () => {
       const result = await processCommand('trigger error', sampleMessages);
       expect(result).toContain("I'm having trouble");
     });
+
+    it('should treat "help me" as conversation, not command', async () => {
+      const result = await processCommand('help me', sampleMessages);
+      expect(result).toBe('AI response');
+      expect(responses.getResponseForMessage).toHaveBeenCalledWith('help me', sampleMessages);
+    });
   });
 
   describe('formatTimestamp', () => {

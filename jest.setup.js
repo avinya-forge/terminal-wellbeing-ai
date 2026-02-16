@@ -1,5 +1,5 @@
 // Add any global test setup here
-import '@testing-library/jest-dom';
+require('@testing-library/jest-dom');
 
 // Mock matchMedia for components that use media queries
 Object.defineProperty(window, 'matchMedia', {
@@ -30,3 +30,12 @@ Object.defineProperty(window, 'IntersectionObserver', {
   writable: true,
   value: MockIntersectionObserver,
 });
+
+// Mock scrollIntoView
+Element.prototype.scrollIntoView = jest.fn();
+
+// Global mock for transformers to avoid ESM/import.meta issues
+jest.mock('@huggingface/transformers', () => ({
+  pipeline: jest.fn().mockResolvedValue(jest.fn().mockResolvedValue([{ generated_text: 'Test response' }])),
+  env: { allowLocalModels: false }
+}), { virtual: true });
