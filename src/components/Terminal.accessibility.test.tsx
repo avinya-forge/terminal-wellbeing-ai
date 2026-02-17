@@ -3,7 +3,7 @@ import TerminalHeader from './TerminalHeader';
 import TerminalOutput from './TerminalOutput';
 import TerminalInput from './TerminalInput';
 import TerminalMessage from './TerminalMessage';
-import { Message } from './Terminal';
+import { Message } from '../types/Message';
 
 // Mock scrollIntoView
 window.HTMLElement.prototype.scrollIntoView = jest.fn();

@@ -1,6 +1,6 @@
 import { render, screen, act } from '@testing-library/react';
 import TerminalMessage from './TerminalMessage';
-import { Message } from './Terminal';
+import { Message } from '../types/Message';
 
 describe('TerminalMessage Component', () => {
   // Mock for setTimeout to control typewriter effect

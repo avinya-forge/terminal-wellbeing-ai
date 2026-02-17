@@ -1,7 +1,8 @@
-import { Message } from "../components/Terminal";
+import { Message } from "../types/Message";
 import { getResponseForMessage, getHelpResponse } from "../data/responses";
 import { getAvailableModels, getCurrentModel, switchModel } from "../utils/aiModel";
 import { searchResources, Resource } from "../data/resources";
+import { updateSession } from "./sessionManager";
 
 // Define command types for better organization
 type CommandHandler = (input: string, messages: Message[]) => Promise<string>;
@@ -21,6 +22,14 @@ const COMMANDS: Record<string, CommandHandler> = {
  * @returns Promise with response string
  */
 export async function processCommand(input: string, messages: Message[]): Promise<string> {
+  // Update session with user input
+  updateSession({
+    id: 'current',
+    content: input,
+    sender: 'user',
+    timestamp: new Date().toISOString()
+  });
+
   try {
     // Trim and convert to lowercase for comparison
     const normalizedInput = input.trim().toLowerCase();

@@ -11,5 +11,5 @@
 
 ## Future Improvements
 - [x] Add accessibility features (ARIA labels) to the terminal interface.
-- [ ] Implement adaptive responses based on user history (session-based).
-- [ ] Implement offline mode using WebAssembly.
+- [x] Implement adaptive responses based on user history (session-based).
+- [x] Implement offline mode using WebAssembly (PWA support).

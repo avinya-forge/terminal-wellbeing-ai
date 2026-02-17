@@ -7,6 +7,10 @@
 - **Enhancement: Accessibility** - Added ARIA labels and improved screen reader support for the terminal interface.
 - **Refactor:** Standardized AI model initialization and error handling.
 - **Infrastructure:** Fixed environment issues and test configuration.
+- **Feature: Adaptive Responses** - AI now analyzes user sentiment and topics to provide personalized, context-aware responses (session-based).
+- **Feature: Offline Support (PWA)** - Application is now a Progressive Web App (PWA) with offline capabilities and installability.
+- **Refactor:** Modularized `aiModel.ts` into smaller, testable components (`ai-helpers.ts`, `sessionManager.ts`, `analysis.ts`).
+- **Infrastructure:** Added PWA configuration and improved test coverage.
 
 ## v1.0.1
 - Fixed command processing logic to correctly handle arguments for slash commands (e.g., `/model 1`).

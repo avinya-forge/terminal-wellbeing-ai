@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Message } from './Terminal';
+import { Message } from '../types/Message';
 
 interface TerminalMessageProps {
   message: Message;

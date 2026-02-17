@@ -1,25 +1,32 @@
 import { pipeline } from "@huggingface/transformers";
-import { Message } from "../components/Terminal";
+import { Message } from "../types/Message";
 import { AVAILABLE_MODELS, ModelConfig } from "../config/models";
 import {
-  SENSITIVE_KEYWORDS,
   SUICIDE_RESPONSE,
   SELF_DEPRECATION_KEYWORDS,
   SELF_DEPRECATION_RESPONSES,
   GENERAL_SUPPORT_RESPONSES,
   SYSTEM_RESPONSES,
-  CONTINUITY_PHRASES,
-  GREETING_PATTERNS,
   GREETINGS,
   FIRST_TIME_GREETINGS
 } from "../data/phrases";
+import { getProfileSummary } from "./sessionManager";
+import {
+  MAX_RECENT_RESPONSES,
+  MAX_CONTEXT_MESSAGES,
+  MAX_RETRIES,
+  RETRY_DELAY,
+  DEFAULT_MODEL_INDEX
+} from "../config/ai-constants";
+import {
+  sanitizePromptContent,
+  isSensitiveTopic,
+  isGreeting,
+  postProcessResponse
+} from "./ai-helpers";
 
-// System constants
-const MAX_RECENT_RESPONSES = 15;
-const MAX_CONTEXT_MESSAGES = 8;
-const MAX_RETRIES = 3;
-const RETRY_DELAY = 1000; // ms
-const DEFAULT_MODEL_INDEX = 0;
+// Re-export helpers for backward compatibility and testing
+export { sanitizePromptContent, isSensitiveTopic, isGreeting, postProcessResponse };
 
 // Type definition for the text generator
 type TextGenerator = {
@@ -47,11 +54,6 @@ let currentModelIndex = DEFAULT_MODEL_INDEX;
 
 // Track previously sent responses to avoid repetition using a more efficient data structure
 const recentResponses: Set<string> = new Set();
-
-// Helper function to escape special characters in strings for RegExp
-function escapeRegExp(string: string): string {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
-}
 
 export type ProgressCallback = (status: string) => void;
 
@@ -152,15 +154,6 @@ export function getAvailableModels(): Array<{name: string, displayName: string, 
   }));
 }
 
-// Sanitize user input to prevent prompt injection by neutralizing delimiters
-export function sanitizePromptContent(text: string): string {
-  if (!text) return "";
-  return text
-    .replace(/Human:/gi, (match) => match.replace(':', '_'))
-    .replace(/Assistant:/gi, (match) => match.replace(':', '_'))
-    .replace(/System:/gi, (match) => match.replace(':', '_'));
-}
-
 // Convert conversation history to context for the model with improved formatting
 export function prepareContext(messages: Message[]): string {
   // Get more context messages for better conversation flow
@@ -171,6 +164,12 @@ export function prepareContext(messages: Message[]): string {
     "Acknowledge the user's feelings, ask follow-up questions when appropriate, and provide thoughtful responses. " +
     "Be warm, friendly, and maintain a natural conversation flow.\n\n";
   
+  // Add adaptive profile summary to context
+  const profileSummary = getProfileSummary();
+  if (profileSummary) {
+    context += `System Note: ${profileSummary}\n\n`;
+  }
+
   // Add conversation history with proper formatting
   context += recentMessages.map(msg => {
     const role = msg.sender === "user" ? "Human" : "Assistant";
@@ -179,12 +178,6 @@ export function prepareContext(messages: Message[]): string {
   }).join("\n");
   
   return context;
-}
-
-// Check if the topic is sensitive and needs special handling
-export function isSensitiveTopic(input: string): boolean {
-  const normalizedInput = input.toLowerCase();
-  return SENSITIVE_KEYWORDS.some(keyword => normalizedInput.includes(keyword));
 }
 
 // Generate supportive responses for sensitive topics
@@ -362,41 +355,6 @@ Assistant:`;
   
   // If all models fail, use predefined responses
   return getUniqueResponse(SYSTEM_RESPONSES.fallback);
-}
-
-// Post-process the response to improve quality and conversational flow
-export function postProcessResponse(response: string, input: string): string {
-  // Remove any repetitive phrases
-  const lines = response.split('\n').filter(line => line.trim() !== '');
-  if (lines.length > 1) {
-    // Remove duplicate consecutive lines
-    const uniqueLines = lines.filter((line, index, arr) => 
-      index === 0 || line !== arr[index - 1]
-    );
-    response = uniqueLines.join('\n');
-  }
-  
-  // Ensure the response doesn't repeat the user's input verbatim
-  if (response.toLowerCase().includes(input.toLowerCase()) && input.length > 5) {
-    try {
-      response = response.replace(new RegExp(escapeRegExp(input), 'gi'), 'what you mentioned');
-    } catch (e) {
-      // If regex fails, just continue without this replacement
-      console.warn('Regex replacement failed:', e);
-    }
-  }
-  
-  // Add conversation continuity phrases if the response is short
-  if (response.length < 30 && !response.includes('?')) {
-    response += " " + CONTINUITY_PHRASES[Math.floor(Math.random() * CONTINUITY_PHRASES.length)];
-  }
-  
-  return response;
-}
-
-// Check if input is a greeting or introduction
-export function isGreeting(input: string): boolean {
-  return GREETING_PATTERNS.some(pattern => pattern.test(input.trim()));
 }
 
 // Generate friendly, conversational greeting responses

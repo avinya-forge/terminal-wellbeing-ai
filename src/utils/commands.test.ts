@@ -1,6 +1,6 @@
 import { processCommand, formatTimestamp } from './commands';
 import * as responses from '../data/responses';
-import { Message } from '../components/Terminal';
+import { Message } from '../types/Message';
 import { searchResources } from '../data/resources';
 
 // Mock the responses module

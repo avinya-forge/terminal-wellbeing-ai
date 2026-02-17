@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Terminal from './components/Terminal';
+import ReloadPrompt from './components/ReloadPrompt';
 import './styles.css';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
 
   return (
     <div>
+      <ReloadPrompt />
       {isLoaded ? (
         <Terminal />
       ) : (

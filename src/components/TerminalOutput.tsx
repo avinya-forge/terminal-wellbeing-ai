@@ -1,4 +1,4 @@
-import { Message } from './Terminal';
+import { Message } from '../types/Message';
 import TerminalMessage from './TerminalMessage';
 
 interface TerminalOutputProps {
