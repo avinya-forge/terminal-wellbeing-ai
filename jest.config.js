@@ -8,7 +8,9 @@ export default {
     // Handle image imports
     '\\.(jpg|jpeg|png|gif|webp|svg)$': '<rootDir>/__mocks__/fileMock.js',
     // Mock transformers to avoid ESM/import.meta issues
-    '^@huggingface/transformers$': '<rootDir>/__mocks__/@huggingface/transformers.js'
+    '^@huggingface/transformers$': '<rootDir>/__mocks__/@huggingface/transformers.js',
+    // Mock PWA registration
+    '^virtual:pwa-register/react$': '<rootDir>/__mocks__/pwaRegisterMock.js'
   },
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   transform: {

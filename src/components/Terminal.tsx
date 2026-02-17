@@ -7,13 +7,7 @@ import { initializeModel } from '../utils/aiModel';
 import { processCommand } from '../utils/commands';
 import { getInitialMessages } from '../data/responses';
 import useLocalStorage from '../hooks/useLocalStorage';
-
-export interface Message {
-  id: string;
-  content: string;
-  sender: 'user' | 'bot';
-  timestamp: string;
-}
+import { Message } from '../types/Message';
 
 const Terminal = () => {
   const [messages, setMessages] = useLocalStorage<Message[]>('terminal_messages', getInitialMessages() as unknown as Message[]);

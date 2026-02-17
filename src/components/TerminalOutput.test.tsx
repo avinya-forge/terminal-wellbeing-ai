@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import TerminalOutput from './TerminalOutput';
-import { Message } from './Terminal';
+import { Message } from '../types/Message';
 
 // Mock the TerminalMessage component
 jest.mock('./TerminalMessage', () => {

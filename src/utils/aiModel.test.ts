@@ -7,7 +7,7 @@ import {
   prepareContext,
   initializeModel
 } from './aiModel';
-import { Message } from '../components/Terminal';
+import { Message } from '../types/Message';
 import { SUICIDE_RESPONSE } from '../data/phrases';
 
 // Mock the transformers module

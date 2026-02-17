@@ -1,4 +1,4 @@
-import { Message } from "../components/Terminal";
+import { Message } from "../types/Message";
 import { generateResponse } from "../utils/aiModel";
 
 /**
