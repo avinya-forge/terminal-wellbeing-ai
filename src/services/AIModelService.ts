@@ -1,5 +1,6 @@
 import { pipeline } from "@huggingface/transformers";
 import { Message } from "../types/Message";
+import { TextGenerator, GenerationOptions } from "../types/AIModel";
 import { AVAILABLE_MODELS, ModelConfig } from "../config/models";
 import {
   SUICIDE_RESPONSE,
@@ -16,7 +17,8 @@ import {
   MAX_CONTEXT_MESSAGES,
   MAX_RETRIES,
   RETRY_DELAY,
-  DEFAULT_MODEL_INDEX
+  DEFAULT_MODEL_INDEX,
+  SYSTEM_PROMPT
 } from "../config/ai-constants";
 import {
   sanitizePromptContent,
@@ -24,22 +26,6 @@ import {
   isGreeting,
   postProcessResponse
 } from "../utils/ai-helpers";
-
-// Type definition for the text generator
-type TextGenerator = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (text: string, options: any): Promise<any>;
-};
-
-// Use a more specific type for generation options
-type GenerationOptions = {
-  max_length: number;
-  temperature: number;
-  top_p: number;
-  no_repeat_ngram_size: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
-};
 
 // Cache for the text generators
 interface ModelCache {
@@ -168,10 +154,8 @@ export class AIModelService {
     // Get more context messages for better conversation flow
     const recentMessages = messages.slice(-MAX_CONTEXT_MESSAGES);
 
-    // Add a system prompt to guide the model's behavior
-    let context = "System: You are a supportive and empathetic mental health assistant. Respond conversationally and naturally. " +
-      "Acknowledge the user's feelings, ask follow-up questions when appropriate, and provide thoughtful responses. " +
-      "Be warm, friendly, and maintain a natural conversation flow.\n\n";
+    // Use system prompt from constants
+    let context = SYSTEM_PROMPT;
 
     // Add adaptive profile summary to context
     const profileSummary = getProfileSummary();

@@ -1,5 +1,10 @@
 # Release Notes
 
+## v1.2.1 (Refactor & Cleanup)
+- **Refactor: AI Service Types** - Introduced strict type definitions (`TextGenerator`, `GenerationOptions`) for `AIModelService` to improve code safety and maintainability.
+- **Refactor: Configuration** - Centralized the AI System Prompt in `src/config/ai-constants.ts` for easier updates and management.
+- **Maintenance:** Resolved `any` type usage in AI service logic.
+
 ## v1.2.0 (Unified Batch - Consolidation)
 - **Feature: Expanded Resource Database** - Added 50+ new mental health resources covering diverse categories (LGBTQ+, BIPOC, Youth, Seniors, Legal, Housing, etc.).
 - **Enhancement: Smarter Analysis** - Improved sentiment analysis with window-based negation handling and precise topic extraction.
