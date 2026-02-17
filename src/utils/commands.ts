@@ -3,15 +3,16 @@ import { getResponseForMessage, getHelpResponse } from "../data/responses";
 import { getAvailableModels, getCurrentModel, switchModel } from "../utils/aiModel";
 import { searchResources, Resource } from "../data/resources";
 import { updateSession } from "./sessionManager";
+import { parseCommand, ParsedCommand } from "./commandParser";
 
 // Define command types for better organization
-type CommandHandler = (input: string, messages: Message[]) => Promise<string>;
+type CommandHandler = (parsed: ParsedCommand, messages: Message[]) => Promise<string>;
 
 // Command registry for easy maintenance and extension
 const COMMANDS: Record<string, CommandHandler> = {
   help: async () => getHelpResponse(),
-  resources: async (input) => handleResourcesCommand(input),
-  model: async (input) => handleModelCommand(input),
+  resources: async (parsed) => handleResourcesCommand(parsed),
+  model: async (parsed) => handleModelCommand(parsed),
   models: async () => listAvailableModels(),
 };
 
@@ -31,25 +32,32 @@ export async function processCommand(input: string, messages: Message[]): Promis
   });
 
   try {
-    // Trim and convert to lowercase for comparison
-    const normalizedInput = input.trim().toLowerCase();
+    const parsed = parseCommand(input);
     
-    // Check if input is a command (with or without slash prefix)
-    let commandText: string | undefined;
-
-    if (normalizedInput.startsWith("/")) {
-      // Remove slash and get the first word as the command key
-      const withoutSlash = normalizedInput.substring(1);
-      commandText = withoutSlash.split(/\s+/)[0];
-    } else {
-      // For non-slash commands, require exact match to avoid false positives (e.g., "help me")
-      commandText = normalizedInput;
+    // If input was parsed but might be just whitespace or filtered out?
+    if (!parsed) {
+        if (input.trim()) {
+           // Handle standard conversations if input exists but parse failed (shouldn't happen with current parser unless empty)
+           return await getResponseForMessage(input, messages);
+        }
+        return "";
     }
+
+    const commandHandler = COMMANDS[parsed.command];
     
-    // Look for command in registry
-    const commandHandler = commandText ? COMMANDS[commandText] : undefined;
+    // Check if valid command
     if (commandHandler) {
-      return await commandHandler(input, messages);
+      // For non-slash commands, strictly verify it is intended as a command.
+      // If the input does NOT start with '/', we treat it as a command ONLY if:
+      // 1. It matches the command name exactly (no arguments).
+      // This preserves existing behavior where "help" works but "help me" is chat.
+
+      const isSlash = input.trim().startsWith('/');
+      if (!isSlash && parsed.args.length > 0) {
+           return await getResponseForMessage(input, messages);
+      }
+
+      return await commandHandler(parsed, messages);
     }
     
     // Handle standard conversations
@@ -66,14 +74,12 @@ export function formatTimestamp(date: Date): string {
 
 /**
  * Handle the model command to switch between AI models
- * @param input User input containing model command
+ * @param parsed Parsed command object
  * @returns Response message
  */
-async function handleModelCommand(input: string): Promise<string> {
-  const parts = input.trim().split(/\s+/);
-  
+async function handleModelCommand(parsed: ParsedCommand): Promise<string> {
   // If just /model with no arguments, show current model
-  if (parts.length <= 1) {
+  if (parsed.args.length === 0) {
     const currentModel = getCurrentModel();
     return `Current AI model: ${currentModel.displayName}
 ${currentModel.description}
@@ -81,8 +87,8 @@ ${currentModel.description}
 Type /models to see all available models or /model <number> to switch models.`;
   }
   
-  // Try to parse model index
-  const modelIndex = parseInt(parts[1], 10);
+  // Try to parse model index from first argument
+  const modelIndex = parseInt(parsed.args[0], 10);
   if (isNaN(modelIndex)) {
     return `Invalid model number. Please use a number (e.g., /model 1).
 Type /models to see available models.`;
@@ -131,20 +137,11 @@ async function listAvailableModels(): Promise<string> {
 
 /**
  * Handle the resources command to list or search mental health resources
- * @param input User input containing resources command
+ * @param parsed Parsed command object
  * @returns Formatted list of resources
  */
-async function handleResourcesCommand(input: string): Promise<string> {
-  // Extract query if present (remove /resources and trim)
-  const normalizedInput = input.trim();
-  let query = "";
-
-  if (normalizedInput.toLowerCase().startsWith("/resources")) {
-    query = normalizedInput.substring(10).trim();
-  } else if (normalizedInput.toLowerCase().startsWith("resources")) {
-    // Should generally be caught by the command check, but just in case
-    query = normalizedInput.substring(9).trim();
-  }
+async function handleResourcesCommand(parsed: ParsedCommand): Promise<string> {
+  const query = parsed.args.join(' ').trim();
 
   const results = searchResources(query);
 
