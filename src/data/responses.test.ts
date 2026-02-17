@@ -1,5 +1,4 @@
 import { getInitialMessages, getHelpResponse, getResponseForMessage } from './responses';
-import { Message } from "../types/Message";
 import * as aiModel from '../utils/aiModel';
 
 // Mock the AI model

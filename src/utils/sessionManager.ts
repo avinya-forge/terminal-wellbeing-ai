@@ -1,9 +1,8 @@
-import { UserProfile, SessionData, AnalysisResult } from '../types/ai';
+import { UserProfile, SessionData } from '../types/ai';
 import { analyzeText } from './analysis';
 import { Message } from '../types/Message';
 
 const STORAGE_KEY = 'wellbeing_user_profile';
-const SESSION_KEY = 'wellbeing_current_session';
 
 const DEFAULT_PROFILE: UserProfile = {
   lastInteraction: new Date().toISOString(),
