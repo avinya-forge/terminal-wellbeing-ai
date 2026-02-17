@@ -72,57 +72,56 @@ const TOPIC_KEYWORDS: Record<string, string[]> = {
 export function analyzeSentiment(text: string): number {
   if (!text) return 0;
 
-  const words = text.toLowerCase().match(/\b(\w+)\b/g) || [];
+  // Split by spaces but keep punctuation to detect clause boundaries
+  // Use words array and index for window-based lookahead/lookbehind
+  const words = text.toLowerCase().match(/[a-z']+|[.,!?;]/g) || [];
   if (words.length === 0) return 0;
 
   let score = 0;
-  let wordCount = 0;
+  let sentimentWordCount = 0;
+  let negationActiveUntil = -1;
 
-  // Look for negation
-  let negation = 1;
+  const NEGATION_WORDS = new Set(['no', 'not', 'never', 'dont', "don't", 'didnt', "didn't", 'wont', "won't", 'cant', "can't", 'neither', 'nor']);
+  const RESET_WORDS = new Set(['but', 'however', 'although', 'though', '.', ',', '!', '?', ';']);
 
   for (let i = 0; i < words.length; i++) {
     const word = words[i];
 
-    // Check for negation words
-    if (['no', 'not', 'never', 'dont', "don't", 'didnt', "didn't", 'wont', "won't", 'cant', "can't"].includes(word)) {
-      negation = -1;
+    if (RESET_WORDS.has(word)) {
+      negationActiveUntil = -1;
       continue;
     }
 
-    if (SENTIMENT_DICTIONARY[word] !== undefined) {
-      score += SENTIMENT_DICTIONARY[word] * negation;
-      wordCount++;
-      // Reset negation after applying
-      negation = 1;
-    } else {
-      // If word is not in dictionary, reset negation if we've moved too far (e.g. "not very happy" works, but "not the man went to happy" shouldn't apply "not" to "happy")
-      // Simple heuristic: reset negation after 3 non-sentiment words
-      // But for simplicity, let's keep it persistent for the immediate next sentiment word within a small window?
-      // Actually, simple "next sentiment word" approach is better.
-      // But current loop applies negation to the *next* matching word.
-      // If we encounter a word not in dictionary, we check if we should reset negation.
-      // Let's just reset negation if we hit a punctuation or after 2 words.
-      // Simplified: Just toggle negation for the next found sentiment word.
+    if (NEGATION_WORDS.has(word)) {
+      // Set negation window for next 3 words (e.g. "not very very happy")
+      negationActiveUntil = i + 3;
+      continue;
+    }
+
+    const sentimentValue = SENTIMENT_DICTIONARY[word];
+    if (sentimentValue !== undefined) {
+      const isNegated = i <= negationActiveUntil;
+      score += sentimentValue * (isNegated ? -1 : 1);
+      sentimentWordCount++;
     }
   }
 
   // Normalize score between -1 and 1
-  if (wordCount === 0) return 0;
+  if (sentimentWordCount === 0) return 0;
 
-  // Clamp checks
-  const normalized = Math.max(-1, Math.min(1, score / Math.max(1, Math.sqrt(wordCount))));
+  // Dampen the score based on word count to avoid extreme swings from single words
+  const normalized = Math.max(-1, Math.min(1, score / Math.max(1, Math.sqrt(sentimentWordCount))));
   return normalized;
 }
 
 export function extractTopics(text: string): string[] {
   if (!text) return [];
 
-  const lowerText = text.toLowerCase();
   const foundTopics: Set<string> = new Set();
 
   for (const [topic, keywords] of Object.entries(TOPIC_KEYWORDS)) {
-    if (keywords.some(keyword => lowerText.includes(keyword))) {
+    // Use word boundaries to avoid partial matches (e.g., "hispanic" matching "panic")
+    if (keywords.some(keyword => new RegExp(`\\b${keyword}\\b`, 'i').test(text))) {
       foundTopics.add(topic);
     }
   }

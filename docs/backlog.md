@@ -8,6 +8,10 @@
 - [x] Create a "Panic" mode for immediate crisis resource display.
 - [x] Optimize model loading time and feedback.
 - [x] Expand resource database to be searchable (e.g., /resources anxiety).
+- [x] Refactor AI Model to Service Pattern.
+- [x] Improve Analysis Logic (Sentiment negation, Topic extraction).
+- [x] Implement Robust Command Parser (handle quotes/args).
+- [x] Expand Resource Database (add 50+ entries).
 
 ## Future Improvements
 - [x] Add accessibility features (ARIA labels) to the terminal interface.

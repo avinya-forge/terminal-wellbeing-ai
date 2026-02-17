@@ -26,9 +26,10 @@ describe('Resource Data', () => {
       const results = searchResources('suicide');
       expect(results.length).toBeGreaterThan(0);
       const hasSuicideTag = results.every(r =>
-        r.tags.includes('suicide') ||
+        r.tags.some(t => t.toLowerCase().includes('suicide')) ||
         r.name.toLowerCase().includes('suicide') ||
-        r.description.toLowerCase().includes('suicide')
+        r.description.toLowerCase().includes('suicide') ||
+        r.category.toLowerCase().includes('suicide')
       );
       expect(hasSuicideTag).toBe(true);
     });

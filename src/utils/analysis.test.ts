@@ -26,6 +26,13 @@ describe('Analysis Utils', () => {
       // "not happy" should ideally be negative or less positive
       expect(negated).toBeLessThan(0);
     });
+
+    it('handles complex negation correctly', () => {
+      expect(analyzeSentiment('I am not happy')).toBeLessThan(0);
+      expect(analyzeSentiment('I am not very happy')).toBeLessThan(0);
+      // "I am not going to the store, but I am happy" -> Should be positive (negation resets)
+      expect(analyzeSentiment('I am not going to the store, but I am happy')).toBeGreaterThan(0);
+    });
   });
 
   describe('extractTopics', () => {
@@ -37,6 +44,13 @@ describe('Analysis Utils', () => {
 
     it('returns empty array for no topics', () => {
       expect(extractTopics('the sky is blue')).toEqual([]);
+    });
+
+    it('avoids partial matches for topics', () => {
+      // "panic" is a keyword for anxiety. "hispanic" contains "panic".
+      expect(extractTopics('hispanic heritage')).not.toContain('anxiety');
+      // "pain" is a keyword for health. "painting" contains "pain".
+      expect(extractTopics('I am painting a picture')).not.toContain('health');
     });
   });
 
