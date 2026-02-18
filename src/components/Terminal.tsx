@@ -9,6 +9,7 @@ import { getInitialMessages } from '../data/responses';
 import { getPrivacyMode, setPrivacyMode } from '../utils/sessionManager';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { Message } from '../types/Message';
+import { applyTheme } from '../utils/themes';
 
 const Terminal = () => {
   const [messages, setMessages] = useLocalStorage<Message[]>('terminal_messages', getInitialMessages() as unknown as Message[]);
@@ -20,6 +21,23 @@ const Terminal = () => {
   const [isPrivacyMode, setIsPrivacyMode] = useState(getPrivacyMode());
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Initialize theme from local storage
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('terminal_theme');
+    if (savedTheme) {
+      try {
+        // Handle both JSON stringified and raw string cases
+        const themeName = savedTheme.startsWith('"') ? JSON.parse(savedTheme) : savedTheme;
+        applyTheme(themeName);
+      } catch (e) {
+        console.warn("Failed to load theme preference, using default.", e);
+        applyTheme('modern');
+      }
+    } else {
+      applyTheme('modern');
+    }
+  }, []);
 
   // Initialize AI model on component mount
   useEffect(() => {

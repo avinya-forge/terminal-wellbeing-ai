@@ -1,5 +1,11 @@
 # Release Notes
 
+## v1.5.0 (Unified Batch - Visuals & Theming)
+- **Feature: Theming System** - Added `/theme <name>` command to switch between 6 built-in themes (Modern, Retro, Matrix, Cyberpunk, Ocean, Light). Preferences are saved locally.
+- **Feature: ASCII Art** - Added `/art <mood>` command to display expressive ASCII art (happy, sad, zen, coffee, etc.) in the terminal.
+- **Enhancement: UX Polish** - Eliminated "Flash of Unstyled Content" (FOUC) by optimizing CSS variable loading.
+- **Refactor:** consolidated theme logic into `src/utils/themes.ts` and updated `Terminal.tsx` to handle state efficiently.
+
 ## v1.4.0 (Unified Batch - Journaling & Refactor)
 - **Feature: Personal Journaling** - Added a private journaling system. Use `/note <text>` to save thoughts, `/notes` to view them, and `/delete-note <id>` to remove them. Journal entries are included in session exports but respect Privacy Mode.
 - **Enhancement: AI Architecture Consolidation** - Unified AI logic into a robust `AIModelService` pattern, removing redundant utility wrappers and improving code organization.
