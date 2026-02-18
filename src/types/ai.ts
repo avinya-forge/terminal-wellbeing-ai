@@ -10,6 +10,7 @@ export interface UserProfile {
   topics: Record<string, number>; // Topic -> Frequency
   messageCount: number;
   userName?: string;
+  privacyMode?: boolean; // If true, data is not persisted to localStorage
   preferences: {
     responseLength: 'short' | 'medium' | 'long';
     tone: 'casual' | 'formal' | 'empathetic';

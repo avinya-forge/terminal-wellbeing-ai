@@ -1,5 +1,12 @@
 # Release Notes
 
+## v1.3.0 (Unified Batch - Iteration 3)
+- **Feature: Privacy Mode** - Added a toggleable Privacy Mode (`/privacy`) that disables local storage persistence for sensitive sessions. Visual indicator included in the terminal header.
+- **Feature: Session Export** - Added `/export` command to allow users to download their session data (profile, history, analysis) as JSON.
+- **Enhancement: Advanced Sentiment Analysis** - Upgraded analysis engine to support intensifiers (e.g., "very happy"), emojis (😊, 😢), and refined negation handling.
+- **Enhancement: Expanded Topic Detection** - Added detection for 5+ new mental health topics including Grief, Self-Esteem, Social Anxiety, Loneliness, and Mindfulness.
+- **Refactor:** Modularized analysis logic into `src/data/sentiment.ts` and `src/data/topics.ts` for better maintainability.
+
 ## v1.2.1 (Refactor & Cleanup)
 - **Refactor: AI Service Types** - Introduced strict type definitions (`TextGenerator`, `GenerationOptions`) for `AIModelService` to improve code safety and maintainability.
 - **Refactor: Configuration** - Centralized the AI System Prompt in `src/config/ai-constants.ts` for easier updates and management.

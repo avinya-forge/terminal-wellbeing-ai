@@ -6,6 +6,7 @@ import PanicOverlay from './PanicOverlay';
 import { initializeModel } from '../utils/aiModel';
 import { processCommand } from '../utils/commands';
 import { getInitialMessages } from '../data/responses';
+import { getPrivacyMode, setPrivacyMode } from '../utils/sessionManager';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { Message } from '../types/Message';
 
@@ -16,6 +17,7 @@ const Terminal = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [loadingStatus, setLoadingStatus] = useState("Initializing...");
   const [isPanicMode, setIsPanicMode] = useState(false);
+  const [isPrivacyMode, setIsPrivacyMode] = useState(getPrivacyMode());
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -78,6 +80,27 @@ const Terminal = () => {
       return;
     }
 
+    // Handle privacy command
+    if (normalizedContent === '/privacy') {
+      const newState = !isPrivacyMode;
+      setPrivacyMode(newState);
+      setIsPrivacyMode(newState);
+
+      setMessages(prev => [...prev, userMessage]);
+      setTimeout(() => {
+        const botMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          content: newState
+            ? "🔒 Privacy Mode ENABLED. Your session data will not be saved to local storage."
+            : "🔓 Privacy Mode DISABLED. Your session data will be saved locally.",
+          sender: 'bot',
+          timestamp: new Date().toISOString()
+        };
+        setMessages(prev => [...prev, botMessage]);
+      }, 300);
+      return;
+    }
+
     // Add user message to chat
     setMessages(prev => [...prev, userMessage]);
     setIsTyping(true);
@@ -117,7 +140,7 @@ const Terminal = () => {
     <div className="terminal-container relative">
       {isPanicMode && <PanicOverlay onClose={() => setIsPanicMode(false)} />}
 
-      <TerminalHeader modelLoaded={modelLoaded} loadingStatus={loadingStatus} />
+      <TerminalHeader modelLoaded={modelLoaded} loadingStatus={loadingStatus} privacyMode={isPrivacyMode} />
       
       <div className="terminal-body">
         <TerminalOutput messages={messages} isTyping={isTyping} />

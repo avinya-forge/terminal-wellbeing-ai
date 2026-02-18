@@ -1,91 +1,41 @@
 import { AnalysisResult } from '../types/ai';
-
-// Simple sentiment dictionary (can be expanded)
-const SENTIMENT_DICTIONARY: Record<string, number> = {
-  // Negative
-  sad: -0.8,
-  unhappy: -0.7,
-  depressed: -0.9,
-  anxious: -0.8,
-  scared: -0.8,
-  fear: -0.8,
-  worry: -0.6,
-  worried: -0.6,
-  stress: -0.7,
-  stressed: -0.7,
-  tired: -0.4,
-  exhausted: -0.6,
-  pain: -0.7,
-  hurt: -0.7,
-  bad: -0.5,
-  awful: -0.8,
-  terrible: -0.8,
-  hopeless: -0.9,
-  alone: -0.6,
-  lonely: -0.7,
-  angry: -0.7,
-  mad: -0.6,
-  upset: -0.6,
-  fail: -0.7,
-  failure: -0.8,
-  guilt: -0.7,
-  shame: -0.8,
-
-  // Positive
-  happy: 0.8,
-  good: 0.5,
-  great: 0.8,
-  wonderful: 0.9,
-  better: 0.5,
-  hope: 0.7,
-  hopeful: 0.7,
-  excited: 0.8,
-  calm: 0.6,
-  relaxed: 0.6,
-  peace: 0.7,
-  love: 0.8,
-  like: 0.4,
-  enjoy: 0.6,
-  proud: 0.8,
-  strong: 0.7,
-  safe: 0.6,
-  grateful: 0.8,
-  thanks: 0.4,
-  thank: 0.4,
-  ok: 0.2,
-  okay: 0.2,
-  fine: 0.1
-};
-
-const TOPIC_KEYWORDS: Record<string, string[]> = {
-  family: ['mom', 'dad', 'mother', 'father', 'sister', 'brother', 'parents', 'family', 'child', 'kids', 'son', 'daughter'],
-  work: ['work', 'job', 'boss', 'career', 'office', 'colleague', 'fired', 'hired', 'promotion', 'salary', 'deadline'],
-  relationships: ['partner', 'boyfriend', 'girlfriend', 'spouse', 'husband', 'wife', 'dating', 'breakup', 'ex', 'love', 'relationship'],
-  health: ['health', 'sick', 'ill', 'pain', 'doctor', 'hospital', 'medicine', 'body', 'sleep', 'tired', 'insomnia'],
-  school: ['school', 'college', 'university', 'exam', 'test', 'grade', 'class', 'teacher', 'professor', 'study', 'homework'],
-  anxiety: ['anxious', 'panic', 'worry', 'worried', 'scared', 'fear', 'nervous', 'stress', 'overwhelmed'],
-  depression: ['depressed', 'sad', 'feeling down', 'hopeless', 'empty', 'numb', 'crying'],
-  future: ['future', 'goal', 'plan', 'dream', 'life', 'purpose', 'direction'],
-  sleep: ['sleep', 'dream', 'nightmare', 'awake', 'insomnia', 'rest']
-};
+import { SENTIMENT_DICTIONARY, INTENSIFIERS, EMOJIS } from '../data/sentiment';
+import { TOPIC_KEYWORDS } from '../data/topics';
 
 export function analyzeSentiment(text: string): number {
   if (!text) return 0;
 
-  // Split by spaces but keep punctuation to detect clause boundaries
-  // Use words array and index for window-based lookahead/lookbehind
-  const words = text.toLowerCase().match(/[a-z']+|[.,!?;]/g) || [];
+  // Improved tokenizer to capture words, punctuation, and emojis
+  // Using a simpler regex that works broadly if unicode property escapes fail in some envs,
+  // but trying unicode first. If strict environment, fallback to explicit ranges.
+  // For safety in this environment, I'll use a broad non-whitespace match but prioritize words.
+
+  // Matches: words (with apostrophes), punctuation, or any non-whitespace sequence (to catch emojis/symbols)
+  // But strictly, we want to isolate emojis.
+  // Let's use a robust regex for words and specific ranges for emojis if possible, or just standard "words".
+  // Note: The previous regex ignored emojis.
+
+  const tokenRegex = /[a-z']+|[.,!?;]|[\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF]/gi;
+  const words = text.toLowerCase().match(tokenRegex) || [];
+
   if (words.length === 0) return 0;
 
   let score = 0;
   let sentimentWordCount = 0;
   let negationActiveUntil = -1;
 
-  const NEGATION_WORDS = new Set(['no', 'not', 'never', 'dont', "don't", 'didnt', "didn't", 'wont', "won't", 'cant', "can't", 'neither', 'nor']);
+  const NEGATION_WORDS = new Set(['no', 'not', 'never', 'dont', "don't", 'didnt', "didn't", 'wont', "won't", 'cant', "can't", 'neither', 'nor', 'cannot']);
   const RESET_WORDS = new Set(['but', 'however', 'although', 'though', '.', ',', '!', '?', ';']);
 
   for (let i = 0; i < words.length; i++) {
     const word = words[i];
+
+    // Check for Emojis first (direct mapping)
+    if (EMOJIS[word] !== undefined) {
+       score += EMOJIS[word];
+       sentimentWordCount++;
+       continue;
+    }
 
     if (RESET_WORDS.has(word)) {
       negationActiveUntil = -1;
@@ -93,7 +43,7 @@ export function analyzeSentiment(text: string): number {
     }
 
     if (NEGATION_WORDS.has(word)) {
-      // Set negation window for next 3 words (e.g. "not very very happy")
+      // Set negation window for next 3 words
       negationActiveUntil = i + 3;
       continue;
     }
@@ -101,7 +51,27 @@ export function analyzeSentiment(text: string): number {
     const sentimentValue = SENTIMENT_DICTIONARY[word];
     if (sentimentValue !== undefined) {
       const isNegated = i <= negationActiveUntil;
-      score += sentimentValue * (isNegated ? -1 : 1);
+
+      // Check for intensifier in previous word
+      let multiplier = 1.0;
+      if (i > 0) {
+        const prevWord = words[i - 1];
+        if (INTENSIFIERS[prevWord]) {
+           multiplier = INTENSIFIERS[prevWord];
+        }
+      }
+
+      if (isNegated) {
+        // If intensified negation ("not very good"), dampen the negation
+        if (multiplier > 1.0) {
+            score += sentimentValue * multiplier * -0.5;
+        } else {
+            score += sentimentValue * -1.0;
+        }
+      } else {
+        score += sentimentValue * multiplier;
+      }
+
       sentimentWordCount++;
     }
   }
@@ -110,6 +80,7 @@ export function analyzeSentiment(text: string): number {
   if (sentimentWordCount === 0) return 0;
 
   // Dampen the score based on word count to avoid extreme swings from single words
+  // But allow strong emotions to breakthrough
   const normalized = Math.max(-1, Math.min(1, score / Math.max(1, Math.sqrt(sentimentWordCount))));
   return normalized;
 }
@@ -120,7 +91,7 @@ export function extractTopics(text: string): string[] {
   const foundTopics: Set<string> = new Set();
 
   for (const [topic, keywords] of Object.entries(TOPIC_KEYWORDS)) {
-    // Use word boundaries to avoid partial matches (e.g., "hispanic" matching "panic")
+    // Use word boundaries to avoid partial matches
     if (keywords.some(keyword => new RegExp(`\\b${keyword}\\b`, 'i').test(text))) {
       foundTopics.add(topic);
     }
@@ -141,11 +112,12 @@ export function analyzeText(text: string): AnalysisResult {
   // Heuristic adjustments
   if (topics.includes('anxiety')) mood = 'Anxious';
   if (topics.includes('depression') && sentiment < -0.2) mood = 'Depressed';
+  if (topics.includes('grief') && sentiment < -0.2) mood = 'Grief';
 
   return {
     sentiment,
     topics,
-    entities: [], // Placeholder for future entity extraction
+    entities: [],
     mood
   };
 }

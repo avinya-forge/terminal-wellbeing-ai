@@ -13,6 +13,13 @@
 - [x] Implement Robust Command Parser (handle quotes/args).
 - [x] Expand Resource Database (add 50+ entries).
 
+## Unified Batch Improvements (Completed)
+- [x] Enhance Sentiment Analysis (intensifiers, emojis, refined negation).
+- [x] Expand Topic Detection (grief, self-esteem, social anxiety, loneliness, mindfulness).
+- [x] Implement Privacy Mode (toggle local storage, clear history).
+- [x] Implement Session Export (/export command).
+- [x] Update Terminal UI with Privacy Indicator.
+
 ## Future Improvements
 - [x] Add accessibility features (ARIA labels) to the terminal interface.
 - [x] Implement adaptive responses based on user history (session-based).
