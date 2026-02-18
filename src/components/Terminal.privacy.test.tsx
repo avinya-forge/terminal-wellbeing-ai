@@ -35,7 +35,9 @@ describe('Terminal Privacy Mode', () => {
   test('toggles privacy mode when /privacy is entered', async () => {
     render(<Terminal />);
 
+    // Wait for the input to be enabled
     const input = screen.getByPlaceholderText(/Type your message/i);
+    await waitFor(() => expect(input).not.toBeDisabled());
 
     // Type /privacy
     fireEvent.change(input, { target: { value: '/privacy' } });
@@ -60,10 +62,12 @@ describe('Terminal Privacy Mode', () => {
 
     render(<Terminal />);
 
+    // Wait for the input to be enabled
+    const input = screen.getByPlaceholderText(/Type your message/i);
+    await waitFor(() => expect(input).not.toBeDisabled());
+
     // Verify indicator is initially present
     expect(screen.getByText('PRIVACY MODE')).toBeInTheDocument();
-
-    const input = screen.getByPlaceholderText(/Type your message/i);
 
     // Type /privacy
     fireEvent.change(input, { target: { value: '/privacy' } });
