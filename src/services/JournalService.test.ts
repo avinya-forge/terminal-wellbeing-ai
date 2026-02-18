@@ -1,5 +1,4 @@
 import { journalService } from './JournalService';
-import { JournalEntry } from '../types/Journal';
 
 // Mock localStorage
 const localStorageMock = (() => {
