@@ -1,15 +1,34 @@
 /* Terminal Wellbeing AI - Classic Terminal Style */
 
 :root {
-  --background: #000000;
-  --foreground: #00ff00;
-  --primary: #00ff00;
-  --secondary: #00cc00;
-  --accent: #00aa00;
+  /* Default Theme (Modern Dark) - Prevents FOUC */
+  --background: 230 10% 10%;
+  --foreground: 120 20% 95%;
+  --card: 230 10% 12%;
+  --card-foreground: 120 20% 95%;
+  --popover: 230 10% 12%;
+  --popover-foreground: 120 20% 95%;
+  --primary: 120 40% 50%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 230 20% 20%;
+  --secondary-foreground: 120 20% 90%;
+  --muted: 230 10% 20%;
+  --muted-foreground: 120 10% 70%;
+  --accent: 120 50% 40%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 60% 50%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 230 10% 20%;
+  --input: 230 10% 20%;
+  --ring: 120 40% 50%;
+
+  /* Additional status colors */
   --error: #ff0000;
   --success: #00ff00;
   --warning: #ffff00;
-  --terminal-glow: 0 0 5px rgba(0, 255, 0, 0.5);
+
+  /* Effects */
+  --terminal-glow: 0 0 5px hsl(var(--primary) / 0.5);
 }
 
 * {
@@ -20,8 +39,8 @@
 
 body {
   font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
   line-height: 1.5;
   font-size: 14px;
 }
@@ -30,26 +49,26 @@ body {
 .terminal-container {
   max-width: 800px;
   margin: 2rem auto;
-  border: 1px solid var(--primary);
+  border: 1px solid hsl(var(--primary));
   border-radius: 4px;
   overflow: hidden;
-  box-shadow: 0 0 10px rgba(0, 255, 0, 0.3), var(--terminal-glow);
+  box-shadow: 0 0 10px hsl(var(--primary) / 0.3), var(--terminal-glow);
   height: 80vh;
   display: flex;
   flex-direction: column;
-  background-color: var(--background);
+  background-color: hsl(var(--background));
   position: relative;
 }
 
 /* Terminal Header */
 .terminal-header {
-  background-color: var(--background);
-  color: var(--primary);
+  background-color: hsl(var(--background));
+  color: hsl(var(--primary));
   padding: 0.5rem 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--primary);
+  border-bottom: 1px solid hsl(var(--primary));
 }
 
 .terminal-title {
@@ -93,9 +112,10 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  background-color: var(--background);
+  background-color: hsl(var(--background));
+  /* Grid lines using primary color with low opacity */
   background-image: radial-gradient(
-    rgba(0, 255, 0, 0.05) 2px,
+    hsl(var(--primary) / 0.05) 2px,
     transparent 2px
   );
   background-size: 50px 50px;
@@ -111,7 +131,7 @@ body {
   bottom: 0;
   background: linear-gradient(
     transparent 50%,
-    rgba(0, 255, 0, 0.03) 50%
+    hsl(var(--primary) / 0.03) 50%
   );
   background-size: 100% 4px;
   pointer-events: none;
@@ -129,12 +149,12 @@ body {
 }
 
 .user-prompt {
-  color: var(--foreground);
+  color: hsl(var(--foreground));
   text-shadow: var(--terminal-glow);
 }
 
 .bot-prompt {
-  color: var(--primary);
+  color: hsl(var(--primary));
   text-shadow: var(--terminal-glow);
 }
 
@@ -146,12 +166,12 @@ body {
 }
 
 .user-message {
-  color: var(--foreground);
+  color: hsl(var(--foreground));
   margin-bottom: 0.75rem;
 }
 
 .bot-message {
-  color: var(--primary);
+  color: hsl(var(--primary));
   margin-bottom: 0.75rem;
 }
 
@@ -159,13 +179,13 @@ body {
 .terminal-input-container {
   display: flex;
   padding: 0.5rem 1rem;
-  border-top: 1px solid var(--primary);
-  background-color: var(--background);
+  border-top: 1px solid hsl(var(--primary));
+  background-color: hsl(var(--background));
   position: relative;
 }
 
 .input-prompt {
-  color: var(--foreground);
+  color: hsl(var(--foreground));
   margin-right: 0.5rem;
   font-weight: bold;
   text-shadow: var(--terminal-glow);
@@ -175,7 +195,7 @@ body {
   flex: 1;
   background: transparent;
   border: none;
-  color: var(--foreground);
+  color: hsl(var(--foreground));
   font-family: inherit;
   font-size: inherit;
   outline: none;
@@ -187,7 +207,7 @@ body {
   display: inline-block;
   width: 8px;
   height: 16px;
-  background-color: var(--foreground);
+  background-color: hsl(var(--foreground));
   margin-left: 2px;
   animation: blink 0.8s step-end infinite;
   box-shadow: var(--terminal-glow);
@@ -203,7 +223,7 @@ body {
 .typing-indicator {
   display: flex;
   align-items: center;
-  color: var(--primary);
+  color: hsl(var(--primary));
   text-shadow: var(--terminal-glow);
 }
 
@@ -225,8 +245,8 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: var(--background);
-  color: var(--primary);
+  background-color: hsl(var(--background));
+  color: hsl(var(--primary));
   position: relative;
   overflow: hidden;
 }
@@ -239,12 +259,12 @@ body {
   right: 0;
   bottom: 0;
   background-image: linear-gradient(
-    rgba(0, 255, 0, 0.03) 1px,
+    hsl(var(--primary) / 0.03) 1px,
     transparent 1px
   ),
   linear-gradient(
     90deg,
-    rgba(0, 255, 0, 0.03) 1px,
+    hsl(var(--primary) / 0.03) 1px,
     transparent 1px
   );
   background-size: 20px 20px;

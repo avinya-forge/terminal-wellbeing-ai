@@ -6,6 +6,8 @@ import { updateSession, exportSessionData } from "./sessionManager";
 import { parseCommand, ParsedCommand } from "./commandParser";
 import { journalService } from "../services/JournalService";
 import { analyzeSentiment } from "./analysis";
+import { applyTheme, listThemes, THEMES } from "./themes";
+import { getAsciiArt } from "./ascii";
 
 // Define command types for better organization
 type CommandHandler = (parsed: ParsedCommand, messages: Message[]) => Promise<string>;
@@ -23,6 +25,10 @@ const COMMANDS: Record<string, CommandHandler> = {
   deletenote: async (parsed) => handleDeleteNoteCommand(parsed),
   'clear-notes': async () => handleClearNotesCommand(),
   clearnotes: async () => handleClearNotesCommand(),
+  theme: async (parsed) => handleThemeCommand(parsed),
+  themes: async () => handleListThemesCommand(),
+  art: async (parsed) => handleArtCommand(parsed),
+  ascii: async (parsed) => handleArtCommand(parsed),
 };
 
 /**
@@ -282,4 +288,53 @@ async function handleClearNotesCommand(): Promise<string> {
 
   journalService.clearNotes();
   return `Cleared all ${count} notes from your journal.`;
+}
+
+/**
+ * Handle switching themes
+ */
+async function handleThemeCommand(parsed: ParsedCommand): Promise<string> {
+  const themeName = parsed.args[0];
+
+  if (!themeName) {
+    return `Current themes:\n\n${listThemes()}\n\nUsage: /theme <name>`;
+  }
+
+  // Validate theme existence
+  if (!THEMES[themeName]) {
+    return `Theme "${themeName}" not found.\n\nAvailable themes:\n${listThemes()}\n\nUsage: /theme <name>`;
+  }
+
+  applyTheme(themeName);
+
+  // Persist logic should be handled by Terminal component listening to theme changes or shared state.
+  // For now, we rely on the command updating the UI immediately.
+  // Ideally, this should be reactive.
+  // We can emit a custom event or rely on Terminal to check localStorage if we save it here.
+
+  // Let's save it to localStorage here so Terminal picks it up on reload or if it listens to storage.
+  // Note: 'terminal_theme' key should match what Terminal uses.
+  try {
+    localStorage.setItem('terminal_theme', JSON.stringify(themeName));
+    window.dispatchEvent(new Event('storage')); // Trigger update if possible
+  } catch (e) {
+    console.error("Failed to save theme preference", e);
+  }
+
+  return `Theme changed to: ${themeName}`;
+}
+
+async function handleListThemesCommand(): Promise<string> {
+  return `Available Themes:\n\n${listThemes()}\n\nUse /theme <name> to switch.`;
+}
+
+/**
+ * Handle displaying ASCII art
+ */
+async function handleArtCommand(parsed: ParsedCommand): Promise<string> {
+  const mood = parsed.args[0];
+  if (!mood) {
+    return `Usage: /art <mood>\nTry: happy, sad, zen, coffee, heart, cat, tree`;
+  }
+  return getAsciiArt(mood);
 }

@@ -22,6 +22,9 @@
 - [x] Implement Journaling System (/note, /notes, /delete-note).
 - [x] Consolidate AI Logic (Service Pattern, remove redundant utils).
 - [x] Enhance Analysis Engine (Improved Tokenizer, Mood Trend Visualization).
+- [x] Implement Theme System (`/theme`, `/themes`) with persistent preferences.
+- [x] Add ASCII Art visualization (`/art`, `/ascii`) for mood expression.
+- [x] Fix FOUC (Flash of Unstyled Content) on initial load.
 
 ## Future Improvements
 - [x] Add accessibility features (ARIA labels) to the terminal interface.

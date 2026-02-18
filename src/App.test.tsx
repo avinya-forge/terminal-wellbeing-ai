@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import App from './App';
 
 // Mock the Terminal component
@@ -31,7 +31,9 @@ describe('App Component', () => {
     render(<App />);
     
     // Advance timers to complete loading
-    jest.advanceTimersByTime(500);
+    act(() => {
+      jest.advanceTimersByTime(500);
+    });
     
     // Wait for the Terminal component to appear
     await waitFor(() => {
