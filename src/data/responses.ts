@@ -27,6 +27,8 @@ const SYSTEM_RESPONSES: SystemResponses = {
     /panic - Show immediate crisis resources
     /models - List available AI models
     /model <number> - Switch to a different AI model
+    /privacy - Toggle privacy mode (prevents saving history)
+    /export - Export your session data
 
     You can also just type normally to chat with me about how you're feeling.
     I'm here to listen and support you.

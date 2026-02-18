@@ -56,6 +56,9 @@ describe('Responses Data', () => {
     });
 
     it('should handle errors gracefully', async () => {
+      // Mock console.error to suppress expected error log
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
       // Mock an error
       (aiModel.generateResponse as jest.Mock).mockRejectedValueOnce(new Error('Test error'));
       
@@ -65,6 +68,8 @@ describe('Responses Data', () => {
       const response = await getResponseForMessage(input, messages);
       
       expect(response).toContain("I'm having trouble");
+
+      consoleSpy.mockRestore();
     });
   });
 });

@@ -2,7 +2,7 @@ import { Message } from "../types/Message";
 import { getResponseForMessage, getHelpResponse } from "../data/responses";
 import { getAvailableModels, getCurrentModel, switchModel } from "../utils/aiModel";
 import { searchResources, Resource } from "../data/resources";
-import { updateSession } from "./sessionManager";
+import { updateSession, exportSessionData } from "./sessionManager";
 import { parseCommand, ParsedCommand } from "./commandParser";
 
 // Define command types for better organization
@@ -14,6 +14,7 @@ const COMMANDS: Record<string, CommandHandler> = {
   resources: async (parsed) => handleResourcesCommand(parsed),
   model: async (parsed) => handleModelCommand(parsed),
   models: async () => listAvailableModels(),
+  export: async () => handleExportCommand(),
 };
 
 /**
@@ -174,4 +175,16 @@ function formatResourceList(resources: Resource[], title: string): string {
   }
 
   return response;
+}
+
+/**
+ * Handle export session command
+ */
+async function handleExportCommand(): Promise<string> {
+    const data = exportSessionData();
+    return `Here is your session data export (JSON):
+
+${data}
+
+You can copy and save this text for your records.`;
 }

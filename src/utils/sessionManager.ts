@@ -9,6 +9,7 @@ const DEFAULT_PROFILE: UserProfile = {
   sentimentTrend: [],
   topics: {},
   messageCount: 0,
+  privacyMode: false,
   preferences: {
     responseLength: 'medium',
     tone: 'empathetic'
@@ -31,6 +32,12 @@ function loadProfile(): UserProfile {
 }
 
 function saveProfile(profile: UserProfile): void {
+  if (profile.privacyMode) {
+    // If privacy mode is enabled, ensure no data is left in storage
+    localStorage.removeItem(STORAGE_KEY);
+    return;
+  }
+
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
   } catch (e) {
@@ -85,6 +92,10 @@ export function updateSession(message: Message): void {
 }
 
 export function getProfileSummary(): string {
+  if (currentProfile.privacyMode) {
+    return `User Mood: ${currentSession?.currentMood || 'Neutral'}. (Privacy Mode Active)`;
+  }
+
   const sentimentAvg = currentProfile.sentimentTrend.length > 0
     ? currentProfile.sentimentTrend.reduce((a, b) => a + b, 0) / currentProfile.sentimentTrend.length
     : 0;
@@ -127,4 +138,34 @@ export function clearProfile(): void {
     preferences: { ...DEFAULT_PROFILE.preferences }
   };
   saveProfile(currentProfile);
+}
+
+// Privacy & Data Management
+
+export function setPrivacyMode(enabled: boolean): void {
+  currentProfile.privacyMode = enabled;
+  if (enabled) {
+    localStorage.removeItem(STORAGE_KEY);
+  } else {
+    saveProfile(currentProfile);
+  }
+}
+
+export function getPrivacyMode(): boolean {
+  return !!currentProfile.privacyMode;
+}
+
+export function togglePrivacy(): boolean {
+  const newState = !getPrivacyMode();
+  setPrivacyMode(newState);
+  return newState;
+}
+
+export function exportSessionData(): string {
+  const data = {
+    generatedAt: new Date().toISOString(),
+    profile: currentProfile,
+    currentSession: currentSession
+  };
+  return JSON.stringify(data, null, 2);
 }

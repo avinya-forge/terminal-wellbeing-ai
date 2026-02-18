@@ -33,6 +33,32 @@ describe('Analysis Utils', () => {
       // "I am not going to the store, but I am happy" -> Should be positive (negation resets)
       expect(analyzeSentiment('I am not going to the store, but I am happy')).toBeGreaterThan(0);
     });
+
+    it('handles intensifiers', () => {
+      const happy = analyzeSentiment('happy');
+      const veryHappy = analyzeSentiment('very happy');
+      expect(veryHappy).toBeGreaterThan(happy);
+
+      const sad = analyzeSentiment('sad');
+      const verySad = analyzeSentiment('very sad');
+      expect(verySad).toBeLessThan(sad);
+    });
+
+    it('handles emojis', () => {
+       const happyEmoji = analyzeSentiment('😊');
+       expect(happyEmoji).toBeGreaterThan(0);
+
+       const sadEmoji = analyzeSentiment('😢');
+       expect(sadEmoji).toBeLessThan(0);
+
+       const mixed = analyzeSentiment('I am sad 😢');
+       expect(mixed).toBeLessThan(-0.5);
+    });
+
+    it('handles mixed text and emojis', () => {
+        expect(analyzeSentiment('I love this ❤️')).toBeGreaterThan(0.5);
+        expect(analyzeSentiment('This is terrible 💔')).toBeLessThan(-0.5);
+    });
   });
 
   describe('extractTopics', () => {
@@ -40,6 +66,14 @@ describe('Analysis Utils', () => {
       const topics = extractTopics('I am worried about my job and my boss');
       expect(topics).toContain('work');
       expect(topics).toContain('anxiety');
+    });
+
+    it('extracts new topics', () => {
+        expect(extractTopics('I miss my grandma so much')).toContain('grief');
+        expect(extractTopics('I feel worthless and ugly')).toContain('self_esteem');
+        expect(extractTopics('I am scared of talking to people at the party')).toContain('social_anxiety');
+        expect(extractTopics('I am so lonely')).toContain('loneliness');
+        expect(extractTopics('I need to meditate')).toContain('mindfulness');
     });
 
     it('returns empty array for no topics', () => {
@@ -61,6 +95,12 @@ describe('Analysis Utils', () => {
       expect(result.topics).toContain('school');
       expect(result.topics).toContain('depression');
       expect(result.mood).toBe('Depressed');
+    });
+
+    it('identifies grief mood', () => {
+        const result = analyzeText('I am grieving the loss of my father');
+        expect(result.topics).toContain('grief');
+        expect(result.mood).toBe('Grief');
     });
   });
 });
