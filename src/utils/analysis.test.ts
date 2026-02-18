@@ -1,4 +1,4 @@
-import { analyzeSentiment, extractTopics, analyzeText } from './analysis';
+import { analyzeSentiment, extractTopics, analyzeText, calculateMoodTrend } from './analysis';
 
 describe('Analysis Utils', () => {
   describe('analyzeSentiment', () => {
@@ -101,6 +101,21 @@ describe('Analysis Utils', () => {
         const result = analyzeText('I am grieving the loss of my father');
         expect(result.topics).toContain('grief');
         expect(result.mood).toBe('Grief');
+    });
+  });
+
+  describe('calculateMoodTrend', () => {
+    it('returns correct visual representation', () => {
+      expect(calculateMoodTrend([0.5, 0.8, -0.5, 0.1, -0.4])).toBe('[++-•-]');
+      expect(calculateMoodTrend([0.9, 0.9, 0.9])).toBe('[+++]');
+      expect(calculateMoodTrend([-0.9, -0.9])).toBe('[--]');
+      expect(calculateMoodTrend([0, 0, 0])).toBe('[•••]');
+    });
+
+    it('handles empty input', () => {
+      expect(calculateMoodTrend([])).toBe('No data');
+      // @ts-expect-error Testing runtime check
+      expect(calculateMoodTrend(null)).toBe('No data');
     });
   });
 });

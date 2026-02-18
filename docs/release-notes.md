@@ -1,5 +1,11 @@
 # Release Notes
 
+## v1.4.0 (Unified Batch - Journaling & Refactor)
+- **Feature: Personal Journaling** - Added a private journaling system. Use `/note <text>` to save thoughts, `/notes` to view them, and `/delete-note <id>` to remove them. Journal entries are included in session exports but respect Privacy Mode.
+- **Enhancement: AI Architecture Consolidation** - Unified AI logic into a robust `AIModelService` pattern, removing redundant utility wrappers and improving code organization.
+- **Enhancement: Smarter Analysis** - Improved text tokenization to better handle punctuation and emojis in sentiment analysis. Added internal mood trend calculation.
+- **Maintenance:** Updated dependency management and test coverage for core services.
+
 ## v1.3.0 (Unified Batch - Iteration 3)
 - **Feature: Privacy Mode** - Added a toggleable Privacy Mode (`/privacy`) that disables local storage persistence for sensitive sessions. Visual indicator included in the terminal header.
 - **Feature: Session Export** - Added `/export` command to allow users to download their session data (profile, history, analysis) as JSON.

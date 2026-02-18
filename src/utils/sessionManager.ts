@@ -1,6 +1,7 @@
 import { UserProfile, SessionData } from '../types/ai';
 import { analyzeText } from './analysis';
 import { Message } from '../types/Message';
+import { journalService } from '../services/JournalService';
 
 const STORAGE_KEY = 'wellbeing_user_profile';
 
@@ -17,6 +18,9 @@ const DEFAULT_PROFILE: UserProfile = {
 };
 
 let currentProfile: UserProfile = loadProfile();
+// Initialize journal service privacy mode based on loaded profile
+journalService.setPrivacyMode(!!currentProfile.privacyMode);
+
 let currentSession: SessionData | null = null;
 
 function loadProfile(): UserProfile {
@@ -144,6 +148,7 @@ export function clearProfile(): void {
 
 export function setPrivacyMode(enabled: boolean): void {
   currentProfile.privacyMode = enabled;
+  journalService.setPrivacyMode(enabled);
   if (enabled) {
     localStorage.removeItem(STORAGE_KEY);
   } else {
@@ -165,7 +170,8 @@ export function exportSessionData(): string {
   const data = {
     generatedAt: new Date().toISOString(),
     profile: currentProfile,
-    currentSession: currentSession
+    currentSession: currentSession,
+    journal: journalService.getNotes()
   };
   return JSON.stringify(data, null, 2);
 }

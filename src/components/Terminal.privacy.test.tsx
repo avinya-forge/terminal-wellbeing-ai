@@ -3,7 +3,7 @@ import Terminal from './Terminal';
 import * as sessionManager from '../utils/sessionManager';
 
 // Mock dependencies
-jest.mock('../utils/aiModel', () => ({
+jest.mock('../services/ai', () => ({
   initializeModel: jest.fn().mockResolvedValue(true),
 }));
 

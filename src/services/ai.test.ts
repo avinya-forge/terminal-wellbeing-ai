@@ -6,7 +6,7 @@ import {
   getSupportiveResponse,
   prepareContext,
   initializeModel
-} from './aiModel';
+} from './ai';
 import { Message } from '../types/Message';
 import { SUICIDE_RESPONSE } from '../data/phrases';
 

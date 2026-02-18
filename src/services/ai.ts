@@ -1,4 +1,4 @@
-import { AIModelService, ProgressCallback } from "../services/AIModelService";
+import { AIModelService, ProgressCallback } from "./AIModelService";
 import { Message } from "../types/Message";
 import { ModelConfig } from "../config/models";
 import {
@@ -6,16 +6,18 @@ import {
   isSensitiveTopic,
   isGreeting,
   postProcessResponse
-} from "./ai-helpers";
+} from "../utils/ai-helpers";
 
 // Re-export helpers for backward compatibility and testing
 export { sanitizePromptContent, isSensitiveTopic, isGreeting, postProcessResponse };
 export type { ProgressCallback };
 
 // Create a singleton instance
-const aiService = new AIModelService();
+export const aiService = new AIModelService();
 
 // Export wrapper functions that delegate to the service instance
+// These are kept to minimize churn in consuming components,
+// but direct usage of aiService is encouraged.
 
 export async function initializeModel(onProgress?: ProgressCallback): Promise<boolean> {
   return aiService.initializeModel(onProgress);

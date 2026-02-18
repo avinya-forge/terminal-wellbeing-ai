@@ -1,5 +1,5 @@
 import { Message } from "../types/Message";
-import { generateResponse } from "../utils/aiModel";
+import { generateResponse } from "../services/ai";
 
 /**
  * Response content types
