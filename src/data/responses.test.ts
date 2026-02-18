@@ -1,8 +1,8 @@
 import { getInitialMessages, getHelpResponse, getResponseForMessage } from './responses';
-import * as aiModel from '../utils/aiModel';
+import * as aiModel from '../services/ai';
 
 // Mock the AI model
-jest.mock('../utils/aiModel', () => ({
+jest.mock('../services/ai', () => ({
   generateResponse: jest.fn().mockResolvedValue('AI generated response')
 }));
 

@@ -3,7 +3,7 @@ import TerminalHeader from './TerminalHeader';
 import TerminalOutput from './TerminalOutput';
 import TerminalInput from './TerminalInput';
 import PanicOverlay from './PanicOverlay';
-import { initializeModel } from '../utils/aiModel';
+import { initializeModel } from '../services/ai';
 import { processCommand } from '../utils/commands';
 import { getInitialMessages } from '../data/responses';
 import { getPrivacyMode, setPrivacyMode } from '../utils/sessionManager';

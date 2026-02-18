@@ -10,7 +10,7 @@ jest.mock('./sessionManager', () => ({
   setPrivacyMode: jest.fn(),
 }));
 
-jest.mock('../utils/aiModel', () => ({
+jest.mock('../services/ai', () => ({
   getAvailableModels: jest.fn().mockReturnValue([{ name: 'test', displayName: 'Test Model', description: 'Test' }]),
   getCurrentModel: jest.fn().mockReturnValue({ name: 'test', displayName: 'Test Model', description: 'Test' }),
   switchModel: jest.fn().mockReturnValue(true),

@@ -2,20 +2,18 @@ import { AnalysisResult } from '../types/ai';
 import { SENTIMENT_DICTIONARY, INTENSIFIERS, EMOJIS } from '../data/sentiment';
 import { TOPIC_KEYWORDS } from '../data/topics';
 
+/**
+ * Analyzes the sentiment of a given text.
+ * Returns a normalized score between -1.0 (negative) and 1.0 (positive).
+ */
 export function analyzeSentiment(text: string): number {
   if (!text) return 0;
 
-  // Improved tokenizer to capture words, punctuation, and emojis
-  // Using a simpler regex that works broadly if unicode property escapes fail in some envs,
-  // but trying unicode first. If strict environment, fallback to explicit ranges.
-  // For safety in this environment, I'll use a broad non-whitespace match but prioritize words.
+  // Improved tokenizer to capture words, punctuation, and emojis.
+  // We use specific unicode ranges for emojis to ensure they are captured as single tokens.
+  // Also includes smart quotes in word matching.
+  const tokenRegex = /[a-z0-9'\u2019]+|[.,!?;]|[\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF]/gi;
 
-  // Matches: words (with apostrophes), punctuation, or any non-whitespace sequence (to catch emojis/symbols)
-  // But strictly, we want to isolate emojis.
-  // Let's use a robust regex for words and specific ranges for emojis if possible, or just standard "words".
-  // Note: The previous regex ignored emojis.
-
-  const tokenRegex = /[a-z']+|[.,!?;]|[\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF]/gi;
   const words = text.toLowerCase().match(tokenRegex) || [];
 
   if (words.length === 0) return 0;
@@ -80,7 +78,8 @@ export function analyzeSentiment(text: string): number {
   if (sentimentWordCount === 0) return 0;
 
   // Dampen the score based on word count to avoid extreme swings from single words
-  // But allow strong emotions to breakthrough
+  // But allow strong emotions to breakthrough.
+  // Using a log-like scaling for word count impact.
   const normalized = Math.max(-1, Math.min(1, score / Math.max(1, Math.sqrt(sentimentWordCount))));
   return normalized;
 }
@@ -98,6 +97,17 @@ export function extractTopics(text: string): string[] {
   }
 
   return Array.from(foundTopics);
+}
+
+export function calculateMoodTrend(sentimentHistory: number[]): string {
+  if (!sentimentHistory || sentimentHistory.length === 0) return 'No data';
+
+  // Return a visual representation like [++++-]
+  return '[' + sentimentHistory.map(s => {
+    if (s > 0.3) return '+';
+    if (s < -0.3) return '-';
+    return '•';
+  }).join('') + ']';
 }
 
 export function analyzeText(text: string): AnalysisResult {

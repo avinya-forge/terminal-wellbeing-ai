@@ -19,6 +19,9 @@
 - [x] Implement Privacy Mode (toggle local storage, clear history).
 - [x] Implement Session Export (/export command).
 - [x] Update Terminal UI with Privacy Indicator.
+- [x] Implement Journaling System (/note, /notes, /delete-note).
+- [x] Consolidate AI Logic (Service Pattern, remove redundant utils).
+- [x] Enhance Analysis Engine (Improved Tokenizer, Mood Trend Visualization).
 
 ## Future Improvements
 - [x] Add accessibility features (ARIA labels) to the terminal interface.
