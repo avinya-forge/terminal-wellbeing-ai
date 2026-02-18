@@ -1,4 +1,4 @@
-import { Terminal as TerminalIcon, ShieldAlert, ShieldCheck } from 'lucide-react';
+import { Terminal as TerminalIcon, ShieldCheck } from 'lucide-react';
 
 interface TerminalHeaderProps {
   modelLoaded?: boolean;
