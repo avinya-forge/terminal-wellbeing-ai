@@ -1,5 +1,11 @@
 # Release Notes
 
+## v1.6.0 (Unified Batch - Stats & Architecture)
+- **Feature: Session Statistics** - Added `/stats` command to visualize session duration, message counts, mood trends, and top topics.
+- **Refactor: Command Architecture** - Migrated command handling to a scalable `src/commands/` structure, separating logic for AI, resources, notes, and system commands.
+- **Refactor: UI Components** - Resolved "Fast Refresh" CI warnings by extracting component variants to `src/components/ui/variants.ts`.
+- **Maintenance:** Updated test configuration to support new directory structure.
+
 ## v1.5.0 (Unified Batch - Visuals & Theming)
 - **Feature: Theming System** - Added `/theme <name>` command to switch between 6 built-in themes (Modern, Retro, Matrix, Cyberpunk, Ocean, Light). Preferences are saved locally.
 - **Feature: ASCII Art** - Added `/art <mood>` command to display expressive ASCII art (happy, sad, zen, coffee, etc.) in the terminal.

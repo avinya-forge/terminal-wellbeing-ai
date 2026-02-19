@@ -7,7 +7,7 @@ jest.mock('../services/ai', () => ({
   initializeModel: jest.fn().mockResolvedValue(true),
 }));
 
-jest.mock('../utils/commands', () => ({
+jest.mock('../commands', () => ({
   processCommand: jest.fn().mockResolvedValue('Command processed'),
 }));
 

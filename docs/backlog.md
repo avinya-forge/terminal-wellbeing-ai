@@ -25,6 +25,9 @@
 - [x] Implement Theme System (`/theme`, `/themes`) with persistent preferences.
 - [x] Add ASCII Art visualization (`/art`, `/ascii`) for mood expression.
 - [x] Fix FOUC (Flash of Unstyled Content) on initial load.
+- [x] Refactor UI components to fix Fast Refresh warnings in CI.
+- [x] Refactor command architecture for better maintainability (`src/commands/`).
+- [x] Implement Session Statistics (`/stats`) to view message count, mood trends, and topics.
 
 ## Future Improvements
 - [x] Add accessibility features (ARIA labels) to the terminal interface.

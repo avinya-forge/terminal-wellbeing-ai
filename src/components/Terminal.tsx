@@ -4,7 +4,7 @@ import TerminalOutput from './TerminalOutput';
 import TerminalInput from './TerminalInput';
 import PanicOverlay from './PanicOverlay';
 import { initializeModel } from '../services/ai';
-import { processCommand } from '../utils/commands';
+import { processCommand } from '../commands';
 import { getInitialMessages } from '../data/responses';
 import { getPrivacyMode, setPrivacyMode } from '../utils/sessionManager';
 import useLocalStorage from '../hooks/useLocalStorage';
