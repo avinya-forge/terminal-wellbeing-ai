@@ -1,9 +1,9 @@
-import { processCommand } from './commands';
-import { exportSessionData } from './sessionManager';
+import { processCommand } from './index';
+import { exportSessionData } from '../utils/sessionManager';
 import { Message } from '../types/Message';
 
 // Mock dependencies
-jest.mock('./sessionManager', () => ({
+jest.mock('../utils/sessionManager', () => ({
   updateSession: jest.fn(),
   exportSessionData: jest.fn().mockReturnValue('{"mock": "data"}'),
   getPrivacyMode: jest.fn().mockReturnValue(false),

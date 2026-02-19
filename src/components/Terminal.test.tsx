@@ -1,7 +1,7 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import Terminal from './Terminal';
 import * as aiModel from '../services/ai';
-import * as commands from '../utils/commands';
+import * as commands from '../commands';
 
 // Mock the AI model and commands modules
 jest.mock('../services/ai', () => ({
@@ -9,7 +9,7 @@ jest.mock('../services/ai', () => ({
   generateResponse: jest.fn().mockResolvedValue('This is a test response')
 }));
 
-jest.mock('../utils/commands', () => ({
+jest.mock('../commands', () => ({
   processCommand: jest.fn().mockImplementation(async (input) => {
     if (input.toLowerCase().includes('help')) {
       return 'Help information';
