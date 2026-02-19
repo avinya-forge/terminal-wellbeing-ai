@@ -1,8 +1,7 @@
 import { Message } from "../../types/Message";
-import { ParsedCommand } from "../../utils/commandParser";
 import { analyzeSentiment, calculateMoodTrend, extractTopics } from "../../utils/analysis";
 
-export async function handleStatsCommand(parsed: ParsedCommand, messages: Message[]): Promise<string> {
+export async function handleStatsCommand(_parsed: unknown, messages: Message[]): Promise<string> {
   const userMessages = messages.filter(m => m.sender === 'user');
   const aiMessages = messages.filter(m => m.sender === 'bot');
 

@@ -30,7 +30,7 @@ describe('handleStatsCommand', () => {
   ];
 
   it('calculates stats correctly', async () => {
-    const result = await handleStatsCommand({ command: 'stats', args: [] }, messages);
+    const result = await handleStatsCommand({ command: 'stats', args: [], originalInput: '/stats' }, messages);
 
     // Duration: 10:02 - 10:00 = 2 mins
     expect(result).toContain('Duration: 2 minutes');
@@ -46,7 +46,7 @@ describe('handleStatsCommand', () => {
   });
 
   it('handles empty session', async () => {
-    const result = await handleStatsCommand({ command: 'stats', args: [] }, []);
+    const result = await handleStatsCommand({ command: 'stats', args: [], originalInput: '/stats' }, []);
     expect(result).toContain('Not enough data');
   });
 });
