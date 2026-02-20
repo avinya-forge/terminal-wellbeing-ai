@@ -1,0 +1,121 @@
+import { MemoryService } from './MemoryService';
+import { calculateEmbedding } from '../utils/embeddings';
+import { cosineSimilarity } from '../utils/embeddings';
+
+// Mock dependencies
+jest.mock('../utils/embeddings', () => ({
+  calculateEmbedding: jest.fn(),
+  cosineSimilarity: jest.fn()
+}));
+
+describe('MemoryService', () => {
+  let service: MemoryService;
+  const mockCalculateEmbedding = calculateEmbedding as jest.Mock;
+  const mockCosineSimilarity = cosineSimilarity as jest.Mock;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    window.localStorage.clear();
+    // Re-instantiate if possible or use existing singleton
+    service = MemoryService.getInstance();
+    service.clearMemories();
+
+    // Mock cosine similarity implementation (basic one for tests)
+    mockCosineSimilarity.mockImplementation((a: number[], b: number[]) => {
+        let dot = 0;
+        for(let i=0; i<a.length; i++) dot += a[i]*b[i];
+        return dot; // Simplified for test control
+    });
+  });
+
+  it('should add memory correctly', async () => {
+    mockCalculateEmbedding.mockResolvedValue([0.1, 0.2, 0.3]);
+
+    const entry = await service.addMemory('test content', 'user');
+
+    expect(entry).not.toBeNull();
+    if (entry) {
+        expect(entry.content).toBe('test content');
+        expect(entry.embedding).toEqual([0.1, 0.2, 0.3]);
+        expect(entry.type).toBe('user');
+        expect(service.getMemoryCount()).toBe(1);
+    }
+  });
+
+  it('should retrieve relevant context', async () => {
+    // Add Memory 1
+    mockCalculateEmbedding.mockResolvedValueOnce([1, 0, 0]);
+    await service.addMemory('memory one', 'user');
+
+    // Add Memory 2
+    mockCalculateEmbedding.mockResolvedValueOnce([0, 1, 0]);
+    await service.addMemory('memory two', 'user');
+
+    // Search Query (matches Memory 1)
+    mockCalculateEmbedding.mockResolvedValueOnce([1, 0, 0]);
+
+    // Setup cosine mock to return high score for mem1 and low for mem2
+    mockCosineSimilarity.mockImplementation((a, b) => {
+        if (a[0] === 1 && b[0] === 1) return 1.0; // Perfect match
+        return 0.0;
+    });
+
+    const results = await service.retrieveRelevantContext('query');
+
+    expect(results.length).toBeGreaterThan(0);
+    expect(results[0].content).toBe('memory one');
+  });
+
+  it('should respect max entries limit', async () => {
+    // Force max entries to 2 via private access workaround for testing
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (service as any).config.maxEntries = 2;
+
+    mockCalculateEmbedding.mockResolvedValue([0.1]);
+
+    await service.addMemory('1', 'user');
+    // small delay to ensure timestamp difference
+    await new Promise(r => setTimeout(r, 10));
+    await service.addMemory('2', 'user');
+    await new Promise(r => setTimeout(r, 10));
+    await service.addMemory('3', 'user');
+
+    expect(service.getMemoryCount()).toBe(2);
+    const contents = service.getMemories().map(m => m.content);
+    // Should contain 2 and 3 (newest), 1 should be gone
+    expect(contents).toContain('2');
+    expect(contents).toContain('3');
+    expect(contents).not.toContain('1');
+  });
+
+  it('should persist to localStorage', async () => {
+      mockCalculateEmbedding.mockResolvedValue([0.1]);
+      await service.addMemory('persist me', 'user');
+
+      const stored = window.localStorage.getItem('wellbeing_long_term_memory');
+      expect(stored).not.toBeNull();
+      expect(stored).toContain('persist me');
+  });
+
+  it('should respect privacy mode', async () => {
+    service.setPrivacyMode(true);
+    mockCalculateEmbedding.mockResolvedValue([0.1]);
+
+    const entry = await service.addMemory('secret', 'user');
+    expect(entry).toBeNull();
+    expect(service.getMemoryCount()).toBe(0);
+
+    // Check localStorage
+    expect(window.localStorage.getItem('wellbeing_long_term_memory')).toBeNull();
+
+    // Turn off privacy mode
+    service.setPrivacyMode(false);
+    // Should reload from storage (which is empty/cleared)
+    expect(service.getMemoryCount()).toBe(0);
+
+    // Add memory now
+    const entry2 = await service.addMemory('public', 'user');
+    expect(entry2).not.toBeNull();
+    expect(service.getMemoryCount()).toBe(1);
+  });
+});

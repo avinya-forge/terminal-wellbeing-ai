@@ -3,31 +3,31 @@
 ## Phase 1: Resilience & Architecture (Sprint 1.8.0)
 
 ### [EPIC-1.1] AI Service Resilience (10 WU)
-- [ ] [ID-1.1.1] | Define `CircuitBreaker` class interface and configuration types | [INDEPENDENT] | [TODO]
-- [ ] [ID-1.1.2] | Implement `CircuitBreaker` state machine (Closed -> Open -> Half-Open) | [BLOCKS-ID-1.1.3] | [TODO]
-- [ ] [ID-1.1.3] | Implement failure counting logic in `CircuitBreaker` | [BLOCKS-ID-1.1.4] | [TODO]
-- [ ] [ID-1.1.4] | Implement timeout/reset logic for Open state | [INDEPENDENT] | [TODO]
-- [ ] [ID-1.1.5] | Integrate `CircuitBreaker` into `AIModelService.ts` initialization | [BLOCKS-ID-1.1.1] | [TODO]
-- [ ] [ID-1.1.6] | Integrate `CircuitBreaker` into `AIModelService.ts` generation | [BLOCKS-ID-1.1.1] | [TODO]
-- [ ] [ID-1.1.7] | Add unit tests for `CircuitBreaker` state transitions | [INDEPENDENT] | [TODO]
-- [ ] [ID-1.1.8] | Add unit tests for `CircuitBreaker` failure counting | [INDEPENDENT] | [TODO]
+- [x] [ID-1.1.1] | Define `CircuitBreaker` class interface and configuration types | [INDEPENDENT] | [DONE]
+- [x] [ID-1.1.2] | Implement `CircuitBreaker` state machine (Closed -> Open -> Half-Open) | [BLOCKS-ID-1.1.3] | [DONE]
+- [x] [ID-1.1.3] | Implement failure counting logic in `CircuitBreaker` | [BLOCKS-ID-1.1.4] | [DONE]
+- [x] [ID-1.1.4] | Implement timeout/reset logic for Open state | [INDEPENDENT] | [DONE]
+- [x] [ID-1.1.5] | Integrate `CircuitBreaker` into `AIModelService.ts` initialization | [BLOCKS-ID-1.1.1] | [DONE]
+- [x] [ID-1.1.6] | Integrate `CircuitBreaker` into `AIModelService.ts` generation | [BLOCKS-ID-1.1.1] | [DONE]
+- [x] [ID-1.1.7] | Add unit tests for `CircuitBreaker` state transitions | [INDEPENDENT] | [DONE]
+- [x] [ID-1.1.8] | Add unit tests for `CircuitBreaker` failure counting | [INDEPENDENT] | [DONE]
 
 ### [EPIC-1.2] Code Hardening: Magic Strings (10 WU)
-- [ ] [ID-1.2.1] | Create `src/constants/moods.ts` and define mood types/enums | [INDEPENDENT] | [TODO]
-- [ ] [ID-1.2.2] | Migrate hardcoded mood strings from `analyzeText` to `moods.ts` | [BLOCKS-ID-1.2.1] | [TODO]
-- [ ] [ID-1.2.3] | Update `AnalysisResult` type to use strict Mood enum/union | [BLOCKS-ID-1.2.1] | [TODO]
+- [x] [ID-1.2.1] | Create `src/constants/moods.ts` and define mood types/enums | [INDEPENDENT] | [DONE]
+- [x] [ID-1.2.2] | Migrate hardcoded mood strings from `analyzeText` to `moods.ts` | [BLOCKS-ID-1.2.1] | [DONE]
+- [x] [ID-1.2.3] | Update `AnalysisResult` type to use strict Mood enum/union | [BLOCKS-ID-1.2.1] | [DONE]
 
 ### [EPIC-1.3] Observability: Error Logging (10 WU)
-- [ ] [ID-1.3.1] | Design `LoggerService` interface with log levels | [INDEPENDENT] | [TODO]
-- [ ] [ID-1.3.2] | Implement `ConsoleLogger` adapter | [BLOCKS-ID-1.3.1] | [TODO]
-- [ ] [ID-1.3.3] | Replace all `console.error` in `AIModelService` with `LoggerService.error` | [BLOCKS-ID-1.3.2] | [TODO]
+- [x] [ID-1.3.1] | Design `LoggerService` interface with log levels | [INDEPENDENT] | [DONE]
+- [x] [ID-1.3.2] | Implement `ConsoleLogger` adapter | [BLOCKS-ID-1.3.1] | [DONE]
+- [x] [ID-1.3.3] | Replace all `console.error` in `AIModelService` with `LoggerService.error` | [BLOCKS-ID-1.3.2] | [DONE]
 
 ### [EPIC-1.4] Testing Hardening (10 WU)
-- [ ] [ID-1.4.1] | Create `AIModelService.fallback.test.ts` | [INDEPENDENT] | [TODO]
-- [ ] [ID-1.4.2] | Mock `pipeline` failure scenarios for primary model | [INDEPENDENT] | [TODO]
-- [ ] [ID-1.4.3] | Verify fallback to secondary model on primary failure | [INDEPENDENT] | [TODO]
-- [ ] [ID-1.4.4] | Verify fallback to tertiary/heuristic on all model failure | [INDEPENDENT] | [TODO]
-- [ ] [ID-1.4.5] | Test `tryFallbackModels` loop logic explicitly | [INDEPENDENT] | [TODO]
+- [x] [ID-1.4.1] | Create `AIModelService.fallback.test.ts` | [INDEPENDENT] | [DONE]
+- [x] [ID-1.4.2] | Mock `pipeline` failure scenarios for primary model | [INDEPENDENT] | [DONE]
+- [x] [ID-1.4.3] | Verify fallback to secondary model on primary failure | [INDEPENDENT] | [DONE]
+- [x] [ID-1.4.4] | Verify fallback to tertiary/heuristic on all model failure | [INDEPENDENT] | [DONE]
+- [x] [ID-1.4.5] | Test `tryFallbackModels` loop logic explicitly | [INDEPENDENT] | [DONE]
 - [ ] [ID-1.5.1] | Create `OfflineMode.e2e.test.ts` | [INDEPENDENT] | [TODO]
 - [ ] [ID-1.5.2] | Test PWA service worker registration event | [INDEPENDENT] | [TODO]
 - [ ] [ID-1.5.3] | Test offline asset caching verification | [INDEPENDENT] | [TODO]

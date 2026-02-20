@@ -35,8 +35,8 @@ export function getAvailableModels(): Array<{name: string, displayName: string, 
   return aiService.getAvailableModels();
 }
 
-export function prepareContext(messages: Message[]): string {
-  return aiService.prepareContext(messages);
+export async function prepareContext(messages: Message[]): Promise<string> {
+  return await aiService.prepareContext(messages);
 }
 
 export function getSupportiveResponse(input: string): string {

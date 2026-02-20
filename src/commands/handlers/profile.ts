@@ -9,17 +9,20 @@ export async function handleProfileCommand(parsed: ParsedCommand): Promise<strin
     const tone = profile.preferences?.tone || "empathetic";
     const length = profile.preferences?.responseLength || "medium";
     const messages = profile.messageCount || 0;
+    const warnings = profile.triggerWarnings?.length ? profile.triggerWarnings.join(", ") : "None";
 
     return `User Profile:
 Name: ${name}
 Preferred Tone: ${tone}
 Response Length: ${length}
 Messages Exchanged: ${messages}
+Trigger Warnings: ${warnings}
 
 Usage:
 /profile name <your_name>
 /profile tone <casual|formal|empathetic>
-/profile length <short|medium|long>`;
+/profile length <short|medium|long>
+/profile warnings <topic1>, <topic2>`;
   }
 
   const subCommand = parsed.args[0].toLowerCase();
@@ -59,6 +62,17 @@ Usage:
       }
     });
     return `Profile updated. I will keep my responses ${value}.`;
+  }
+
+  if (subCommand === "warnings" || subCommand === "trigger-warnings") {
+    if (!value) {
+       return `Current Trigger Warnings: ${profile.triggerWarnings?.join(", ") || "None"}.
+Usage: /profile warnings <topic1>, <topic2>`;
+    }
+
+    const warnings = value.split(',').map(s => s.trim()).filter(s => s.length > 0);
+    updateUserProfile({ triggerWarnings: warnings });
+    return `Trigger warnings updated: ${warnings.join(", ")}`;
   }
 
   return `Unknown subcommand '${subCommand}'. Try /profile for options.`;

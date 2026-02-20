@@ -1,5 +1,11 @@
 # Release Notes
 
+## v1.8.0-pre (Phase 1: Resilience & Architecture)
+- **Feature: Circuit Breaker** - Implemented a `CircuitBreaker` utility to handle AI model failures gracefully, preventing cascading errors.
+- **Refactor: Magic Strings** - Centralized mood constants in `src/constants/moods.ts` and updated analysis logic to use strict types.
+- **Refactor: Logging** - Introduced `LoggerService` for structured logging, replacing direct console calls.
+- **Testing:** Added comprehensive fallback testing for `AIModelService`, ensuring robustness when primary models fail.
+
 ## v1.7.1 (Archived Backlog Items)
 
 ### Current Tasks

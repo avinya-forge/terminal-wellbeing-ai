@@ -28,6 +28,7 @@ import {
 } from "../utils/ai-helpers";
 import { CircuitBreaker, CircuitBreakerOpenError } from "../utils/CircuitBreaker";
 import { logger } from "./LoggerService";
+import { memoryService } from "./MemoryService";
 
 // Cache for the text generators
 interface ModelCache {
@@ -165,7 +166,7 @@ export class AIModelService {
   }
 
   // Convert conversation history to context for the model with improved formatting
-  public prepareContext(messages: Message[]): string {
+  public async prepareContext(messages: Message[]): Promise<string> {
     // Get more context messages for better conversation flow
     const recentMessages = messages.slice(-MAX_CONTEXT_MESSAGES);
 
@@ -176,6 +177,20 @@ export class AIModelService {
     const profileSummary = getProfileSummary();
     if (profileSummary) {
       context += `System Note: ${profileSummary}\n\n`;
+    }
+
+    // Add Long-term Memory Context
+    // We use the last user message to query memory
+    const lastUserMessage = messages.slice().reverse().find(m => m.sender === 'user');
+    if (lastUserMessage && lastUserMessage.content) {
+        try {
+            const memories = await memoryService.retrieveRelevantContext(lastUserMessage.content);
+            if (memories.length > 0) {
+                context += `Relevant Past Memories:\n${memories.map(m => `- ${m.content}`).join('\n')}\n\n`;
+            }
+        } catch (error) {
+            logger.warn('Failed to retrieve memory context', error);
+        }
     }
 
     // Add conversation history with proper formatting
@@ -230,6 +245,16 @@ export class AIModelService {
     return selectedResponse;
   }
 
+  // Helper to save interactions to memory asynchronously
+  private async saveInteractionToMemory(userInput: string, assistantResponse: string) {
+    try {
+        await memoryService.addMemory(userInput, 'user');
+        await memoryService.addMemory(assistantResponse, 'assistant');
+    } catch (error) {
+        logger.error('Failed to save interaction to memory:', error);
+    }
+  }
+
   // Generate response using the AI model or fallback methods
   public async generateResponse(input: string, messages: Message[]): Promise<string> {
     // Check for greetings and introductions to make conversation more natural
@@ -263,7 +288,7 @@ export class AIModelService {
     // Try using the AI model if available
     if (modelGenerator) {
       try {
-        const context = this.prepareContext(messages);
+        const context = await this.prepareContext(messages);
         const sanitizedInput = sanitizePromptContent(input);
         const prompt = `${context}
 Human: ${sanitizedInput}
@@ -301,6 +326,10 @@ Assistant:`;
                 }
               }
               this.recentResponses.add(responseText);
+
+              // Save interaction to memory
+              this.saveInteractionToMemory(input, responseText);
+
               return responseText;
             }
           }
@@ -336,7 +365,7 @@ Assistant:`;
       if (!generator) continue;
 
       try {
-        const context = this.prepareContext(messages);
+        const context = await this.prepareContext(messages);
         const sanitizedInput = sanitizePromptContent(input);
         const prompt = `${context}
 Human: ${sanitizedInput}
