@@ -177,6 +177,106 @@ export const THEMES: Record<string, Theme> = {
       ring: '240 5% 65%',
     },
   },
+  dracula: {
+    name: 'dracula',
+    displayName: 'Dracula',
+    colors: {
+      background: '231 15% 18%', // #282a36
+      foreground: '60 30% 96%', // #f8f8f2
+      card: '231 15% 25%',
+      cardForeground: '60 30% 96%',
+      popover: '231 15% 25%',
+      popoverForeground: '60 30% 96%',
+      primary: '326 100% 74%', // Pink #ff79c6
+      primaryForeground: '231 15% 18%',
+      secondary: '265 89% 78%', // Purple #bd93f9
+      secondaryForeground: '231 15% 18%',
+      muted: '231 15% 28%',
+      mutedForeground: '231 15% 60%',
+      accent: '135 94% 65%', // Green #50fa7b
+      accentForeground: '231 15% 18%',
+      destructive: '0 100% 67%', // Red #ff5555
+      destructiveForeground: '0 0% 100%',
+      border: '231 15% 38%',
+      input: '231 15% 28%',
+      ring: '326 100% 74%',
+    }
+  },
+  nord: {
+    name: 'nord',
+    displayName: 'Nord',
+    colors: {
+      background: '220 16% 22%', // #2e3440
+      foreground: '218 27% 92%', // #d8dee9
+      card: '220 16% 26%',
+      cardForeground: '218 27% 92%',
+      popover: '220 16% 26%',
+      popoverForeground: '218 27% 92%',
+      primary: '193 43% 67%', // #88c0d0
+      primaryForeground: '220 16% 22%',
+      secondary: '213 32% 52%', // #5e81ac
+      secondaryForeground: '218 27% 92%',
+      muted: '220 16% 30%',
+      mutedForeground: '220 16% 60%',
+      accent: '179 25% 65%', // #8fbcbb
+      accentForeground: '220 16% 22%',
+      destructive: '354 42% 56%', // #bf616a
+      destructiveForeground: '218 27% 92%',
+      border: '220 16% 36%',
+      input: '220 16% 30%',
+      ring: '193 43% 67%',
+    }
+  },
+  monokai: {
+    name: 'monokai',
+    displayName: 'Monokai',
+    colors: {
+      background: '70 8% 15%', // #272822
+      foreground: '0 0% 97%', // #f8f8f2
+      card: '70 8% 20%',
+      cardForeground: '0 0% 97%',
+      popover: '70 8% 20%',
+      popoverForeground: '0 0% 97%',
+      primary: '70 60% 50%', // Green #a6e22e
+      primaryForeground: '70 8% 15%',
+      secondary: '54 70% 68%', // Yellow #e6db74
+      secondaryForeground: '70 8% 15%',
+      muted: '70 8% 25%',
+      mutedForeground: '70 8% 60%',
+      accent: '326 100% 60%', // Pink #f92672
+      accentForeground: '0 0% 97%',
+      destructive: '0 100% 60%',
+      destructiveForeground: '0 0% 97%',
+      border: '70 8% 30%',
+      input: '70 8% 25%',
+      ring: '70 60% 50%',
+    }
+  },
+  solarized: {
+    name: 'solarized',
+    displayName: 'Solarized Dark',
+    colors: {
+      background: '192 100% 11%', // #002b36
+      foreground: '192 15% 60%', // #839496
+      card: '192 100% 15%',
+      cardForeground: '192 15% 60%',
+      popover: '192 100% 15%',
+      popoverForeground: '192 15% 60%',
+      primary: '169 77% 38%', // #2aa198
+      primaryForeground: '0 0% 100%',
+      secondary: '205 69% 49%', // #268bd2
+      secondaryForeground: '0 0% 100%',
+      muted: '192 100% 18%',
+      mutedForeground: '192 10% 40%',
+      accent: '169 77% 38%',
+      accentForeground: '0 0% 100%',
+      destructive: '359 71% 52%', // #dc322f
+      destructiveForeground: '0 0% 100%',
+      border: '192 100% 20%',
+      input: '192 100% 18%',
+      ring: '169 77% 38%',
+    }
+  }
 };
 
 export function getTheme(themeName: string): Theme {

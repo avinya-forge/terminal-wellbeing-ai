@@ -12,7 +12,7 @@ import { Message } from '../types/Message';
 import { applyTheme } from '../utils/themes';
 
 const Terminal = () => {
-  const [messages, setMessages] = useLocalStorage<Message[]>('terminal_messages', getInitialMessages() as unknown as Message[]);
+  const [messages, setMessages] = useLocalStorage<Message[]>('terminal_messages', getInitialMessages());
   const [isTyping, setIsTyping] = useState(false);
   const [modelLoaded, setModelLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -94,7 +94,7 @@ const Terminal = () => {
 
     // Handle clear command directly for better UX
     if (normalizedContent === 'clear' || normalizedContent === '/clear') {
-      setMessages(getInitialMessages() as unknown as Message[]);
+      setMessages(getInitialMessages());
       return;
     }
 

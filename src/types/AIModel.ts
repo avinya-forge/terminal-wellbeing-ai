@@ -9,9 +9,6 @@ export type GenerationOptions = {
   temperature: number;
   top_p: number;
   no_repeat_ngram_size: number;
-  // Use any to support additional options passed to HuggingFace pipeline
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
 };
 
 // Type definition for the text generator function

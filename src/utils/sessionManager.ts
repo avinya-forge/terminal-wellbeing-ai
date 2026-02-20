@@ -109,21 +109,32 @@ export function getProfileSummary(): string {
     .slice(0, 3)
     .map(([topic]) => topic);
 
-  let summary = `User Mood: ${currentSession?.currentMood || 'Neutral'}. `;
-  if (topTopics.length > 0) {
-    summary += `Interested in: ${topTopics.join(', ')}. `;
+  let summary = "";
+
+  if (currentProfile.userName) {
+    summary += `User's name is ${currentProfile.userName}. `;
   }
 
-  if (currentProfile.messageCount > 10) {
-    summary += `Frequent user. `;
-  } else if (currentProfile.messageCount < 3) {
-    summary += `New user. `;
+  summary += `User Mood: ${currentSession?.currentMood || 'Neutral'}. `;
+
+  if (topTopics.length > 0) {
+    summary += `Recent topics: ${topTopics.join(', ')}. `;
+  }
+
+  // Preferences
+  const { tone, responseLength } = currentProfile.preferences;
+  summary += `Please use a ${tone} tone and keep responses ${responseLength}. `;
+
+  if (currentProfile.messageCount > 20) {
+    summary += `This is a long-term user. `;
+  } else if (currentProfile.messageCount < 5) {
+    summary += `This is a new user, be welcoming. `;
   }
 
   if (sentimentAvg < -0.4) {
-    summary += `Seems distressed recently. Be extra supportive. `;
+    summary += `User seems distressed recently. Be extra supportive and validate their feelings. `;
   } else if (sentimentAvg > 0.4) {
-    summary += `Seems in good spirits. `;
+    summary += `User seems in good spirits. `;
   }
 
   return summary;
@@ -166,6 +177,22 @@ export function togglePrivacy(): boolean {
   return newState;
 }
 
+export function updateUserProfile(updates: Partial<UserProfile>): void {
+  currentProfile = {
+    ...currentProfile,
+    ...updates,
+    preferences: {
+      ...currentProfile.preferences,
+      ...(updates.preferences || {})
+    }
+  };
+  saveProfile(currentProfile);
+}
+
+export function getUserProfile(): UserProfile {
+  return { ...currentProfile };
+}
+
 export function exportSessionData(): string {
   const data = {
     generatedAt: new Date().toISOString(),
@@ -174,4 +201,30 @@ export function exportSessionData(): string {
     journal: journalService.getNotes()
   };
   return JSON.stringify(data, null, 2);
+}
+
+export function exportSessionMarkdown(): string {
+  const notes = journalService.getNotes();
+  const summary = getProfileSummary();
+  const date = new Date().toLocaleString();
+
+  let md = `# Wellbeing Session Export - ${date}\n\n`;
+  md += `## Profile Summary\n${summary}\n\n`;
+
+  if (currentSession) {
+    md += `## Current Session\n`;
+    md += `- Mood: ${currentSession.currentMood}\n`;
+    md += `- Messages: ${currentSession.messages}\n`;
+    md += `- Duration: Since ${new Date(currentSession.startTime).toLocaleTimeString()}\n\n`;
+  }
+
+  if (notes.length > 0) {
+    md += `## Journal Notes\n`;
+    notes.forEach(note => {
+      md += `### ${new Date(note.timestamp).toLocaleString()}\n`;
+      md += `${note.content}\n\n`;
+    });
+  }
+
+  return md;
 }
