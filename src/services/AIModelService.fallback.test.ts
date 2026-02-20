@@ -83,9 +83,15 @@ describe('AIModelService Fallback Logic', () => {
       jest.useRealTimers();
 
       // Call 3 times to trip breaker (threshold is 3)
-      try { await service.generateResponse('Test 1', []); } catch(e) {}
-      try { await service.generateResponse('Test 2', []); } catch(e) {}
-      try { await service.generateResponse('Test 3', []); } catch(e) {}
+      try { await service.generateResponse('Test 1', []); } catch(e) {
+          // Ignore error
+      }
+      try { await service.generateResponse('Test 2', []); } catch(e) {
+          // Ignore error
+      }
+      try { await service.generateResponse('Test 3', []); } catch(e) {
+          // Ignore error
+      }
 
       // 4th time should be immediate fallback due to CB Open
       const response = await service.generateResponse('Test 4', []);

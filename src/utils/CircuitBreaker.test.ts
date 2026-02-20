@@ -26,7 +26,9 @@ describe('CircuitBreaker', () => {
     for (let i = 0; i < config.failureThreshold; i++) {
         try {
             await cb.execute(failingAction);
-        } catch (e) {}
+        } catch (e) {
+            // Ignore error
+        }
     }
 
     expect(cb.getState()).toBe(CircuitBreakerState.OPEN);
@@ -38,7 +40,9 @@ describe('CircuitBreaker', () => {
     for (let i = 0; i < config.failureThreshold; i++) {
         try {
             await cb.execute(failingAction);
-        } catch (e) {}
+        } catch (e) {
+             // Ignore error
+        }
     }
 
     await expect(cb.execute(async () => 'Success')).rejects.toThrow(CircuitBreakerOpenError);
@@ -51,7 +55,9 @@ describe('CircuitBreaker', () => {
     for (let i = 0; i < config.failureThreshold; i++) {
         try {
             await cb.execute(failingAction);
-        } catch (e) {}
+        } catch (e) {
+             // Ignore error
+        }
     }
 
     expect(cb.getState()).toBe(CircuitBreakerState.OPEN);
@@ -73,7 +79,9 @@ describe('CircuitBreaker', () => {
     for (let i = 0; i < config.failureThreshold; i++) {
         try {
             await cb.execute(failingAction);
-        } catch (e) {}
+        } catch (e) {
+             // Ignore error
+        }
     }
 
     expect(cb.getState()).toBe(CircuitBreakerState.OPEN);
@@ -84,7 +92,9 @@ describe('CircuitBreaker', () => {
     // Next execution fails
     try {
         await cb.execute(failingAction);
-    } catch (e) {}
+    } catch (e) {
+         // Ignore error
+    }
 
     expect(cb.getState()).toBe(CircuitBreakerState.OPEN);
   });
