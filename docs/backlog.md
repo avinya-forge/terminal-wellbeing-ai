@@ -1,80 +1,143 @@
 # Backlog
 
-## Phase 1: Resilience & Architecture (Sprint 1.8.0)
-
-### [EPIC-1.1] AI Service Resilience (10 WU)
-- [x] [ID-1.1.1] | Define `CircuitBreaker` class interface and configuration types | [INDEPENDENT] | [DONE]
-- [x] [ID-1.1.2] | Implement `CircuitBreaker` state machine (Closed -> Open -> Half-Open) | [BLOCKS-ID-1.1.3] | [DONE]
-- [x] [ID-1.1.3] | Implement failure counting logic in `CircuitBreaker` | [BLOCKS-ID-1.1.4] | [DONE]
-- [x] [ID-1.1.4] | Implement timeout/reset logic for Open state | [INDEPENDENT] | [DONE]
-- [x] [ID-1.1.5] | Integrate `CircuitBreaker` into `AIModelService.ts` initialization | [BLOCKS-ID-1.1.1] | [DONE]
-- [x] [ID-1.1.6] | Integrate `CircuitBreaker` into `AIModelService.ts` generation | [BLOCKS-ID-1.1.1] | [DONE]
-- [x] [ID-1.1.7] | Add unit tests for `CircuitBreaker` state transitions | [INDEPENDENT] | [DONE]
-- [x] [ID-1.1.8] | Add unit tests for `CircuitBreaker` failure counting | [INDEPENDENT] | [DONE]
-
-### [EPIC-1.2] Code Hardening: Magic Strings (10 WU)
-- [x] [ID-1.2.1] | Create `src/constants/moods.ts` and define mood types/enums | [INDEPENDENT] | [DONE]
-- [x] [ID-1.2.2] | Migrate hardcoded mood strings from `analyzeText` to `moods.ts` | [BLOCKS-ID-1.2.1] | [DONE]
-- [x] [ID-1.2.3] | Update `AnalysisResult` type to use strict Mood enum/union | [BLOCKS-ID-1.2.1] | [DONE]
-
-### [EPIC-1.3] Observability: Error Logging (10 WU)
-- [x] [ID-1.3.1] | Design `LoggerService` interface with log levels | [INDEPENDENT] | [DONE]
-- [x] [ID-1.3.2] | Implement `ConsoleLogger` adapter | [BLOCKS-ID-1.3.1] | [DONE]
-- [x] [ID-1.3.3] | Replace all `console.error` in `AIModelService` with `LoggerService.error` | [BLOCKS-ID-1.3.2] | [DONE]
-
-### [EPIC-1.4] Testing Hardening (10 WU)
-- [x] [ID-1.4.1] | Create `AIModelService.fallback.test.ts` | [INDEPENDENT] | [DONE]
-- [x] [ID-1.4.2] | Mock `pipeline` failure scenarios for primary model | [INDEPENDENT] | [DONE]
-- [x] [ID-1.4.3] | Verify fallback to secondary model on primary failure | [INDEPENDENT] | [DONE]
-- [x] [ID-1.4.4] | Verify fallback to tertiary/heuristic on all model failure | [INDEPENDENT] | [DONE]
-- [x] [ID-1.4.5] | Test `tryFallbackModels` loop logic explicitly | [INDEPENDENT] | [DONE]
-- [ ] [ID-1.5.1] | Create `OfflineMode.e2e.test.ts` | [INDEPENDENT] | [TODO]
-- [ ] [ID-1.5.2] | Test PWA service worker registration event | [INDEPENDENT] | [TODO]
-- [ ] [ID-1.5.3] | Test offline asset caching verification | [INDEPENDENT] | [TODO]
-
-## Phase 2: Deep Personalization
-
-### [EPIC-2.1] Long-term Memory Architecture (10 WU)
-- [ ] [ID-2.1.1] | Define `MemoryEntry` interface (content, timestamp, embedding) | [INDEPENDENT] | [TODO]
-- [ ] [ID-2.1.2] | Create `MemoryService` class structure | [INDEPENDENT] | [TODO]
-- [ ] [ID-2.1.3] | Implement `localStorage` adapter for `MemoryService` | [BLOCKS-ID-2.1.2] | [TODO]
-- [ ] [ID-2.2.1] | Research lightweight JS-based embedding library | [INDEPENDENT] | [TODO]
-- [ ] [ID-2.2.2] | Implement `calculateEmbedding(text)` helper function | [INDEPENDENT] | [TODO]
-- [ ] [ID-2.2.3] | Implement `cosineSimilarity(vecA, vecB)` helper | [INDEPENDENT] | [TODO]
-- [ ] [ID-2.2.4] | Implement `retrieveRelevantContext(query)` in `MemoryService` | [BLOCKS-ID-2.2.3] | [TODO]
-- [ ] [ID-2.2.5] | Integrate `MemoryService` into `AIModelService.prepareContext` | [BLOCKS-ID-2.2.4] | [TODO]
-- [ ] [ID-2.2.6] | Add unit tests for vector math helpers | [INDEPENDENT] | [TODO]
-- [ ] [ID-2.2.7] | Add unit tests for memory storage/retrieval | [INDEPENDENT] | [TODO]
+## Phase 2: Deep Personalization (Refinement)
 
 ### [EPIC-2.3] User Profile Expansion (10 WU)
-- [ ] [ID-2.3.1] | Update `UserProfile` interface to include `triggerWarnings` | [INDEPENDENT] | [TODO]
-- [ ] [ID-2.3.2] | Update `/profile` command parser for `trigger-warnings` | [BLOCKS-ID-2.3.1] | [TODO]
-- [ ] [ID-2.3.3] | Create UI for "Trigger Warning" selection | [INDEPENDENT] | [TODO]
 - [ ] [ID-2.3.4] | Implement `filterContent(response, warnings)` helper | [INDEPENDENT] | [TODO]
 - [ ] [ID-2.3.5] | Integrate content filtering into `postProcessResponse` | [BLOCKS-ID-2.3.4] | [TODO]
 - [ ] [ID-2.3.6] | Add unit tests for content filtering logic | [INDEPENDENT] | [TODO]
+- [ ] [ID-2.3.7] | Create "Profile Reset" command/flow | [INDEPENDENT] | [TODO]
+- [ ] [ID-2.3.8] | Implement Profile Export separately from Session | [INDEPENDENT] | [TODO]
+- [ ] [ID-2.3.9] | Add validation for "Name" field (length, profanity) | [INDEPENDENT] | [TODO]
+- [ ] [ID-2.3.10] | Persist profile changes immediately (debounce check) | [INDEPENDENT] | [TODO]
+- [ ] [ID-2.3.11] | Add "Response Speed" preference (simulated delay) | [INDEPENDENT] | [TODO]
+- [ ] [ID-2.3.12] | Create UI/Command for viewing all available Trigger Warnings | [INDEPENDENT] | [TODO]
+- [ ] [ID-2.3.13] | Test Profile persistence across sessions | [INDEPENDENT] | [TODO]
+
+### [EPIC-2.4] Memory Hardening & Security (10 WU)
+- [ ] [ID-2.4.1] | Implement AES-GCM encryption helper for `localStorage` | [INDEPENDENT] | [TODO]
+- [ ] [ID-2.4.2] | Add unit tests for Encryption/Decryption logic | [INDEPENDENT] | [TODO]
+- [ ] [ID-2.4.3] | Integrate encryption into `MemoryService.saveMemories` | [BLOCKS-ID-2.4.1] | [TODO]
+- [ ] [ID-2.4.4] | Integrate decryption into `MemoryService.loadMemories` | [BLOCKS-ID-2.4.3] | [TODO]
+- [ ] [ID-2.4.5] | Create `EmbeddingWorker` class for off-main-thread processing | [INDEPENDENT] | [TODO]
+- [ ] [ID-2.4.6] | Refactor `embeddings.ts` to communicate with Worker | [BLOCKS-ID-2.4.5] | [TODO]
+- [ ] [ID-2.4.7] | Add integration test for Worker communication | [INDEPENDENT] | [TODO]
+- [ ] [ID-2.4.8] | Strict Type Audit for `@huggingface/transformers` (remove `any`) | [INDEPENDENT] | [TODO]
+- [ ] [ID-2.4.9] | Create "Memory Migration" tool for version upgrades | [INDEPENDENT] | [TODO]
+- [ ] [ID-2.4.10] | Profile Memory usage with large vector sets | [INDEPENDENT] | [TODO]
 
 ## Phase 3: Accessibility & UX
-
-### [EPIC-3.1] Accessibility Audit (10 WU)
-- [ ] [ID-3.1.1] | Install `axe-core` accessibility testing library | [INDEPENDENT] | [TODO]
-- [ ] [ID-3.1.2] | Create `verify_a11y.ts` script | [INDEPENDENT] | [TODO]
-- [ ] [ID-3.1.3] | Define "Critical Paths" for verification | [INDEPENDENT] | [TODO]
-- [ ] [ID-3.1.4] | Implement WCAG AA Color Contrast checker utility | [INDEPENDENT] | [TODO]
-- [ ] [ID-3.1.5] | Run contrast check on "Modern" theme | [BLOCKS-ID-3.1.4] | [TODO]
-- [ ] [ID-3.1.6] | Run contrast check on "Retro" theme | [BLOCKS-ID-3.1.4] | [TODO]
-- [ ] [ID-3.1.7] | Run contrast check on "Matrix" theme | [BLOCKS-ID-3.1.4] | [TODO]
-- [ ] [ID-3.1.8] | Run contrast check on "Cyberpunk" theme | [BLOCKS-ID-3.1.4] | [TODO]
-- [ ] [ID-3.1.9] | Run contrast check on "Ocean" theme | [BLOCKS-ID-3.1.4] | [TODO]
-- [ ] [ID-3.1.10] | Run contrast check on "Light" theme | [BLOCKS-ID-3.1.4] | [TODO]
 
 ### [EPIC-3.2] UI & Focus Management (10 WU)
 - [ ] [ID-3.2.1] | Audit `TerminalInput` focus management | [INDEPENDENT] | [TODO]
 - [ ] [ID-3.2.2] | Audit `TerminalOutput` live region updates | [INDEPENDENT] | [TODO]
 - [ ] [ID-3.2.3] | Fix missing `aria-labels` on interactive elements | [INDEPENDENT] | [TODO]
+- [ ] [ID-3.2.4] | Implement "Skip to Content" link for keyboard users | [INDEPENDENT] | [TODO]
+- [ ] [ID-3.2.5] | Add keyboard shortcuts for common commands (Ctrl+K, etc.) | [INDEPENDENT] | [TODO]
+- [ ] [ID-3.2.6] | Test focus trap implementation in modal dialogs (if any) | [INDEPENDENT] | [TODO]
+- [ ] [ID-3.2.7] | Verify high contrast mode support in Windows/macOS | [INDEPENDENT] | [TODO]
+- [ ] [ID-3.2.8] | Add visual focus indicators for all interactive elements | [INDEPENDENT] | [TODO]
+- [ ] [ID-3.2.9] | Test with NVDA screen reader (manual) | [INDEPENDENT] | [TODO]
+- [ ] [ID-3.2.10] | Test with VoiceOver screen reader (manual) | [INDEPENDENT] | [TODO]
 
 ### [EPIC-3.3] Visual Polish (10 WU)
 - [ ] [ID-3.3.1] | Profile `TypingIndicator` performance | [INDEPENDENT] | [TODO]
 - [ ] [ID-3.3.2] | Refactor `TypingIndicator` to use CSS animations | [INDEPENDENT] | [TODO]
 - [ ] [ID-3.3.3] | Optimize re-renders in `Terminal.tsx` | [INDEPENDENT] | [TODO]
 - [ ] [ID-3.3.4] | Verify "smooth scrolling" behavior | [INDEPENDENT] | [TODO]
+- [ ] [ID-3.3.5] | Implement "Reduced Motion" media query support | [INDEPENDENT] | [TODO]
+- [ ] [ID-3.3.6] | Standardize spacing using Tailwind utility classes | [INDEPENDENT] | [TODO]
+- [ ] [ID-3.3.7] | Add loading skeletons for initial load | [INDEPENDENT] | [TODO]
+- [ ] [ID-3.3.8] | Polish scrollbar styling for cross-browser consistency | [INDEPENDENT] | [TODO]
+- [ ] [ID-3.3.9] | Fix any z-index layering issues | [INDEPENDENT] | [TODO]
+- [ ] [ID-3.3.10] | Create "Visual Regression" baseline screenshots | [INDEPENDENT] | [TODO]
+
+### [EPIC-3.4] Automated Accessibility Pipeline (10 WU)
+- [ ] [ID-3.4.1] | Install `playwright` and `@axe-core/playwright` | [INDEPENDENT] | [TODO]
+- [ ] [ID-3.4.2] | Create `a11y.spec.ts` for automated audit | [BLOCKS-ID-3.4.1] | [TODO]
+- [ ] [ID-3.4.3] | Implement "Critical Path" accessibility tests | [BLOCKS-ID-3.4.2] | [TODO]
+- [ ] [ID-3.4.4] | Configure CI to fail on accessibility violations | [INDEPENDENT] | [TODO]
+- [ ] [ID-3.4.5] | Create `A11yReport` generator for CI artifacts | [INDEPENDENT] | [TODO]
+- [ ] [ID-3.4.6] | Add `pa11y-ci` for static analysis | [INDEPENDENT] | [TODO]
+- [ ] [ID-3.4.7] | Integrate Lighthouse CI check | [INDEPENDENT] | [TODO]
+- [ ] [ID-3.4.8] | Document A11y standards for contributors | [INDEPENDENT] | [TODO]
+- [ ] [ID-3.4.9] | Create custom A11y matchers for Jest | [INDEPENDENT] | [TODO]
+- [ ] [ID-3.4.10] | Automate "Keyboard Navigation" test flows | [INDEPENDENT] | [TODO]
+
+## Phase 4: Performance & Optimization (Sprint 2.0.0)
+
+### [EPIC-4.1] Web Worker AI Offloading (10 WU)
+- [ ] [ID-4.1.1] | Design `AIWorker` interface and message protocol | [INDEPENDENT] | [TODO]
+- [ ] [ID-4.1.2] | Create `src/workers/ai.worker.ts` entry point | [BLOCKS-ID-4.1.1] | [TODO]
+- [ ] [ID-4.1.3] | Move `AIModelService` inference logic to Worker | [BLOCKS-ID-4.1.2] | [TODO]
+- [ ] [ID-4.1.4] | Implement `WorkerBridge` in main thread | [BLOCKS-ID-4.1.3] | [TODO]
+- [ ] [ID-4.1.5] | Handle Worker errors and termination | [INDEPENDENT] | [TODO]
+- [ ] [ID-4.1.6] | Add loading state management for Worker initialization | [INDEPENDENT] | [TODO]
+- [ ] [ID-4.1.7] | Test Worker fallback (if Worker fails, run on main?) | [INDEPENDENT] | [TODO]
+- [ ] [ID-4.1.8] | Profile memory usage of Worker vs Main thread | [INDEPENDENT] | [TODO]
+- [ ] [ID-4.1.9] | Optimize message passing (Transferable Objects) | [INDEPENDENT] | [TODO]
+- [ ] [ID-4.1.10] | Update documentation for Worker architecture | [INDEPENDENT] | [TODO]
+
+### [EPIC-4.2] Advanced Caching & PWA (10 WU)
+- [ ] [ID-4.2.1] | Audit current Service Worker configuration | [INDEPENDENT] | [TODO]
+- [ ] [ID-4.2.2] | Implement `StaleWhileRevalidate` for API responses | [INDEPENDENT] | [TODO]
+- [ ] [ID-4.2.3] | Implement `CacheFirst` for static assets (fonts, images) | [INDEPENDENT] | [TODO]
+- [ ] [ID-4.2.4] | Add "Update Available" toast notification | [INDEPENDENT] | [TODO]
+- [ ] [ID-4.2.5] | Optimize font loading (swap, preload) | [INDEPENDENT] | [TODO]
+- [ ] [ID-4.2.6] | Compress static assets (Brotli/Gzip) configuration | [INDEPENDENT] | [TODO]
+- [ ] [ID-4.2.7] | Implement `virtual:pwa-register/react` properly | [INDEPENDENT] | [TODO]
+- [ ] [ID-4.2.8] | Create PWA install prompt UI | [INDEPENDENT] | [TODO]
+- [ ] [ID-4.2.9] | Test offline capability manually | [INDEPENDENT] | [TODO]
+- [ ] [ID-4.2.10] | Verify manifest.json correctness | [INDEPENDENT] | [TODO]
+
+## Phase 5: Security & Privacy (Sprint 2.1.0)
+
+### [EPIC-5.1] Local Data Encryption (10 WU)
+- [ ] [ID-5.1.1] | Research Web Crypto API (SubtleCrypto) | [INDEPENDENT] | [TODO]
+- [ ] [ID-5.1.2] | Implement `KeyManager` for deriving keys from user salt | [BLOCKS-ID-5.1.1] | [TODO]
+- [ ] [ID-5.1.3] | Implement `encryptData(data, key)` utility | [BLOCKS-ID-5.1.2] | [TODO]
+- [ ] [ID-5.1.4] | Implement `decryptData(data, key)` utility | [BLOCKS-ID-5.1.2] | [TODO]
+- [ ] [ID-5.1.5] | Migrate `localStorage` (Journal) to encrypted format | [BLOCKS-ID-5.1.3] | [TODO]
+- [ ] [ID-5.1.6] | Migrate `localStorage` (Profile) to encrypted format | [BLOCKS-ID-5.1.3] | [TODO]
+- [ ] [ID-5.1.7] | Handle key rotation/regeneration scenarios | [INDEPENDENT] | [TODO]
+- [ ] [ID-5.1.8] | Add "Forgot Key" (Data Wipe) flow | [INDEPENDENT] | [TODO]
+- [ ] [ID-5.1.9] | Verify performance impact of encryption | [INDEPENDENT] | [TODO]
+- [ ] [ID-5.1.10] | Audit for potential side-channel leaks | [INDEPENDENT] | [TODO]
+
+### [EPIC-5.2] Secure Data Export/Import (10 WU)
+- [ ] [ID-5.2.1] | Define JSON Schema for Export Format v1 | [INDEPENDENT] | [TODO]
+- [ ] [ID-5.2.2] | Implement `validateExport(json)` using schema | [BLOCKS-ID-5.2.1] | [TODO]
+- [ ] [ID-5.2.3] | Implement `exportData(password?)` with optional encryption | [INDEPENDENT] | [TODO]
+- [ ] [ID-5.2.4] | Implement `importData(json)` with validation | [BLOCKS-ID-5.2.2] | [TODO]
+- [ ] [ID-5.2.5] | Add checksum verification for integrity | [INDEPENDENT] | [TODO]
+- [ ] [ID-5.2.6] | Create UI for Import/Export management | [INDEPENDENT] | [TODO]
+- [ ] [ID-5.2.7] | Test importing corrupted data | [INDEPENDENT] | [TODO]
+- [ ] [ID-5.2.8] | Test importing large datasets | [INDEPENDENT] | [TODO]
+- [ ] [ID-5.2.9] | Ensure PII is handled correctly during export | [INDEPENDENT] | [TODO]
+- [ ] [ID-5.2.10] | Document Export Format for external tools | [INDEPENDENT] | [TODO]
+
+## Phase 6: Future Horizons (Research)
+
+### [EPIC-6.1] Voice Interface (10 WU)
+- [ ] [ID-6.1.1] | Research Web Speech API browser compatibility | [INDEPENDENT] | [TODO]
+- [ ] [ID-6.1.2] | Create `VoiceService` interface | [INDEPENDENT] | [TODO]
+- [ ] [ID-6.1.3] | Implement `SpeechToText` listener | [BLOCKS-ID-6.1.2] | [TODO]
+- [ ] [ID-6.1.4] | Implement `TextToSpeech` synthesizer | [BLOCKS-ID-6.1.2] | [TODO]
+- [ ] [ID-6.1.5] | Create "Microphone" UI toggle | [INDEPENDENT] | [TODO]
+- [ ] [ID-6.1.6] | Handle permission denial gracefully | [INDEPENDENT] | [TODO]
+- [ ] [ID-6.1.7] | Test voice input with different accents (manual) | [INDEPENDENT] | [TODO]
+- [ ] [ID-6.1.8] | Optimize for low-latency feedback | [INDEPENDENT] | [TODO]
+- [ ] [ID-6.1.9] | Add privacy indicator for active microphone | [INDEPENDENT] | [TODO]
+- [ ] [ID-6.1.10] | Implement "Wake Word" feasibility study | [INDEPENDENT] | [TODO]
+
+### [EPIC-6.2] Multi-modal Input (10 WU)
+- [ ] [ID-6.2.1] | Research image analysis models (client-side) | [INDEPENDENT] | [TODO]
+- [ ] [ID-6.2.2] | Implement drag-and-drop file upload zone | [INDEPENDENT] | [TODO]
+- [ ] [ID-6.2.3] | Create `ImageService` for processing uploads | [BLOCKS-ID-6.2.2] | [TODO]
+- [ ] [ID-6.2.4] | Integrate "Mood from Image" analysis | [BLOCKS-ID-6.2.3] | [TODO]
+- [ ] [ID-6.2.5] | Ensure strict privacy (image never leaves device) | [INDEPENDENT] | [TODO]
+- [ ] [ID-6.2.6] | Create UI for displaying uploaded images | [INDEPENDENT] | [TODO]
+- [ ] [ID-6.2.7] | Add accessibility (alt text generation) | [INDEPENDENT] | [TODO]
+- [ ] [ID-6.2.8] | Test with various image formats (JPG, PNG, WebP) | [INDEPENDENT] | [TODO]
+- [ ] [ID-6.2.9] | Profile memory usage of image processing | [INDEPENDENT] | [TODO]
+- [ ] [ID-6.2.10] | Document multi-modal privacy guarantees | [INDEPENDENT] | [TODO]
