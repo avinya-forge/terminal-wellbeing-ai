@@ -6,9 +6,18 @@ interface PanicOverlayProps {
 
 const PanicOverlay: React.FC<PanicOverlayProps> = ({ onClose }) => {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+      role="alertdialog"
+      aria-modal="true"
+      aria-labelledby="panic-title"
+      aria-describedby="panic-desc"
+    >
       <div className="w-full max-w-2xl border-4 border-red-600 bg-black p-8 text-center shadow-[0_0_50px_rgba(220,38,38,0.5)]">
-        <h1 className="mb-8 text-4xl font-bold uppercase tracking-widest text-red-500 animate-pulse">
+        <h1
+          id="panic-title"
+          className="mb-8 text-4xl font-bold uppercase tracking-widest text-red-500 animate-pulse"
+        >
           Crisis Resources
         </h1>
 
@@ -30,7 +39,7 @@ const PanicOverlay: React.FC<PanicOverlayProps> = ({ onClose }) => {
           </div>
         </div>
 
-        <p className="mb-8 text-lg text-gray-300">
+        <p id="panic-desc" className="mb-8 text-lg text-gray-300">
           You are not alone. Help is available 24/7.
         </p>
 

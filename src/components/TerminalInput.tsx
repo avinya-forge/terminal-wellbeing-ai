@@ -1,11 +1,11 @@
-import { forwardRef, useState, KeyboardEvent } from 'react';
+import { forwardRef, useState, KeyboardEvent, memo } from 'react';
 
 interface TerminalInputProps {
   onSendMessage: (message: string) => void;
   disabled?: boolean;
 }
 
-const TerminalInput = forwardRef<HTMLInputElement, TerminalInputProps>(
+const TerminalInput = memo(forwardRef<HTMLInputElement, TerminalInputProps>(
   ({ onSendMessage, disabled = false }, ref) => {
     const [input, setInput] = useState('');
 
@@ -29,12 +29,13 @@ const TerminalInput = forwardRef<HTMLInputElement, TerminalInputProps>(
           placeholder="Type your message or /help for commands..."
           disabled={disabled}
           aria-label="Terminal Command Input"
+          autoFocus
         />
         {!disabled && <span className="cursor" aria-hidden="true">|</span>}
       </div>
     );
   }
-);
+));
 
 TerminalInput.displayName = 'TerminalInput';
 

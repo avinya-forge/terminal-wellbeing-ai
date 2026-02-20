@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Terminal as TerminalIcon, ShieldCheck } from 'lucide-react';
 
 interface TerminalHeaderProps {
@@ -6,7 +7,7 @@ interface TerminalHeaderProps {
   privacyMode?: boolean;
 }
 
-const TerminalHeader = ({ modelLoaded = false, loadingStatus, privacyMode = false }: TerminalHeaderProps) => {
+const TerminalHeader = memo(({ modelLoaded = false, loadingStatus, privacyMode = false }: TerminalHeaderProps) => {
   return (
     <header className="terminal-header" role="banner">
       <div className="terminal-title">
@@ -43,6 +44,8 @@ const TerminalHeader = ({ modelLoaded = false, loadingStatus, privacyMode = fals
       </div>
     </header>
   );
-};
+});
+
+TerminalHeader.displayName = 'TerminalHeader';
 
 export default TerminalHeader;

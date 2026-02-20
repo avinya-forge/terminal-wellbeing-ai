@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { Message } from '../types/Message';
 
 interface TerminalMessageProps {
   message: Message;
 }
 
-const TerminalMessage = ({ message }: TerminalMessageProps) => {
+const TerminalMessage = memo(({ message }: TerminalMessageProps) => {
   const [displayText, setDisplayText] = useState('');
   const [isComplete, setIsComplete] = useState(false);
   
@@ -53,6 +53,8 @@ const TerminalMessage = ({ message }: TerminalMessageProps) => {
       </div>
     </div>
   );
-};
+});
+
+TerminalMessage.displayName = 'TerminalMessage';
 
 export default TerminalMessage;

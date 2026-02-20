@@ -25,6 +25,35 @@ export function isGreeting(input: string): boolean {
   return GREETING_PATTERNS.some(pattern => pattern.test(input.trim()));
 }
 
+// Filter content based on user-configured trigger warnings
+export function filterContent(text: string, warnings: string[]): string {
+  if (!text || !warnings || warnings.length === 0) {
+    return text;
+  }
+
+  let filteredText = text;
+  for (const warning of warnings) {
+    if (!warning || warning.trim().length === 0) continue;
+
+    try {
+      const trimmed = warning.trim();
+      const escaped = escapeRegExp(trimmed);
+
+      // Add word boundaries if the warning starts/ends with a word character
+      // This prevents "cat" from matching "catastrophe" while allowing "stop!" to match "stop!"
+      const startBoundary = /^\w/.test(trimmed) ? '\\b' : '';
+      const endBoundary = /\w$/.test(trimmed) ? '\\b' : '';
+
+      // Use case-insensitive global replacement with calculated boundaries
+      const regex = new RegExp(`${startBoundary}${escaped}${endBoundary}`, 'gi');
+      filteredText = filteredText.replace(regex, '[CONTENT REDACTED]');
+    } catch (e) {
+      console.warn(`Failed to create regex for warning: ${warning}`, e);
+    }
+  }
+  return filteredText;
+}
+
 // Post-process the response to improve quality and conversational flow
 export function postProcessResponse(response: string, input: string): string {
   // Remove any repetitive phrases

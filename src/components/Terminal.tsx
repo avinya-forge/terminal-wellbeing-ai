@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import TerminalHeader from './TerminalHeader';
 import TerminalOutput from './TerminalOutput';
 import TerminalInput from './TerminalInput';
@@ -74,7 +74,7 @@ const Terminal = () => {
   }, [isLoading, isPanicMode]);
 
   // Handle sending a new message
-  const handleSendMessage = async (content: string) => {
+  const handleSendMessage = useCallback(async (content: string) => {
     if (!content.trim()) return;
 
     // Check for panic command immediately
@@ -152,7 +152,7 @@ const Terminal = () => {
     } finally {
       setIsTyping(false);
     }
-  };
+  }, [isPrivacyMode, messages, setMessages]);
 
   return (
     <div className="terminal-container relative">

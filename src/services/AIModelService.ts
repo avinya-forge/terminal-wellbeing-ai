@@ -11,7 +11,7 @@ import {
   GREETINGS,
   FIRST_TIME_GREETINGS
 } from "../data/phrases";
-import { getProfileSummary } from "../utils/sessionManager";
+import { getProfileSummary, getUserProfile } from "../utils/sessionManager";
 import {
   MAX_RECENT_RESPONSES,
   MAX_CONTEXT_MESSAGES,
@@ -24,7 +24,8 @@ import {
   sanitizePromptContent,
   isSensitiveTopic,
   isGreeting,
-  postProcessResponse
+  postProcessResponse,
+  filterContent
 } from "../utils/ai-helpers";
 import { CircuitBreaker, CircuitBreakerOpenError } from "../utils/CircuitBreaker";
 import { logger } from "./LoggerService";
@@ -316,6 +317,12 @@ Assistant:`;
             // Post-process the response to improve quality
             responseText = postProcessResponse(responseText, input);
 
+            // Filter content based on user warnings
+            const profile = getUserProfile();
+            if (profile.triggerWarnings && profile.triggerWarnings.length > 0) {
+              responseText = filterContent(responseText, profile.triggerWarnings);
+            }
+
             if (responseText.length > 10) {
               // Add to recent responses to avoid repetition
               if (this.recentResponses.size >= MAX_RECENT_RESPONSES) {
@@ -385,10 +392,17 @@ Assistant:`;
           const assistantResponseMatch = fullText.match(/Assistant:(.*?)(?=(Human:|$))/s);
 
           if (assistantResponseMatch && assistantResponseMatch[1] && assistantResponseMatch[1].trim()) {
-            const responseText = assistantResponseMatch[1].trim();
-            const response = postProcessResponse(responseText, input);
-            if (response.length > 10) {
-              return response;
+            let responseText = assistantResponseMatch[1].trim();
+            responseText = postProcessResponse(responseText, input);
+
+            // Filter content based on user warnings
+            const profile = getUserProfile();
+            if (profile.triggerWarnings && profile.triggerWarnings.length > 0) {
+              responseText = filterContent(responseText, profile.triggerWarnings);
+            }
+
+            if (responseText.length > 10) {
+              return responseText;
             }
           }
         }

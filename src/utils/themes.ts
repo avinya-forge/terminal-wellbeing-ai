@@ -38,7 +38,7 @@ export const THEMES: Record<string, Theme> = {
       popover: '230 10% 12%',
       popoverForeground: '120 20% 95%',
       primary: '120 40% 50%',
-      primaryForeground: '0 0% 100%',
+      primaryForeground: '0 0% 0%',
       secondary: '230 20% 20%',
       secondaryForeground: '120 20% 90%',
       muted: '230 10% 20%',
@@ -263,7 +263,7 @@ export const THEMES: Record<string, Theme> = {
       popover: '192 100% 15%',
       popoverForeground: '192 15% 60%',
       primary: '169 77% 38%', // #2aa198
-      primaryForeground: '0 0% 100%',
+      primaryForeground: '192 100% 11%',
       secondary: '205 69% 49%', // #268bd2
       secondaryForeground: '0 0% 100%',
       muted: '192 100% 18%',
