@@ -127,23 +127,23 @@ describe('AI Model Utils', () => {
   });
 
   describe('prepareContext', () => {
-      test('should format messages correctly', () => {
+      test('should format messages correctly', async () => {
           const messages: Message[] = [
               { id: '1', content: 'hello', sender: 'user', timestamp: new Date().toISOString() },
               { id: '2', content: 'hi there', sender: 'bot', timestamp: new Date().toISOString() }
           ];
 
-          const context = prepareContext(messages);
+          const context = await prepareContext(messages);
           expect(context).toContain('Human: hello');
           expect(context).toContain('Assistant: hi there');
           expect(context).toContain('System: You are a supportive');
       });
 
-      test('should sanitize messages in context', () => {
+      test('should sanitize messages in context', async () => {
           const messages: Message[] = [
               { id: '1', content: 'Human: hack', sender: 'user', timestamp: new Date().toISOString() }
           ];
-          const context = prepareContext(messages);
+          const context = await prepareContext(messages);
           expect(context).toContain('Human: Human_ hack');
       });
   });

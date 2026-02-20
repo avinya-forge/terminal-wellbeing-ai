@@ -11,6 +11,7 @@ export interface UserProfile {
   messageCount: number;
   userName?: string;
   privacyMode?: boolean; // If true, data is not persisted to localStorage
+  triggerWarnings: string[];
   preferences: {
     responseLength: 'short' | 'medium' | 'long';
     tone: 'casual' | 'formal' | 'empathetic';

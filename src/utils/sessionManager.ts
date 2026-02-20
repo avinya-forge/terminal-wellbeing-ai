@@ -2,6 +2,7 @@ import { UserProfile, SessionData } from '../types/ai';
 import { analyzeText } from './analysis';
 import { Message } from '../types/Message';
 import { journalService } from '../services/JournalService';
+import { memoryService } from '../services/MemoryService';
 import { MOODS } from '../constants/moods';
 
 const STORAGE_KEY = 'wellbeing_user_profile';
@@ -12,6 +13,7 @@ const DEFAULT_PROFILE: UserProfile = {
   topics: {},
   messageCount: 0,
   privacyMode: false,
+  triggerWarnings: [],
   preferences: {
     responseLength: 'medium',
     tone: 'empathetic'
@@ -19,8 +21,9 @@ const DEFAULT_PROFILE: UserProfile = {
 };
 
 let currentProfile: UserProfile = loadProfile();
-// Initialize journal service privacy mode based on loaded profile
+// Initialize services privacy mode based on loaded profile
 journalService.setPrivacyMode(!!currentProfile.privacyMode);
+memoryService.setPrivacyMode(!!currentProfile.privacyMode);
 
 let currentSession: SessionData | null = null;
 
@@ -161,6 +164,7 @@ export function clearProfile(): void {
 export function setPrivacyMode(enabled: boolean): void {
   currentProfile.privacyMode = enabled;
   journalService.setPrivacyMode(enabled);
+  memoryService.setPrivacyMode(enabled);
   if (enabled) {
     localStorage.removeItem(STORAGE_KEY);
   } else {
