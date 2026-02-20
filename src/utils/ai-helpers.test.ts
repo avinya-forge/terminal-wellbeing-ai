@@ -1,4 +1,4 @@
-import { filterContent, sanitizePromptContent, isSensitiveTopic, isGreeting, postProcessResponse } from './ai-helpers';
+import { filterContent, sanitizePromptContent, isSensitiveTopic } from './ai-helpers';
 
 describe('AI Helpers', () => {
   describe('filterContent', () => {
