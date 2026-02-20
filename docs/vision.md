@@ -10,7 +10,6 @@ To provide accessible, low-barrier mental health support through a familiar, low
 - **Safety:** Immediate redirection for crisis situations (988).
 
 ## Future Roadmap
-- **Enhanced AI Models:** Integration with more capable, specialized mental health models.
-- **Offline Capabilities:** Fully local model execution for privacy and availability.
-- **Personalization:** Adaptive responses based on user history (session-based).
-- **Resource Database:** Expanded, searchable database of mental health resources.
+- **Resilience:** Circuit breakers and offline robustness.
+- **Personalization:** Long-term memory and deeper profile integration.
+- **Accessibility:** Full WCAG AA compliance and screen reader optimization.
