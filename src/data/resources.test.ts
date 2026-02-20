@@ -44,6 +44,12 @@ describe('Resource Data', () => {
       const results = searchResources('xyznonexistentquery');
       expect(results).toEqual([]);
     });
+
+    it('should rank exact name matches higher than description matches', () => {
+      // Searching for "Mission 22" should put it first, even if others mention "mission"
+      const results = searchResources('Mission 22');
+      expect(results[0].name).toBe('Mission 22');
+    });
   });
 
   describe('getResourcesByCategory', () => {

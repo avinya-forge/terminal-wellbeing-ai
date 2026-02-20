@@ -12,6 +12,12 @@
 - [x] Improve Analysis Logic (Sentiment negation, Topic extraction).
 - [x] Implement Robust Command Parser (handle quotes/args).
 - [x] Expand Resource Database (add 50+ entries).
+- [x] Strict Type Refactoring (enable `no-explicit-any` and fix violations).
+- [x] Implement Dynamic Help Command (`/help`).
+- [x] Implement Motivational Quotes (`/quote`).
+- [x] Implement Breathing Exercise (`/breathe`).
+- [x] Enhance Resource Search (Scoring/Ranking).
+- [x] Implement User Profile System (`/profile` command).
 
 ## Unified Batch Improvements (Completed)
 - [x] Enhance Sentiment Analysis (intensifiers, emojis, refined negation).

@@ -9,6 +9,9 @@ import { handleNoteCommand, handleListNotesCommand, handleDeleteNoteCommand, han
 import { handleThemeCommand, handleListThemesCommand } from "./handlers/theme";
 import { handleHelpCommand, handleExportCommand, handleArtCommand } from "./handlers/system";
 import { handleStatsCommand } from "./handlers/stats";
+import { handleQuoteCommand } from "./handlers/quote";
+import { handleBreatheCommand } from "./handlers/breathe";
+import { handleProfileCommand } from "./handlers/profile";
 
 // Define command types for better organization
 type CommandHandler = (parsed: ParsedCommand, messages: Message[]) => Promise<string>;
@@ -17,10 +20,13 @@ type CommandHandler = (parsed: ParsedCommand, messages: Message[]) => Promise<st
 export const COMMANDS: Record<string, CommandHandler> = {
   help: async () => handleHelpCommand(),
   stats: async (parsed, messages) => handleStatsCommand(parsed, messages),
+  quote: async () => handleQuoteCommand(),
+  breathe: async () => handleBreatheCommand(),
+  profile: async (parsed) => handleProfileCommand(parsed),
   resources: async (parsed) => handleResourcesCommand(parsed),
   model: async (parsed) => handleModelCommand(parsed),
   models: async () => listAvailableModels(),
-  export: async () => handleExportCommand(),
+  export: async (parsed) => handleExportCommand(parsed),
   note: async (parsed) => handleNoteCommand(parsed),
   notes: async () => handleListNotesCommand(),
   'delete-note': async (parsed) => handleDeleteNoteCommand(parsed),

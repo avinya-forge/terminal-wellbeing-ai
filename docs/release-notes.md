@@ -1,5 +1,16 @@
 # Release Notes
 
+## v1.7.0 (Unified Batch - Wellness Tools & Hygiene)
+- **Feature: Dynamic Help** - The `/help` command now dynamically generates categories and command lists, ensuring it's always up-to-date.
+- **Feature: Motivational Quotes** - Added `/quote` command to deliver random inspirational quotes from a database of 50+ entries.
+- **Feature: Breathing Exercise** - Added `/breathe` command to guide users through the 4-7-8 breathing technique for anxiety reduction.
+- **Feature: User Profile** - Introduced `/profile` command to set user name, preferred tone (casual/formal/empathetic), and response length, enabling a more personalized AI experience.
+- **Feature: Markdown Export** - `/export markdown` now allows exporting session history in a readable Markdown format.
+- **Feature: Expanded Themes** - Added 4 new themes: Dracula, Nord, Monokai, and Solarized Dark.
+- **Enhancement: Search Ranking** - Improved `/resources` search to prioritize exact name matches and category matches over general descriptions.
+- **Refactor: Strict Typing** - Enabled `no-explicit-any` in ESLint and resolved all violations in core services (`AIModelService`, `Terminal`).
+- **Maintenance:** Standardized command handling and response data structures.
+
 ## v1.6.0 (Unified Batch - Stats & Architecture)
 - **Feature: Session Statistics** - Added `/stats` command to visualize session duration, message counts, mood trends, and top topics.
 - **Refactor: Command Architecture** - Migrated command handling to a scalable `src/commands/` structure, separating logic for AI, resources, notes, and system commands.

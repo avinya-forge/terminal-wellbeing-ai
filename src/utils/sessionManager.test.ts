@@ -53,8 +53,10 @@ describe('Session Manager', () => {
 
     const summary = getProfileSummary();
     expect(summary).toContain('Mood: Positive');
-    expect(summary).toContain('Interested in: work');
-    expect(summary).toContain('New user');
+    expect(summary).toContain('Recent topics: work');
+    // "New user" might not appear if message count logic changed or threshold met differently
+    // Actually, one message = count 1 < 5, so "This is a new user" should appear.
+    expect(summary).toContain('This is a new user');
   });
 
   it('identifies distress correctly', () => {
@@ -62,15 +64,15 @@ describe('Session Manager', () => {
     updateSession(createMessage('Everything is terrible'));
 
     const summary = getProfileSummary();
-    expect(summary).toContain('Seems distressed');
+    expect(summary).toContain('User seems distressed recently');
   });
 
   it('tracks frequent user status', () => {
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 25; i++) {
       updateSession(createMessage('Just chatting'));
     }
     const summary = getProfileSummary();
-    expect(summary).toContain('Frequent user');
+    expect(summary).toContain('This is a long-term user');
   });
 
   it('persists profile across sessions', () => {

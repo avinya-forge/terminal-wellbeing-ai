@@ -521,12 +521,29 @@ export function searchResources(query: string): Resource[] {
 
   const lowerQuery = query.toLowerCase();
 
-  return RESOURCES.filter(resource =>
-    resource.name.toLowerCase().includes(lowerQuery) ||
-    resource.description.toLowerCase().includes(lowerQuery) ||
-    resource.category.toLowerCase().includes(lowerQuery) ||
-    resource.tags.some(tag => tag.toLowerCase().includes(lowerQuery))
-  );
+  return RESOURCES.map(resource => {
+    let score = 0;
+    // Exact match bonus
+    if (resource.name.toLowerCase() === lowerQuery) score += 20;
+
+    // Title match
+    if (resource.name.toLowerCase().includes(lowerQuery)) score += 10;
+
+    // Category match
+    if (resource.category.toLowerCase().includes(lowerQuery)) score += 5;
+
+    // Tag match
+    if (resource.tags.some(tag => tag.toLowerCase() === lowerQuery)) score += 5;
+    else if (resource.tags.some(tag => tag.toLowerCase().includes(lowerQuery))) score += 3;
+
+    // Description match
+    if (resource.description.toLowerCase().includes(lowerQuery)) score += 1;
+
+    return { resource, score };
+  })
+  .filter(item => item.score > 0)
+  .sort((a, b) => b.score - a.score)
+  .map(item => item.resource);
 }
 
 export function getResourcesByCategory(category: string): Resource[] {
