@@ -1,6 +1,7 @@
 import { AnalysisResult } from '../types/ai';
 import { SENTIMENT_DICTIONARY, INTENSIFIERS, EMOJIS } from '../data/sentiment';
 import { TOPIC_KEYWORDS } from '../data/topics';
+import { Mood, MOODS } from '../constants/moods';
 
 /**
  * Analyzes the sentiment of a given text.
@@ -114,15 +115,15 @@ export function analyzeText(text: string): AnalysisResult {
   const sentiment = analyzeSentiment(text);
   const topics = extractTopics(text);
 
-  let mood = 'Neutral';
-  if (sentiment > 0.3) mood = 'Positive';
-  else if (sentiment < -0.6) mood = 'Distressed';
-  else if (sentiment < -0.3) mood = 'Negative';
+  let mood: Mood = MOODS.NEUTRAL;
+  if (sentiment > 0.3) mood = MOODS.POSITIVE;
+  else if (sentiment < -0.6) mood = MOODS.DISTRESSED;
+  else if (sentiment < -0.3) mood = MOODS.NEGATIVE;
 
   // Heuristic adjustments
-  if (topics.includes('anxiety')) mood = 'Anxious';
-  if (topics.includes('depression') && sentiment < -0.2) mood = 'Depressed';
-  if (topics.includes('grief') && sentiment < -0.2) mood = 'Grief';
+  if (topics.includes('anxiety')) mood = MOODS.ANXIOUS;
+  if (topics.includes('depression') && sentiment < -0.2) mood = MOODS.DEPRESSED;
+  if (topics.includes('grief') && sentiment < -0.2) mood = MOODS.GRIEF;
 
   return {
     sentiment,

@@ -2,6 +2,7 @@ import { UserProfile, SessionData } from '../types/ai';
 import { analyzeText } from './analysis';
 import { Message } from '../types/Message';
 import { journalService } from '../services/JournalService';
+import { MOODS } from '../constants/moods';
 
 const STORAGE_KEY = 'wellbeing_user_profile';
 
@@ -57,7 +58,7 @@ export function startSession(): SessionData {
     id: `session_${Date.now()}`,
     startTime: now,
     messages: 0,
-    currentMood: 'Neutral',
+    currentMood: MOODS.NEUTRAL,
     profile: currentProfile
   };
 
@@ -97,7 +98,7 @@ export function updateSession(message: Message): void {
 
 export function getProfileSummary(): string {
   if (currentProfile.privacyMode) {
-    return `User Mood: ${currentSession?.currentMood || 'Neutral'}. (Privacy Mode Active)`;
+    return `User Mood: ${currentSession?.currentMood || MOODS.NEUTRAL}. (Privacy Mode Active)`;
   }
 
   const sentimentAvg = currentProfile.sentimentTrend.length > 0
@@ -115,7 +116,7 @@ export function getProfileSummary(): string {
     summary += `User's name is ${currentProfile.userName}. `;
   }
 
-  summary += `User Mood: ${currentSession?.currentMood || 'Neutral'}. `;
+  summary += `User Mood: ${currentSession?.currentMood || MOODS.NEUTRAL}. `;
 
   if (topTopics.length > 0) {
     summary += `Recent topics: ${topTopics.join(', ')}. `;

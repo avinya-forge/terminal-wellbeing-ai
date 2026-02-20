@@ -26,6 +26,8 @@ import {
   isGreeting,
   postProcessResponse
 } from "../utils/ai-helpers";
+import { CircuitBreaker, CircuitBreakerOpenError } from "../utils/CircuitBreaker";
+import { logger } from "./LoggerService";
 
 // Cache for the text generators
 interface ModelCache {
@@ -39,9 +41,14 @@ export class AIModelService {
   private currentModelIndex: number = DEFAULT_MODEL_INDEX;
   private recentResponses: Set<string> = new Set();
   private initialized: boolean = false;
+  private circuitBreaker: CircuitBreaker;
 
   constructor() {
     this.currentModelIndex = DEFAULT_MODEL_INDEX;
+    this.circuitBreaker = new CircuitBreaker({
+      failureThreshold: 3,
+      resetTimeout: 30000 // 30s
+    });
   }
 
   // Initialize the text generation pipelines with retry mechanism
@@ -56,16 +63,18 @@ export class AIModelService {
       try {
         // Start with the default model
         const defaultModel = AVAILABLE_MODELS[DEFAULT_MODEL_INDEX];
-        console.log(`Initializing primary AI model (${defaultModel.displayName})...`);
+        logger.info(`Initializing primary AI model (${defaultModel.displayName})...`);
         onProgress?.(`Loading ${defaultModel.displayName}...`);
 
-        this.textGenerators[defaultModel.name] = (await pipeline(
-          "text-generation",
-          defaultModel.name,
-          { device: defaultModel.device }
-        )) as unknown as TextGenerator;
+        await this.circuitBreaker.execute(async () => {
+          this.textGenerators[defaultModel.name] = (await pipeline(
+            "text-generation",
+            defaultModel.name,
+            { device: defaultModel.device }
+          )) as unknown as TextGenerator;
+        });
 
-        console.log(`Primary AI model (${defaultModel.displayName}) initialized successfully`);
+        logger.info(`Primary AI model (${defaultModel.displayName}) initialized successfully`);
         onProgress?.(`${defaultModel.displayName} ready`);
 
         // Initialize other models in the background after the primary model is loaded
@@ -76,8 +85,14 @@ export class AIModelService {
         this.initialized = true;
         return true;
       } catch (error: unknown) {
+        if (error instanceof CircuitBreakerOpenError) {
+          logger.warn("Circuit Breaker is OPEN. Skipping initialization.");
+          onProgress?.("Service temporarily unavailable (Circuit Breaker)");
+          return false;
+        }
+
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        console.error(`Error initializing AI model (attempt ${retries + 1}/${MAX_RETRIES}): ${errorMessage}`);
+        logger.error(`Error initializing AI model (attempt ${retries + 1}/${MAX_RETRIES}): ${errorMessage}`);
         onProgress?.(`Error: ${errorMessage}. Retrying...`);
         return false;
       }
@@ -89,7 +104,7 @@ export class AIModelService {
     // Retry logic
     while (!success && retries < MAX_RETRIES - 1) {
       retries++;
-      console.log(`Retrying model initialization in ${RETRY_DELAY}ms... (${retries}/${MAX_RETRIES - 1})`);
+      logger.info(`Retrying model initialization in ${RETRY_DELAY}ms... (${retries}/${MAX_RETRIES - 1})`);
       onProgress?.(`Retrying initialization (${retries}/${MAX_RETRIES - 1})...`);
 
       // Wait before retrying
@@ -112,15 +127,15 @@ export class AIModelService {
       if (this.textGenerators[model.name]) continue;
 
       try {
-        console.log(`Initializing additional model: ${model.displayName}...`);
+        logger.info(`Initializing additional model: ${model.displayName}...`);
         this.textGenerators[model.name] = (await pipeline(
           "text-generation",
           model.name,
           { device: model.device }
         )) as unknown as TextGenerator;
-        console.log(`Model ${model.displayName} initialized successfully`);
+        logger.info(`Model ${model.displayName} initialized successfully`);
       } catch (error) {
-        console.error(`Failed to initialize model ${model.displayName}:`, error);
+        logger.error(`Failed to initialize model ${model.displayName}:`, error);
         // Continue with other models even if one fails
       }
     }
@@ -261,7 +276,9 @@ Assistant:`;
           no_repeat_ngram_size: currentModel.noRepeatNgramSize
         };
 
-        const result = await modelGenerator(prompt, options);
+        const result = await this.circuitBreaker.execute(async () => {
+          return await modelGenerator(prompt, options);
+        });
 
         if (result && result[0] && result[0].generated_text) {
           // Extract just the assistant's response
@@ -292,8 +309,14 @@ Assistant:`;
         // Try fallback to another model if available
         return await this.tryFallbackModels(input, messages, currentModel.name);
       } catch (error: unknown) {
+        if (error instanceof CircuitBreakerOpenError) {
+           logger.warn("Circuit Breaker OPEN during generation. Switching immediately to fallback.");
+           // Fallback to static response immediately if circuit is open
+           return this.getUniqueResponse(SYSTEM_RESPONSES.fallback);
+        }
+
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        console.error(`Error generating AI response with ${currentModel.displayName}: ${errorMessage}`);
+        logger.error(`Error generating AI response with ${currentModel.displayName}: ${errorMessage}`);
         // Try fallback to another model if available
         return await this.tryFallbackModels(input, messages, currentModel.name);
       }
@@ -341,7 +364,7 @@ Assistant:`;
           }
         }
       } catch (error) {
-        console.error(`Fallback model ${model.displayName} also failed:`, error);
+        logger.error(`Fallback model ${model.displayName} also failed:`, error);
         // Continue trying other models
       }
     }
