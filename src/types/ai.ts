@@ -17,11 +17,13 @@ export interface UserProfile {
   };
 }
 
+import { Mood } from "../constants/moods";
+
 export interface SessionData {
   id: string;
   startTime: string;
   messages: number;
-  currentMood: string; // inferred from sentiment
+  currentMood: Mood; // inferred from sentiment
   profile: UserProfile;
 }
 
@@ -29,5 +31,5 @@ export interface AnalysisResult {
   sentiment: number;
   topics: string[];
   entities: string[];
-  mood: string;
+  mood: Mood;
 }
