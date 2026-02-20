@@ -14,9 +14,10 @@ const getExtractor = async () => {
   if (!extractor) {
     logger.info('Initializing feature extraction pipeline...');
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       extractor = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2', {
         quantized: true,
-      });
+      } as any);
       logger.info('Feature extraction pipeline initialized.');
     } catch (error) {
       logger.error('Failed to initialize feature extraction pipeline:', error);
