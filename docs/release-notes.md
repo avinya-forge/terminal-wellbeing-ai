@@ -214,3 +214,8 @@
 - [x] [ID-3.2.3] | Fix missing `aria-labels` on interactive elements | [INDEPENDENT] | [DONE]
 - [x] [ID-3.2.4] | Implement "Skip to Content" link for keyboard users | [INDEPENDENT] | [DONE]
 - [x] [ID-3.2.5] | Add keyboard shortcuts for common commands (Ctrl+K, etc.) | [INDEPENDENT] | [DONE]
+
+### [EPIC-2.3] User Profile Expansion (Completed Tasks - Sprint 1.8.1)
+- [x] [ID-2.3.11] | Add "Response Speed" preference (simulated delay) | [INDEPENDENT] | [DONE]
+- [x] [ID-2.3.10] | Persist profile changes immediately (debounce check) | [INDEPENDENT] | [DONE]
+- [x] [ID-2.3.13] | Test Profile persistence across sessions | [INDEPENDENT] | [DONE]

@@ -17,10 +17,12 @@ const DEFAULT_PROFILE: UserProfile = {
   triggerWarnings: [],
   preferences: {
     responseLength: 'medium',
-    tone: 'empathetic'
+    tone: 'empathetic',
+    speed: 'medium'
   }
 };
 
+let saveTimeout: ReturnType<typeof setTimeout> | null = null;
 let currentProfile: UserProfile = loadProfile();
 // Initialize services privacy mode based on loaded profile
 journalService.setPrivacyMode(!!currentProfile.privacyMode);
@@ -40,17 +42,30 @@ function loadProfile(): UserProfile {
   return { ...DEFAULT_PROFILE };
 }
 
-function saveProfile(profile: UserProfile): void {
+function saveProfile(profile: UserProfile, force: boolean = false): void {
+  if (saveTimeout) {
+    clearTimeout(saveTimeout);
+    saveTimeout = null;
+  }
+
   if (profile.privacyMode) {
     // If privacy mode is enabled, ensure no data is left in storage
     localStorage.removeItem(STORAGE_KEY);
     return;
   }
 
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
-  } catch (e) {
-    logger.error('Failed to save user profile', e);
+  const persist = () => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+    } catch (e) {
+      logger.error('Failed to save user profile', e);
+    }
+  };
+
+  if (force) {
+    persist();
+  } else {
+    saveTimeout = setTimeout(persist, 1000);
   }
 }
 
@@ -157,7 +172,7 @@ export function clearProfile(): void {
     topics: {},
     preferences: { ...DEFAULT_PROFILE.preferences }
   };
-  saveProfile(currentProfile);
+  saveProfile(currentProfile, true);
 }
 
 // Privacy & Data Management
@@ -169,7 +184,7 @@ export async function setPrivacyMode(enabled: boolean): Promise<void> {
   if (enabled) {
     localStorage.removeItem(STORAGE_KEY);
   } else {
-    saveProfile(currentProfile);
+    saveProfile(currentProfile, true);
   }
 }
 

@@ -1,6 +1,7 @@
 import { AIModelService, ProgressCallback } from "./AIModelService";
 import { Message } from "../types/Message";
 import { ModelConfig } from "../config/models";
+import { getUserProfile } from "../utils/sessionManager";
 import {
   sanitizePromptContent,
   isSensitiveTopic,
@@ -44,5 +45,16 @@ export function getSupportiveResponse(input: string): string {
 }
 
 export async function generateResponse(input: string, messages: Message[]): Promise<string> {
-  return aiService.generateResponse(input, messages);
+  const profile = getUserProfile();
+  const speed = profile.preferences?.speed || 'medium';
+  let delay = 1000;
+  if (speed === 'fast') delay = 300;
+  if (speed === 'slow') delay = 2500;
+
+  const [response] = await Promise.all([
+    aiService.generateResponse(input, messages),
+    new Promise(resolve => setTimeout(resolve, delay))
+  ]);
+
+  return response;
 }

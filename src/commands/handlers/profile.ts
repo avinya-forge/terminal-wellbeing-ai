@@ -22,6 +22,7 @@ Usage:
 /profile name <your_name>
 /profile tone <casual|formal|empathetic>
 /profile length <short|medium|long>
+/profile speed <fast|medium|slow>
 /profile warnings <topic1>, <topic2>
 /profile reset
 /profile export
@@ -92,6 +93,21 @@ Privacy Mode: ${profile.privacyMode ? "Enabled" : "Disabled"}`;
       }
     });
     return `Profile updated. I will keep my responses ${value}.`;
+  }
+
+  if (subCommand === "speed") {
+    const validSpeeds = ["fast", "medium", "slow"] as const;
+    if (!(validSpeeds as readonly string[]).includes(value)) {
+      return `Invalid speed. Options: ${validSpeeds.join(", ")}`;
+    }
+
+    updateUserProfile({
+      preferences: {
+        ...profile.preferences,
+        speed: value as typeof validSpeeds[number]
+      }
+    });
+    return `Profile updated. I will respond at a ${value} pace.`;
   }
 
   if (subCommand === "warnings" || subCommand === "trigger-warnings") {
