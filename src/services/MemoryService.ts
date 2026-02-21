@@ -55,7 +55,7 @@ export class MemoryService {
 
     try {
       // Load or generate key
-      let keyString = localStorage.getItem(KEY_STORAGE_KEY);
+      const keyString = localStorage.getItem(KEY_STORAGE_KEY);
       if (keyString) {
         try {
             this.encryptionKey = await importKey(keyString);

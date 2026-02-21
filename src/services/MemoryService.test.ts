@@ -75,8 +75,13 @@ describe('MemoryService', () => {
     await service.addMemory('3', 'user');
 
     expect(service.getMemoryCount()).toBe(2);
-    const contents = service.getMemories().map(m => m.content);
+
+    const memories = service.getMemories();
+    const contents = memories.map(m => m.content);
+
     // Should contain 2 and 3 (newest), 1 should be gone
+    // Note: The service sorts by timestamp DESCENDING (newest first) on save
+    // So we expect the newest (3, 2) to be present.
     expect(contents).toContain('2');
     expect(contents).toContain('3');
     expect(contents).not.toContain('1');
