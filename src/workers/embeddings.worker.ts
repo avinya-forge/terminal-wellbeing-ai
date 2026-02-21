@@ -18,7 +18,10 @@ let extractorPromise: Promise<FeatureExtractionPipeline> | null = null;
 const initializePipeline = (): Promise<FeatureExtractionPipeline> => {
   if (!extractorPromise) {
     // Use type assertion if necessary, but try to keep it safe
-    extractorPromise = pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2', {
+    // Cast options to any to avoid "Expression produces a union type that is too complex to represent" error
+    // and "quantized does not exist in type PretrainedModelOptions" error
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    extractorPromise = (pipeline as any)('feature-extraction', 'Xenova/all-MiniLM-L6-v2', {
       quantized: true,
     }) as Promise<FeatureExtractionPipeline>;
   }
