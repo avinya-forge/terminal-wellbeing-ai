@@ -8,10 +8,6 @@
 - [x] [ID-2.3.13] | Test Profile persistence across sessions | [INDEPENDENT] | [DONE]
 
 ### [EPIC-2.4] Memory Hardening & Security (10 WU)
-- [ ] [ID-2.4.5] | Create `EmbeddingWorker` class for off-main-thread processing | [INDEPENDENT] | [TODO]
-- [ ] [ID-2.4.6] | Refactor `embeddings.ts` to communicate with Worker | [BLOCKS-ID-2.4.5] | [TODO]
-- [ ] [ID-2.4.7] | Add integration test for Worker communication | [INDEPENDENT] | [TODO]
-- [ ] [ID-2.4.8] | Strict Type Audit for `@huggingface/transformers` (remove `any`) | [INDEPENDENT] | [TODO]
 - [ ] [ID-2.4.9] | Create "Memory Migration" tool for version upgrades | [INDEPENDENT] | [TODO]
 - [ ] [ID-2.4.10] | Profile Memory usage with large vector sets | [INDEPENDENT] | [TODO]
 
