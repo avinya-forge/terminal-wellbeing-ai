@@ -16,7 +16,8 @@ const DEFAULT_PROFILE: UserProfile = {
   triggerWarnings: [],
   preferences: {
     responseLength: 'medium',
-    tone: 'empathetic'
+    tone: 'empathetic',
+    speed: 'medium'
   }
 };
 
@@ -51,6 +52,20 @@ function saveProfile(profile: UserProfile): void {
   } catch (e) {
     console.error('Failed to save user profile', e);
   }
+}
+
+let saveTimeout: ReturnType<typeof setTimeout> | null = null;
+
+function saveProfileDebounced(profile: UserProfile): void {
+  if (saveTimeout) {
+    clearTimeout(saveTimeout);
+  }
+
+  // Use a shorter debounce time to balance performance and data safety
+  saveTimeout = setTimeout(() => {
+    saveProfile(profile);
+    saveTimeout = null;
+  }, 1000);
 }
 
 export function startSession(): SessionData {
@@ -95,7 +110,7 @@ export function updateSession(message: Message): void {
     currentSession.currentMood = analysis.mood;
     currentSession.messages++;
 
-    saveProfile(currentProfile);
+    saveProfileDebounced(currentProfile);
   }
 }
 
@@ -191,6 +206,7 @@ export function updateUserProfile(updates: Partial<UserProfile>): void {
       ...(updates.preferences || {})
     }
   };
+  // For explicit user profile updates (settings), save immediately to ensure feedback is instant
   saveProfile(currentProfile);
 }
 

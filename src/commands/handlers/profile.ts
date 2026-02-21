@@ -8,6 +8,7 @@ export async function handleProfileCommand(parsed: ParsedCommand): Promise<strin
     const name = profile.userName || "Not set";
     const tone = profile.preferences?.tone || "empathetic";
     const length = profile.preferences?.responseLength || "medium";
+    const speed = profile.preferences?.speed || "medium";
     const messages = profile.messageCount || 0;
     const warnings = profile.triggerWarnings?.length ? profile.triggerWarnings.join(", ") : "None";
 
@@ -15,6 +16,7 @@ export async function handleProfileCommand(parsed: ParsedCommand): Promise<strin
 Name: ${name}
 Preferred Tone: ${tone}
 Response Length: ${length}
+Response Speed: ${speed}
 Messages Exchanged: ${messages}
 Trigger Warnings: ${warnings}
 
@@ -22,6 +24,7 @@ Usage:
 /profile name <your_name>
 /profile tone <casual|formal|empathetic>
 /profile length <short|medium|long>
+/profile speed <fast|medium|slow>
 /profile warnings <topic1>, <topic2>
 /profile reset
 /profile export
@@ -35,6 +38,7 @@ Usage:
     const name = profile.userName || "Not set";
     const tone = profile.preferences?.tone || "empathetic";
     const length = profile.preferences?.responseLength || "medium";
+    const speed = profile.preferences?.speed || "medium";
     const messages = profile.messageCount || 0;
     const warnings = profile.triggerWarnings?.length ? profile.triggerWarnings.join(", ") : "None";
 
@@ -43,6 +47,7 @@ Usage:
 Name: ${name}
 Tone: ${tone}
 Length: ${length}
+Speed: ${speed}
 Messages: ${messages}
 Warnings: ${warnings}
 Privacy Mode: ${profile.privacyMode ? "Enabled" : "Disabled"}`;
@@ -92,6 +97,21 @@ Privacy Mode: ${profile.privacyMode ? "Enabled" : "Disabled"}`;
       }
     });
     return `Profile updated. I will keep my responses ${value}.`;
+  }
+
+  if (subCommand === "speed") {
+    const validSpeeds = ["fast", "medium", "slow"] as const;
+    if (!(validSpeeds as readonly string[]).includes(value)) {
+      return `Invalid speed. Options: ${validSpeeds.join(", ")}`;
+    }
+
+    updateUserProfile({
+      preferences: {
+        ...profile.preferences,
+        speed: value as typeof validSpeeds[number]
+      }
+    });
+    return `Profile updated. I will respond at ${value} speed.`;
   }
 
   if (subCommand === "warnings" || subCommand === "trigger-warnings") {

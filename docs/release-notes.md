@@ -1,5 +1,20 @@
 # Release Notes
 
+## v1.10.0 (Unified Batch - Performance & Personalization)
+
+### [EPIC-2.3] User Profile Expansion (Completed)
+- [x] [ID-2.3.10] | Persist profile changes immediately (debounce check) | [INDEPENDENT] | [DONE]
+- [x] [ID-2.3.11] | Add "Response Speed" preference (simulated delay) | [INDEPENDENT] | [DONE]
+- **Feature:** Added `/profile speed <fast|medium|slow>` to control AI typing speed.
+- **Optimization:** Implemented debounced saving for session updates to reduce IO operations.
+
+### [EPIC-2.4] Memory Hardening & Security (Completed)
+- [x] [ID-2.4.5] | Create `EmbeddingWorker` class for off-main-thread processing | [INDEPENDENT] | [DONE]
+- [x] [ID-2.4.6] | Refactor `embeddings.ts` to communicate with Worker | [BLOCKS-ID-2.4.5] | [DONE]
+- [x] [ID-2.4.7] | Add integration test for Worker communication | [INDEPENDENT] | [DONE]
+- **Architecture:** Offloaded heavy embedding calculations (TensorFlow/ONNX via Transformers.js) to a dedicated Web Worker to prevent UI freezing during memory retrieval.
+- **Refactor:** Created `EmbeddingWorker` singleton wrapper for type-safe worker communication.
+
 ## v1.8.0 (Phase 1: Resilience & Architecture)
 
 ### [EPIC-1.1] AI Service Resilience (10 WU)

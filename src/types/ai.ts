@@ -15,6 +15,7 @@ export interface UserProfile {
   preferences: {
     responseLength: 'short' | 'medium' | 'long';
     tone: 'casual' | 'formal' | 'empathetic';
+    speed: 'fast' | 'medium' | 'slow';
   };
 }
 

@@ -10,7 +10,9 @@ export default {
     // Mock transformers to avoid ESM/import.meta issues
     '^@huggingface/transformers$': '<rootDir>/__mocks__/@huggingface/transformers.js',
     // Mock PWA registration
-    '^virtual:pwa-register/react$': '<rootDir>/__mocks__/pwaRegisterMock.js'
+    '^virtual:pwa-register/react$': '<rootDir>/__mocks__/pwaRegisterMock.js',
+    // Mock Worker Factory to avoid import.meta issues in Jest
+    'workerFactory$': '<rootDir>/__mocks__/workerFactoryMock.js'
   },
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   transform: {

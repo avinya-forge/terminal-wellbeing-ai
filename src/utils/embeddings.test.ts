@@ -1,33 +1,26 @@
 import { calculateEmbedding, cosineSimilarity } from './embeddings';
-import { pipeline } from '@huggingface/transformers';
+import { embeddingWorker } from '../workers/EmbeddingWorker';
 
-// Mock the pipeline
-jest.mock('@huggingface/transformers', () => ({
-  pipeline: jest.fn()
+// Mock the worker
+jest.mock('../workers/EmbeddingWorker', () => ({
+  embeddingWorker: {
+    extract: jest.fn()
+  }
 }));
 
 describe('Embedding Utils', () => {
-  const mockPipeline = pipeline as jest.Mock;
-  const mockExtractor = jest.fn();
-
   beforeEach(() => {
     jest.clearAllMocks();
-    mockPipeline.mockResolvedValue(mockExtractor);
   });
 
   describe('calculateEmbedding', () => {
     it('should calculate embedding for valid text', async () => {
-      // Mock extractor output
-      const mockOutput = {
-        data: new Float32Array([0.1, 0.2, 0.3])
-      };
-      mockExtractor.mockResolvedValue(mockOutput);
+      // Mock worker output
+      (embeddingWorker.extract as jest.Mock).mockResolvedValue([0.1, 0.2, 0.3]);
 
       const result = await calculateEmbedding('hello world');
 
-      expect(mockPipeline).toHaveBeenCalledWith('feature-extraction', 'Xenova/all-MiniLM-L6-v2', expect.any(Object));
-      expect(mockExtractor).toHaveBeenCalledWith('hello world', expect.any(Object));
-      // Float32Array when converted to array via Array.from should match
+      expect(embeddingWorker.extract).toHaveBeenCalledWith('hello world');
       expect(result[0]).toBeCloseTo(0.1);
       expect(result[1]).toBeCloseTo(0.2);
       expect(result[2]).toBeCloseTo(0.3);
@@ -36,11 +29,11 @@ describe('Embedding Utils', () => {
     it('should return empty array for empty input', async () => {
       const result = await calculateEmbedding('');
       expect(result).toEqual([]);
-      expect(mockExtractor).not.toHaveBeenCalled();
+      expect(embeddingWorker.extract).not.toHaveBeenCalled();
     });
 
     it('should return empty array on error', async () => {
-      mockExtractor.mockRejectedValue(new Error('Pipeline failed'));
+      (embeddingWorker.extract as jest.Mock).mockRejectedValue(new Error('Worker failed'));
       const result = await calculateEmbedding('fail');
       expect(result).toEqual([]);
     });

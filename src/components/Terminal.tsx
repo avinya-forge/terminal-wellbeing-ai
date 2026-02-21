@@ -6,7 +6,7 @@ import PanicOverlay from './PanicOverlay';
 import { initializeModel } from '../services/ai';
 import { processCommand } from '../commands';
 import { getInitialMessages } from '../data/responses';
-import { getPrivacyMode, setPrivacyMode } from '../utils/sessionManager';
+import { getPrivacyMode, setPrivacyMode, getUserProfile } from '../utils/sessionManager';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { Message } from '../types/Message';
 import { applyTheme } from '../utils/themes';
@@ -135,6 +135,17 @@ const Terminal = () => {
         sender: 'bot',
         timestamp: new Date().toISOString()
       };
+
+      // Simulate typing delay based on profile preference
+      const profile = getUserProfile();
+      const speed = profile.preferences?.speed || 'medium';
+
+      let delay = 1000; // Default (medium)
+      if (speed === 'fast') delay = 300;
+      if (speed === 'slow') delay = 2500;
+
+      // Ensure a minimum visual delay for the typing indicator
+      await new Promise(resolve => setTimeout(resolve, delay));
 
       // Add bot message to chat
       setMessages(prev => [...prev, botMessage]);

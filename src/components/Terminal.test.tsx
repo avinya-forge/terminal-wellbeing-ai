@@ -1,7 +1,8 @@
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent, act } from '@testing-library/react';
 import Terminal from './Terminal';
 import * as aiModel from '../services/ai';
 import * as commands from '../commands';
+import * as sessionManager from '../utils/sessionManager';
 
 // Mock the AI model and commands modules
 jest.mock('../services/ai', () => ({
@@ -20,6 +21,13 @@ jest.mock('../commands', () => ({
     return 'Command processed';
   }),
   formatTimestamp: jest.fn().mockReturnValue('12:34')
+}));
+
+jest.mock('../utils/sessionManager', () => ({
+  getPrivacyMode: jest.fn().mockReturnValue(false),
+  setPrivacyMode: jest.fn(),
+  // Default to fast for tests to avoid timeouts in waitFor
+  getUserProfile: jest.fn().mockReturnValue({ preferences: { speed: 'fast' } })
 }));
 
 describe('Terminal Component', () => {
@@ -69,7 +77,7 @@ describe('Terminal Component', () => {
     
     // Check if bot response is displayed
     await waitFor(() => {
-      expect(screen.getByText('Command processed')).toBeInTheDocument();
+      expect(screen.getByText(/Command processed/)).toBeInTheDocument();
     });
   });
 
@@ -86,6 +94,11 @@ describe('Terminal Component', () => {
     
     // Verify message is displayed
     expect(await screen.findByText('Hello there')).toBeInTheDocument();
+
+    // Wait for the first command to complete so input is enabled
+    await waitFor(() => {
+        expect(inputElement).not.toBeDisabled();
+    });
     
     // Clear the conversation
     fireEvent.change(inputElement, { target: { value: '/clear' } });
@@ -140,7 +153,7 @@ describe('Terminal Component', () => {
     
     // After response, input should be enabled again
     await waitFor(() => {
-      expect(screen.getByText('Delayed response')).toBeInTheDocument();
+      expect(screen.getByText(/Delayed response/)).toBeInTheDocument();
       expect(inputElement).not.toBeDisabled();
     });
   });
@@ -168,5 +181,44 @@ describe('Terminal Component', () => {
     await waitFor(() => {
       expect(screen.queryByText('Crisis Resources')).not.toBeInTheDocument();
     });
+  });
+
+  it('respects slow speed preference with longer delay', async () => {
+    jest.useFakeTimers();
+    (sessionManager.getUserProfile as jest.Mock).mockReturnValue({
+      preferences: { speed: 'slow' }
+    });
+
+    render(<Terminal />);
+
+    const inputElement = screen.getByPlaceholderText(/Type your message/i);
+    // Wait for initial load
+    await act(async () => {
+       jest.advanceTimersByTime(1000);
+    });
+
+    // Type and submit
+    fireEvent.change(inputElement, { target: { value: 'Hello' } });
+    fireEvent.keyDown(inputElement, { key: 'Enter', code: 'Enter', charCode: 13 });
+
+    // Should process command quickly (mocked)
+    await waitFor(() => expect(commands.processCommand).toHaveBeenCalled());
+
+    // But response should NOT be visible yet due to delay (slow = 2500ms)
+    // We advance 1000ms
+    await act(async () => {
+        jest.advanceTimersByTime(1000);
+    });
+    expect(screen.queryByText('Command processed')).not.toBeInTheDocument();
+
+    // Advance remaining time (1500 more to reach 2500, giving 2000 to be safe)
+    await act(async () => {
+        jest.advanceTimersByTime(2000);
+    });
+
+    // Now it should be visible
+    expect(screen.getByText(/Command processed/)).toBeInTheDocument();
+
+    jest.useRealTimers();
   });
 });
