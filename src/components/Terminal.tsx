@@ -11,6 +11,7 @@ import useLocalStorage from '../hooks/useLocalStorage';
 import { Message } from '../types/Message';
 import { applyTheme } from '../utils/themes';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
+import { logger } from '../services/LoggerService';
 
 const Terminal = () => {
   const [messages, setMessages] = useLocalStorage<Message[]>('terminal_messages', getInitialMessages());
@@ -23,16 +24,17 @@ const Terminal = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Initialize theme from local storage
+  // Initialize theme from local storage — themes are stored as plain strings
   useEffect(() => {
     const savedTheme = localStorage.getItem('terminal_theme');
-    if (savedTheme) {
+    if (savedTheme && savedTheme.trim()) {
       try {
-        // Handle both JSON stringified and raw string cases
-        const themeName = savedTheme.startsWith('"') ? JSON.parse(savedTheme) : savedTheme;
+        // Handle legacy JSON-encoded values (e.g. '"modern"') for backward compat
+        const themeName = savedTheme.startsWith('"')
+          ? JSON.parse(savedTheme) as string
+          : savedTheme;
         applyTheme(themeName);
-      } catch (e) {
-        console.warn("Failed to load theme preference, using default.", e);
+      } catch {
         applyTheme('modern');
       }
     } else {
@@ -52,7 +54,7 @@ const Terminal = () => {
           setLoadingStatus("AI Model: Using fallback responses");
         }
       } catch (error) {
-        console.error('Failed to initialize model:', error);
+        logger.error('Failed to initialize model:', error);
         setLoadingStatus("Error initializing model");
       } finally {
         setIsLoading(false);
@@ -139,8 +141,8 @@ const Terminal = () => {
       // Add bot message to chat
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
-      console.error('Error processing message:', error);
-      
+      logger.error('Error processing message:', error);
+
       // Add error message
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -148,7 +150,7 @@ const Terminal = () => {
         sender: 'bot',
         timestamp: new Date().toISOString()
       };
-      
+
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsTyping(false);
@@ -169,15 +171,15 @@ const Terminal = () => {
       {isPanicMode && <PanicOverlay onClose={() => setIsPanicMode(false)} />}
 
       <TerminalHeader modelLoaded={modelLoaded} loadingStatus={loadingStatus} privacyMode={isPrivacyMode} />
-      
+
       <div className="terminal-body">
         <TerminalOutput messages={messages} isTyping={isTyping} />
         <div ref={messagesEndRef} />
       </div>
-      
-      <TerminalInput 
+
+      <TerminalInput
         ref={inputRef}
-        onSendMessage={handleSendMessage} 
+        onSendMessage={handleSendMessage}
         disabled={isTyping || isLoading || isPanicMode}
       />
     </div>

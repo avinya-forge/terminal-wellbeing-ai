@@ -17,12 +17,12 @@ describe('Terminal Accessibility', () => {
       expect(header.tagName).toBe('HEADER');
     });
 
-    it('has accessible status indicators', () => {
+    it('has accessible status indicator for model state', () => {
       render(<TerminalHeader modelLoaded={true} />);
-      // These should have aria-labels or be hidden if decorative, but status is important
-      // We expect them to have some label describing their state
-      const indicators = screen.getAllByLabelText(/Status:/i);
-      expect(indicators.length).toBeGreaterThan(0);
+      // The meaningful status indicator (3rd dot) has an aria-label describing model state
+      // The decorative red/yellow dots are aria-hidden
+      const indicator = screen.getByLabelText(/AI Model: Ready/i);
+      expect(indicator).toBeInTheDocument();
     });
   });
 

@@ -1,4 +1,5 @@
 import { JournalEntry, JournalEntries } from '../types/Journal';
+import { logger } from './LoggerService';
 
 const JOURNAL_STORAGE_KEY = 'wellbeing_journal';
 
@@ -26,7 +27,7 @@ export class JournalService {
       const stored = storage.getItem(JOURNAL_STORAGE_KEY);
       return stored ? JSON.parse(stored) : [];
     } catch (error) {
-      console.error('Failed to load journal entries:', error);
+      logger.error('Failed to load journal entries:', error);
       return [];
     }
   }
@@ -42,7 +43,7 @@ export class JournalService {
     try {
       storage.setItem(JOURNAL_STORAGE_KEY, JSON.stringify(this.entries));
     } catch (error) {
-      console.error('Failed to save journal entries:', error);
+      logger.error('Failed to save journal entries:', error);
     }
   }
 

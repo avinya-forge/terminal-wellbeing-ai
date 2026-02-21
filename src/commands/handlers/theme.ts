@@ -1,5 +1,6 @@
 import { ParsedCommand } from "../../utils/commandParser";
 import { applyTheme, listThemes, THEMES } from "../../utils/themes";
+import { logger } from "../../services/LoggerService";
 
 /**
  * Handle switching themes
@@ -26,10 +27,11 @@ export async function handleThemeCommand(parsed: ParsedCommand): Promise<string>
   // Let's save it to localStorage here so Terminal picks it up on reload or if it listens to storage.
   // Note: 'terminal_theme' key should match what Terminal uses.
   try {
-    localStorage.setItem('terminal_theme', JSON.stringify(themeName));
+    // Save as plain string (no JSON.stringify) so Terminal can simply localStorage.getItem
+    localStorage.setItem('terminal_theme', themeName);
     window.dispatchEvent(new Event('storage')); // Trigger update if possible
   } catch (e) {
-    console.error("Failed to save theme preference", e);
+    logger.error("Failed to save theme preference", e);
   }
 
   return `Theme changed to: ${themeName}`;

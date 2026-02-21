@@ -1,5 +1,6 @@
 import { Message } from "../types/Message";
 import { generateResponse } from "../services/ai";
+import { logger } from "../services/LoggerService";
 
 export interface CommandDefinition {
   name: string;
@@ -9,23 +10,31 @@ export interface CommandDefinition {
 }
 
 export const COMMAND_DEFINITIONS: CommandDefinition[] = [
+  // General
   { name: "/help", description: "Show this help message", category: "General" },
-  { name: "/clear", description: "Clear the terminal screen", category: "Utilities" },
-  { name: "/panic", description: "Show immediate crisis resources", category: "Mental Health" },
+  // Mental Health
+  { name: "/panic", description: "Show immediate crisis resources (Ctrl+Shift+P)", category: "Mental Health" },
   { name: "/resources", description: "Search mental health resources", usage: "/resources [topic]", category: "Mental Health" },
   { name: "/quote", description: "Get a motivational quote", category: "Mental Health" },
-  { name: "/breathe", description: "Start a breathing exercise", category: "Mental Health" },
-  { name: "/note", description: "Add a personal note", usage: "/note <content>", category: "Mental Health" },
-  { name: "/notes", description: "List all your notes", category: "Mental Health" },
+  { name: "/breathe", description: "Start a 4-7-8 breathing exercise", category: "Mental Health" },
+  { name: "/note", description: "Add a personal journal entry", usage: "/note <content>", category: "Mental Health" },
+  { name: "/notes", description: "List all your journal entries", category: "Mental Health" },
+  { name: "/delete-note", description: "Delete a journal entry by ID", usage: "/delete-note <id>", category: "Mental Health" },
+  { name: "/clear-notes", description: "Clear all journal entries", category: "Mental Health" },
+  // Utilities
+  { name: "/clear", description: "Clear the terminal screen (Ctrl+K)", category: "Utilities" },
   { name: "/stats", description: "View session statistics", category: "Utilities" },
-  { name: "/privacy", description: "Toggle privacy mode", category: "Utilities" },
-  { name: "/export", description: "Export session data", category: "Utilities" },
-  { name: "/theme", description: "Change interface theme", usage: "/theme [name]", category: "Utilities" },
-  { name: "/art", description: "Display ASCII art", usage: "/art [mood]", category: "Utilities" },
+  { name: "/privacy", description: "Toggle privacy mode (disables storage)", category: "Utilities" },
+  { name: "/export", description: "Export session data as JSON or Markdown", usage: "/export [markdown]", category: "Utilities" },
+  { name: "/theme", description: "Change interface theme", usage: "/theme <name>", category: "Utilities" },
+  { name: "/themes", description: "List all available themes", category: "Utilities" },
+  { name: "/art", description: "Display ASCII art by mood", usage: "/art <mood>", category: "Utilities" },
+  { name: "/profile", description: "Manage user profile & preferences", usage: "/profile [view|name|tone|length|warnings|reset|export]", category: "Utilities" },
+  // System
   { name: "/models", description: "List available AI models", category: "System" },
   { name: "/model", description: "Switch AI model", usage: "/model <index>", category: "System" },
-  { name: "/profile", description: "Manage user profile", usage: "/profile [subcommand]", category: "Utilities" },
 ];
+
 
 /**
  * Response content types
@@ -66,7 +75,7 @@ function createBotMessage(content: string, id?: string): Message {
  * @returns Array of welcome messages
  */
 export function getInitialMessages(): Message[] {
-  return SYSTEM_RESPONSES.welcome.map((content, index) => 
+  return SYSTEM_RESPONSES.welcome.map((content, index) =>
     createBotMessage(content, (index + 1).toString())
   );
 }
@@ -109,7 +118,7 @@ export async function getResponseForMessage(input: string, messages: Message[]):
   try {
     return await generateResponse(input, messages);
   } catch (error) {
-    console.error("Error generating response:", error);
+    logger.error("Error generating response:", error);
     return SYSTEM_RESPONSES.error;
   }
 }

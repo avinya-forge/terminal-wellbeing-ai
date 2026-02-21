@@ -10,36 +10,29 @@ const TerminalHeader = ({ modelLoaded = false, loadingStatus, privacyMode = fals
   return (
     <header className="terminal-header" role="banner">
       <div className="terminal-title">
-        <TerminalIcon size={18} />
+        <TerminalIcon size={18} aria-hidden="true" />
         <span>WellBeing.sh</span>
         {privacyMode && (
-          <span className="privacy-badge flex items-center gap-1 ml-4 text-xs bg-purple-900/50 text-purple-200 px-2 py-0.5 rounded border border-purple-500/30">
-            <ShieldCheck size={12} />
+          <span className="privacy-badge flex items-center gap-1 ml-4 text-xs bg-purple-900/50 text-purple-200 px-2 py-0.5 rounded border border-purple-500/30" role="status" aria-live="polite">
+            <ShieldCheck size={12} aria-hidden="true" />
             PRIVACY MODE
           </span>
         )}
       </div>
-      <div className="terminal-status">
-        <span>
+      <div className="terminal-status" role="status" aria-live="polite">
+        <span className="text-xs opacity-70 mr-1">
           {modelLoaded
-            ? 'AI Model: Ready'
-            : (loadingStatus || 'AI Model: Using fallback responses')}
+            ? 'AI: Ready'
+            : (loadingStatus || 'AI: Loading...')}
         </span>
+        {/* Traffic lights - decorative only (macOS style) */}
+        <span className="status-indicator status-red" aria-hidden="true" title="Close" />
+        <span className="status-indicator status-yellow" aria-hidden="true" title="Minimize" />
         <span
-          className="status-indicator status-red"
-          aria-label="Status: Offline"
-          title="Status: Offline"
-        ></span>
-        <span
-          className="status-indicator status-yellow"
-          aria-label="Status: Connecting"
-          title="Status: Connecting"
-        ></span>
-        <span
-          className={`status-indicator ${modelLoaded ? 'status-green' : 'status-yellow'}`}
-          aria-label={modelLoaded ? "Status: Ready" : "Status: Loading"}
-          title={modelLoaded ? "Status: Ready" : "Status: Loading"}
-        ></span>
+          className={`status-indicator ${modelLoaded ? 'status-green' : 'status-loading'}`}
+          aria-label={modelLoaded ? 'AI Model: Ready' : 'AI Model: Loading'}
+          title={modelLoaded ? 'AI Model: Ready' : 'AI Model: Loading'}
+        />
       </div>
     </header>
   );

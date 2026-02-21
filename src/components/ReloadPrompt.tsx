@@ -1,4 +1,5 @@
 import { useRegisterSW } from 'virtual:pwa-register/react';
+import { logger } from '../services/LoggerService';
 
 export default function ReloadPrompt() {
   const {
@@ -7,10 +8,10 @@ export default function ReloadPrompt() {
     updateServiceWorker,
   } = useRegisterSW({
     onRegistered(r) {
-      console.log('SW Registered: ' + r);
+      logger.info('SW Registered: ' + r);
     },
     onRegisterError(error) {
-      console.log('SW registration error', error);
+      logger.error('SW registration error', error);
     },
   });
 

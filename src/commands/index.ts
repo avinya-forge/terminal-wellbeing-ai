@@ -2,6 +2,7 @@ import { Message } from "../types/Message";
 import { getResponseForMessage } from "../data/responses";
 import { updateSession } from "../utils/sessionManager";
 import { parseCommand, ParsedCommand } from "../utils/commandParser";
+import { logger } from "../services/LoggerService";
 
 import { handleModelCommand, listAvailableModels } from "./handlers/ai";
 import { handleResourcesCommand } from "./handlers/resources";
@@ -59,11 +60,11 @@ export async function processCommand(input: string, messages: Message[]): Promis
 
     // If input was parsed but might be just whitespace or filtered out?
     if (!parsed) {
-        if (input.trim()) {
-           // Handle standard conversations if input exists but parse failed (shouldn't happen with current parser unless empty)
-           return await getResponseForMessage(input, messages);
-        }
-        return "";
+      if (input.trim()) {
+        // Handle standard conversations if input exists but parse failed (shouldn't happen with current parser unless empty)
+        return await getResponseForMessage(input, messages);
+      }
+      return "";
     }
 
     const commandHandler = COMMANDS[parsed.command];
@@ -77,7 +78,7 @@ export async function processCommand(input: string, messages: Message[]): Promis
 
       const isSlash = input.trim().startsWith('/');
       if (!isSlash && parsed.args.length > 0) {
-           return await getResponseForMessage(input, messages);
+        return await getResponseForMessage(input, messages);
       }
 
       return await commandHandler(parsed, messages);
@@ -86,7 +87,7 @@ export async function processCommand(input: string, messages: Message[]): Promis
     // Handle standard conversations
     return await getResponseForMessage(input, messages);
   } catch (error) {
-    console.error("Error processing command:", error);
+    logger.error("Error processing command:", error);
     return "I'm having trouble processing that command. Please try again or type /help for available commands.";
   }
 }

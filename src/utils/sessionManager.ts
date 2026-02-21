@@ -4,6 +4,7 @@ import { Message } from '../types/Message';
 import { journalService } from '../services/JournalService';
 import { memoryService } from '../services/MemoryService';
 import { MOODS } from '../constants/moods';
+import { logger } from '../services/LoggerService';
 
 const STORAGE_KEY = 'wellbeing_user_profile';
 
@@ -34,7 +35,7 @@ function loadProfile(): UserProfile {
       return JSON.parse(stored);
     }
   } catch (e) {
-    console.error('Failed to load user profile', e);
+    logger.error('Failed to load user profile', e);
   }
   return { ...DEFAULT_PROFILE };
 }
@@ -49,7 +50,7 @@ function saveProfile(profile: UserProfile): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
   } catch (e) {
-    console.error('Failed to save user profile', e);
+    logger.error('Failed to save user profile', e);
   }
 }
 
