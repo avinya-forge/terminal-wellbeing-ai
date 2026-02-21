@@ -219,3 +219,9 @@
 - [x] [ID-2.3.11] | Add "Response Speed" preference (simulated delay) | [INDEPENDENT] | [DONE]
 - [x] [ID-2.3.10] | Persist profile changes immediately (debounce check) | [INDEPENDENT] | [DONE]
 - [x] [ID-2.3.13] | Test Profile persistence across sessions | [INDEPENDENT] | [DONE]
+
+### [EPIC-2.4] Memory Hardening & Security (Worker Implementation)
+- [x] [ID-2.4.5] | Create `EmbeddingWorker` class for off-main-thread processing | [INDEPENDENT] | [DONE]
+- [x] [ID-2.4.6] | Refactor `embeddings.ts` to communicate with Worker | [BLOCKS-ID-2.4.5] | [DONE]
+- [x] [ID-2.4.7] | Add integration test for Worker communication | [INDEPENDENT] | [DONE]
+- [x] [ID-2.4.8] | Strict Type Audit for `@huggingface/transformers` (remove `any`) | [INDEPENDENT] | [DONE]
