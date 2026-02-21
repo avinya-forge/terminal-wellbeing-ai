@@ -161,10 +161,10 @@ export function clearProfile(): void {
 
 // Privacy & Data Management
 
-export function setPrivacyMode(enabled: boolean): void {
+export async function setPrivacyMode(enabled: boolean): Promise<void> {
   currentProfile.privacyMode = enabled;
   journalService.setPrivacyMode(enabled);
-  memoryService.setPrivacyMode(enabled);
+  await memoryService.setPrivacyMode(enabled);
   if (enabled) {
     localStorage.removeItem(STORAGE_KEY);
   } else {
@@ -176,9 +176,9 @@ export function getPrivacyMode(): boolean {
   return !!currentProfile.privacyMode;
 }
 
-export function togglePrivacy(): boolean {
+export async function togglePrivacy(): Promise<boolean> {
   const newState = !getPrivacyMode();
-  setPrivacyMode(newState);
+  await setPrivacyMode(newState);
   return newState;
 }
 
@@ -204,6 +204,14 @@ export function exportSessionData(): string {
     profile: currentProfile,
     currentSession: currentSession,
     journal: journalService.getNotes()
+  };
+  return JSON.stringify(data, null, 2);
+}
+
+export function exportProfileData(): string {
+  const data = {
+    generatedAt: new Date().toISOString(),
+    profile: currentProfile
   };
   return JSON.stringify(data, null, 2);
 }

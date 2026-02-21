@@ -167,3 +167,50 @@
   - Multi-model AI support (DistilGPT-2, GPT-2, GPT-Neo).
   - Sensitive topic detection and crisis resource redirection.
   - Command system (`/help`, `/clear`, `/resources`).
+
+## v1.9.0 (Unified Batch - Security & Personalization)
+
+### [EPIC-2.3] Deep Personalization (Content Filtering & Profile)
+- **Feature: Content Filtering** - Implemented robust keyword redaction for trigger warnings. User-defined warnings in `/profile` are now automatically redacted from AI responses.
+- **Feature: Profile Management** - Enhanced `/profile` command with new subcommands:
+    - `/profile reset`: Safely resets user profile to defaults.
+    - `/profile export`: Exports profile data as JSON.
+    - `/profile view`: Displays comprehensive profile details including privacy status.
+    - `/profile name`: Added validation for name length and characters.
+- **Refactor:** Integrated content filtering into the `AIModelService` post-processing pipeline.
+
+### [EPIC-2.4] Memory Hardening (Local Encryption)
+- **Feature: Local Data Encryption** - Implemented AES-GCM encryption for long-term memory storage using Web Crypto API.
+- **Architecture:** Refactored `MemoryService` to support asynchronous initialization and encrypted storage/retrieval.
+- **Security:** Generated encryption keys are stored locally (for now) to obfuscate sensitive data in `localStorage`.
+- **Integration:** Updated `AIModelService` and `SessionManager` to handle asynchronous memory operations.
+
+### [EPIC-3.2] Accessibility Improvements
+- **Feature: Keyboard Shortcuts** - Added global shortcuts for power users:
+    - `Ctrl+K`: Clear terminal.
+    - `Ctrl+L`: Focus input.
+    - `Ctrl+,`: View profile.
+- **Feature: Skip Link** - Added a hidden "Skip to Content" link for keyboard navigation.
+- **Enhancement:** Audit of ARIA labels and focus management in `Terminal.tsx` and `TerminalInput.tsx`.
+
+### [EPIC-2.3] User Profile Expansion (Completed Tasks)
+- [x] [ID-2.3.4] | Implement `filterContent(response, warnings)` helper | [INDEPENDENT] | [DONE]
+- [x] [ID-2.3.5] | Integrate content filtering into `postProcessResponse` | [BLOCKS-ID-2.3.4] | [DONE]
+- [x] [ID-2.3.6] | Add unit tests for content filtering logic | [INDEPENDENT] | [DONE]
+- [x] [ID-2.3.7] | Create "Profile Reset" command/flow | [INDEPENDENT] | [DONE]
+- [x] [ID-2.3.8] | Implement Profile Export separately from Session | [INDEPENDENT] | [DONE]
+- [x] [ID-2.3.9] | Add validation for "Name" field (length, profanity) | [INDEPENDENT] | [DONE]
+- [x] [ID-2.3.12] | Create UI/Command for viewing all available Trigger Warnings | [INDEPENDENT] | [DONE]
+
+### [EPIC-2.4] Memory Hardening & Security (Completed Tasks)
+- [x] [ID-2.4.1] | Implement AES-GCM encryption helper for `localStorage` | [INDEPENDENT] | [DONE]
+- [x] [ID-2.4.2] | Add unit tests for Encryption/Decryption logic | [INDEPENDENT] | [DONE]
+- [x] [ID-2.4.3] | Integrate encryption into `MemoryService.saveMemories` | [BLOCKS-ID-2.4.1] | [DONE]
+- [x] [ID-2.4.4] | Integrate decryption into `MemoryService.loadMemories` | [BLOCKS-ID-2.4.3] | [DONE]
+
+### [EPIC-3.2] UI & Focus Management (Completed Tasks)
+- [x] [ID-3.2.1] | Audit `TerminalInput` focus management | [INDEPENDENT] | [DONE]
+- [x] [ID-3.2.2] | Audit `TerminalOutput` live region updates | [INDEPENDENT] | [DONE]
+- [x] [ID-3.2.3] | Fix missing `aria-labels` on interactive elements | [INDEPENDENT] | [DONE]
+- [x] [ID-3.2.4] | Implement "Skip to Content" link for keyboard users | [INDEPENDENT] | [DONE]
+- [x] [ID-3.2.5] | Add keyboard shortcuts for common commands (Ctrl+K, etc.) | [INDEPENDENT] | [DONE]

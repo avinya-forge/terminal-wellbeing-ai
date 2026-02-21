@@ -17,6 +17,9 @@ function App() {
 
   return (
     <div>
+      <a href="#terminal-input" className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-50 focus:bg-background focus:text-foreground focus:p-4 focus:outline-none">
+        Skip to terminal input
+      </a>
       <ReloadPrompt />
       {isLoaded ? (
         <Terminal />

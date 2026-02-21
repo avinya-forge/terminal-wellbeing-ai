@@ -1,13 +1,15 @@
 import { MemoryEntry, MemoryConfig } from '../types/memory';
 import { calculateEmbedding, cosineSimilarity } from '../utils/embeddings';
 import { logger } from './LoggerService';
+import { generateKey, exportKey, importKey, encryptData, decryptData } from '../utils/encryption';
 
 const STORAGE_KEY = 'wellbeing_long_term_memory';
+const KEY_STORAGE_KEY = 'wellbeing_encryption_key';
 
 const DEFAULT_CONFIG: MemoryConfig = {
   maxEntries: 100, // Keep it small for now to avoid localStorage bloat
-  similarityThreshold: 0.5, // Lowered threshold slightly to be more inclusive for testing
-  contextWindowSize: 3 // Number of relevant memories to retrieve
+  similarityThreshold: 0.5,
+  contextWindowSize: 3
 };
 
 const generateId = (): string => {
@@ -22,10 +24,12 @@ export class MemoryService {
   private memories: MemoryEntry[] = [];
   private config: MemoryConfig;
   private privacyMode: boolean = false;
+  private encryptionKey: CryptoKey | null = null;
+  private initialized: boolean = false;
+  private initializationPromise: Promise<void> | null = null;
 
   private constructor(config: Partial<MemoryConfig> = {}) {
     this.config = { ...DEFAULT_CONFIG, ...config };
-    this.loadMemories();
   }
 
   public static getInstance(config?: Partial<MemoryConfig>): MemoryService {
@@ -35,22 +39,75 @@ export class MemoryService {
     return MemoryService.instance;
   }
 
-  private loadMemories(): void {
-    if (typeof window === 'undefined') return; // Server-side or non-browser env check
+  public async initialize(): Promise<void> {
+    if (this.initialized) return;
+    if (this.initializationPromise) return this.initializationPromise;
+
+    this.initializationPromise = this._init();
+    await this.initializationPromise;
+  }
+
+  private async _init(): Promise<void> {
+    if (typeof window === 'undefined') {
+        this.initialized = true;
+        return;
+    }
+
+    try {
+      // Load or generate key
+      let keyString = localStorage.getItem(KEY_STORAGE_KEY);
+      if (keyString) {
+        try {
+            this.encryptionKey = await importKey(keyString);
+        } catch (e) {
+            logger.error('Failed to import existing key, generating new one:', e);
+            this.encryptionKey = await generateKey();
+            localStorage.setItem(KEY_STORAGE_KEY, await exportKey(this.encryptionKey));
+        }
+      } else {
+        this.encryptionKey = await generateKey();
+        localStorage.setItem(KEY_STORAGE_KEY, await exportKey(this.encryptionKey));
+      }
+
+      await this.loadMemories();
+      this.initialized = true;
+      logger.info('MemoryService initialized with encryption.');
+    } catch (error) {
+      logger.error('Failed to initialize MemoryService:', error);
+      this.initialized = true; // Mark as initialized so we don't retry forever
+    }
+  }
+
+  private async loadMemories(): Promise<void> {
+    if (typeof window === 'undefined') return;
 
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        this.memories = JSON.parse(stored);
-        logger.info(`Loaded ${this.memories.length} memories from storage.`);
+      if (stored && this.encryptionKey) {
+        try {
+            const decrypted = await decryptData(stored, this.encryptionKey);
+            this.memories = JSON.parse(decrypted);
+            logger.info(`Loaded ${this.memories.length} memories from encrypted storage.`);
+        } catch (decryptionError) {
+            logger.warn('Failed to decrypt memories, trying fallback (plaintext):', decryptionError);
+            // If decryption fails, maybe data was plain text?
+            try {
+                this.memories = JSON.parse(stored);
+                logger.warn('Loaded plain text memories. Will encrypt on next save.');
+            } catch (jsonError) {
+                this.memories = [];
+            }
+        }
+      } else if (stored) {
+           this.memories = JSON.parse(stored);
       }
     } catch (error) {
-      logger.error('Failed to load memories from localStorage:', error);
+      logger.error('Failed to load memories:', error);
       this.memories = [];
     }
   }
 
-  public setPrivacyMode(enabled: boolean): void {
+  public async setPrivacyMode(enabled: boolean): Promise<void> {
     this.privacyMode = enabled;
     if (enabled) {
       this.memories = [];
@@ -59,29 +116,34 @@ export class MemoryService {
       }
       logger.info('Privacy mode enabled for MemoryService. Memories cleared.');
     } else {
-      this.loadMemories();
+      await this.initialize();
     }
   }
 
-  private saveMemories(): void {
+  private async saveMemories(): Promise<void> {
     if (typeof window === 'undefined' || this.privacyMode) return;
+    if (!this.encryptionKey) return;
 
     try {
-      // Enforce max entries limit (Keep newest)
+      // Enforce max entries limit
       if (this.memories.length > this.config.maxEntries) {
-         // Sort by timestamp descending (newest first)
          this.memories.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
          this.memories = this.memories.slice(0, this.config.maxEntries);
       }
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.memories));
+
+      const json = JSON.stringify(this.memories);
+      const encrypted = await encryptData(json, this.encryptionKey);
+      localStorage.setItem(STORAGE_KEY, encrypted);
     } catch (error) {
-      logger.error('Failed to save memories to localStorage:', error);
+      logger.error('Failed to save memories:', error);
     }
   }
 
   public async addMemory(content: string, type: 'user' | 'assistant' | 'system', tags: string[] = []): Promise<MemoryEntry | null> {
     if (this.privacyMode) return null;
     if (!content || content.trim().length === 0) return null;
+
+    await this.initialize();
 
     try {
       const embedding = await calculateEmbedding(content);
@@ -96,7 +158,7 @@ export class MemoryService {
       };
 
       this.memories.push(entry);
-      this.saveMemories();
+      await this.saveMemories();
       logger.info(`Added memory entry: ${entry.id}`);
       return entry;
     } catch (error) {
@@ -106,15 +168,17 @@ export class MemoryService {
   }
 
   public async retrieveRelevantContext(query: string, limit: number = this.config.contextWindowSize): Promise<MemoryEntry[]> {
-    if (!query || this.memories.length === 0) return [];
+    if (!query) return [];
+
+    await this.initialize();
+
+    if (this.memories.length === 0) return [];
 
     try {
       const queryEmbedding = await calculateEmbedding(query);
       if (queryEmbedding.length === 0) return [];
 
-      // Calculate similarity for all memories
       const scoredMemories = this.memories.map(memory => {
-        // Skip if memory has no embedding
         if (!memory.embedding || memory.embedding.length === 0) {
            return { memory, score: -1 };
         }
@@ -124,7 +188,6 @@ export class MemoryService {
         };
       });
 
-      // Filter by threshold and sort by score (descending)
       const relevant = scoredMemories
         .filter(item => item.score >= this.config.similarityThreshold)
         .sort((a, b) => b.score - a.score)
@@ -138,9 +201,9 @@ export class MemoryService {
     }
   }
 
-  public clearMemories(): void {
+  public async clearMemories(): Promise<void> {
     this.memories = [];
-    this.saveMemories();
+    await this.saveMemories();
     logger.info('Cleared all memories.');
   }
 

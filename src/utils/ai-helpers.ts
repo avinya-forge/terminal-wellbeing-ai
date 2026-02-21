@@ -25,8 +25,27 @@ export function isGreeting(input: string): boolean {
   return GREETING_PATTERNS.some(pattern => pattern.test(input.trim()));
 }
 
+// Filter content based on user-defined trigger warnings
+export function filterContent(text: string, warnings: string[] = []): string {
+  if (!text || !warnings || !warnings.length) return text;
+
+  let processed = text;
+  for (const warning of warnings) {
+    if (!warning || !warning.trim()) continue;
+    try {
+      // Use word boundaries \b to avoid matching substrings (e.g. "cat" in "category")
+      // Flag 'gi' for global case-insensitive replacement
+      const regex = new RegExp(`\\b${escapeRegExp(warning.trim())}\\b`, 'gi');
+      processed = processed.replace(regex, '[REDACTED]');
+    } catch (e) {
+      console.warn(`Failed to create regex for warning: ${warning}`, e);
+    }
+  }
+  return processed;
+}
+
 // Post-process the response to improve quality and conversational flow
-export function postProcessResponse(response: string, input: string): string {
+export function postProcessResponse(response: string, input: string, warnings: string[] = []): string {
   // Remove any repetitive phrases
   const lines = response.split('\n').filter(line => line.trim() !== '');
   let processedResponse = response;
@@ -52,6 +71,11 @@ export function postProcessResponse(response: string, input: string): string {
   // Add conversation continuity phrases if the response is short
   if (processedResponse.length < 30 && !processedResponse.includes('?')) {
     processedResponse += " " + CONTINUITY_PHRASES[Math.floor(Math.random() * CONTINUITY_PHRASES.length)];
+  }
+
+  // Apply trigger warning filtering
+  if (warnings && warnings.length > 0) {
+    processedResponse = filterContent(processedResponse, warnings);
   }
 
   return processedResponse;

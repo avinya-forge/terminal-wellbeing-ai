@@ -11,7 +11,7 @@ import {
   GREETINGS,
   FIRST_TIME_GREETINGS
 } from "../data/phrases";
-import { getProfileSummary } from "../utils/sessionManager";
+import { getProfileSummary, getUserProfile } from "../utils/sessionManager";
 import {
   MAX_RECENT_RESPONSES,
   MAX_CONTEXT_MESSAGES,
@@ -62,6 +62,9 @@ export class AIModelService {
 
     const attemptInitialization = async (): Promise<boolean> => {
       try {
+        // Initialize memory service (encryption key generation, etc.)
+        await memoryService.initialize();
+
         // Start with the default model
         const defaultModel = AVAILABLE_MODELS[DEFAULT_MODEL_INDEX];
         logger.info(`Initializing primary AI model (${defaultModel.displayName})...`);
@@ -313,8 +316,10 @@ Assistant:`;
           if (assistantResponseMatch && assistantResponseMatch[1] && assistantResponseMatch[1].trim()) {
             let responseText = assistantResponseMatch[1].trim();
 
-            // Post-process the response to improve quality
-            responseText = postProcessResponse(responseText, input);
+            // Post-process the response to improve quality, including content filtering
+            const profile = getUserProfile();
+            const warnings = profile.triggerWarnings || [];
+            responseText = postProcessResponse(responseText, input, warnings);
 
             if (responseText.length > 10) {
               // Add to recent responses to avoid repetition
@@ -386,7 +391,9 @@ Assistant:`;
 
           if (assistantResponseMatch && assistantResponseMatch[1] && assistantResponseMatch[1].trim()) {
             const responseText = assistantResponseMatch[1].trim();
-            const response = postProcessResponse(responseText, input);
+            const profile = getUserProfile();
+            const warnings = profile.triggerWarnings || [];
+            const response = postProcessResponse(responseText, input, warnings);
             if (response.length > 10) {
               return response;
             }
