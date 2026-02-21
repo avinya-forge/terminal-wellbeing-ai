@@ -37,7 +37,8 @@ self.onmessage = async (e: MessageEvent<WorkerMessage>) => {
         // Cast the result to our typed interface since the library types might be generic
         extractor = (await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2', {
           quantized: true,
-        })) as unknown as FeatureExtractionPipeline;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } as any)) as unknown as FeatureExtractionPipeline;
       }
       self.postMessage({ type: 'ready' });
     } else if (type === 'extract') {
