@@ -3,9 +3,9 @@
 ## Phase 2: Deep Personalization (Refinement)
 
 ### [EPIC-2.3] User Profile Expansion (10 WU)
-- [ ] [ID-2.3.10] | Persist profile changes immediately (debounce check) | [INDEPENDENT] | [TODO]
-- [ ] [ID-2.3.11] | Add "Response Speed" preference (simulated delay) | [INDEPENDENT] | [TODO]
-- [ ] [ID-2.3.13] | Test Profile persistence across sessions | [INDEPENDENT] | [TODO]
+- [x] [ID-2.3.10] | Persist profile changes immediately (debounce check) | [INDEPENDENT] | [DONE]
+- [x] [ID-2.3.11] | Add "Response Speed" preference (simulated delay) | [INDEPENDENT] | [DONE]
+- [x] [ID-2.3.13] | Test Profile persistence across sessions | [INDEPENDENT] | [DONE]
 
 ### [EPIC-2.4] Memory Hardening & Security (10 WU)
 - [ ] [ID-2.4.5] | Create `EmbeddingWorker` class for off-main-thread processing | [INDEPENDENT] | [TODO]

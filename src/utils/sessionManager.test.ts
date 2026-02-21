@@ -26,11 +26,16 @@ import { Message } from '../types/Message';
 
 describe('Session Manager', () => {
   beforeEach(async () => {
+    jest.useFakeTimers();
     localStorage.clear();
     clearProfile();
     resetSession();
     startSession();
     await setPrivacyMode(false);
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   const createMessage = (content: string, sender: 'user' | 'bot' = 'user'): Message => ({
@@ -72,12 +77,28 @@ describe('Session Manager', () => {
     expect(summary).toContain('This is a long-term user');
   });
 
-  it('persists profile across sessions', () => {
+  it('persists profile across sessions with debounce', () => {
+    // Initial state (saved by beforeEach)
+    const initialStored = localStorage.getItem('wellbeing_user_profile');
+    expect(initialStored).not.toBeNull();
+
+    // Update session
     updateSession(createMessage('I love my family'));
-    const stored = localStorage.getItem('wellbeing_user_profile');
-    expect(stored).not.toBeNull();
-    if (stored) {
-        const profile = JSON.parse(stored);
+
+    // Should not be saved immediately (content should be same as initial or at least not have the new data)
+    // Note: Since localStorage is mocked simply, we just check that the new topic isn't persisted yet
+    const immediateStored = localStorage.getItem('wellbeing_user_profile');
+    expect(immediateStored).toBe(initialStored);
+
+    // Advance timers to trigger save
+    jest.advanceTimersByTime(1000);
+
+    // Now it should be updated
+    const finalStored = localStorage.getItem('wellbeing_user_profile');
+    expect(finalStored).not.toBe(initialStored);
+
+    if (finalStored) {
+        const profile = JSON.parse(finalStored);
         expect(profile.topics.family).toBeGreaterThan(0);
     }
   });
@@ -99,6 +120,7 @@ describe('Session Manager', () => {
 
     it('clears localStorage when privacy mode is enabled', async () => {
       updateSession(createMessage('Remember me'));
+      jest.advanceTimersByTime(1000);
       expect(localStorage.getItem('wellbeing_user_profile')).not.toBeNull();
 
       await setPrivacyMode(true);
@@ -117,6 +139,7 @@ describe('Session Manager', () => {
 
       await setPrivacyMode(false);
       updateSession(createMessage('Public message'));
+      jest.advanceTimersByTime(1000);
       expect(localStorage.getItem('wellbeing_user_profile')).not.toBeNull();
     });
   });
