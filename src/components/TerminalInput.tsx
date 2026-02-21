@@ -21,6 +21,7 @@ const TerminalInput = forwardRef<HTMLInputElement, TerminalInputProps>(
         <span className="input-prompt" aria-hidden="true">{'>'}</span>
         <input
           ref={ref}
+          id="terminal-input"
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}

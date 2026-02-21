@@ -10,6 +10,7 @@ import { getPrivacyMode, setPrivacyMode } from '../utils/sessionManager';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { Message } from '../types/Message';
 import { applyTheme } from '../utils/themes';
+import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 
 const Terminal = () => {
   const [messages, setMessages] = useLocalStorage<Message[]>('terminal_messages', getInitialMessages());
@@ -101,7 +102,7 @@ const Terminal = () => {
     // Handle privacy command
     if (normalizedContent === '/privacy') {
       const newState = !isPrivacyMode;
-      setPrivacyMode(newState);
+      await setPrivacyMode(newState);
       setIsPrivacyMode(newState);
 
       setMessages(prev => [...prev, userMessage]);
@@ -153,6 +154,15 @@ const Terminal = () => {
       setIsTyping(false);
     }
   };
+
+  // Keyboard shortcuts integration
+  useKeyboardShortcuts({
+    onClear: () => setMessages(getInitialMessages()),
+    onFocus: () => inputRef.current?.focus(),
+    onPanic: () => setIsPanicMode(true),
+    // Simulate user typing /profile view
+    onProfile: () => handleSendMessage('/profile view')
+  });
 
   return (
     <div className="terminal-container relative">

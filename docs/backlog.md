@@ -3,22 +3,11 @@
 ## Phase 2: Deep Personalization (Refinement)
 
 ### [EPIC-2.3] User Profile Expansion (10 WU)
-- [ ] [ID-2.3.4] | Implement `filterContent(response, warnings)` helper | [INDEPENDENT] | [TODO]
-- [ ] [ID-2.3.5] | Integrate content filtering into `postProcessResponse` | [BLOCKS-ID-2.3.4] | [TODO]
-- [ ] [ID-2.3.6] | Add unit tests for content filtering logic | [INDEPENDENT] | [TODO]
-- [ ] [ID-2.3.7] | Create "Profile Reset" command/flow | [INDEPENDENT] | [TODO]
-- [ ] [ID-2.3.8] | Implement Profile Export separately from Session | [INDEPENDENT] | [TODO]
-- [ ] [ID-2.3.9] | Add validation for "Name" field (length, profanity) | [INDEPENDENT] | [TODO]
 - [ ] [ID-2.3.10] | Persist profile changes immediately (debounce check) | [INDEPENDENT] | [TODO]
 - [ ] [ID-2.3.11] | Add "Response Speed" preference (simulated delay) | [INDEPENDENT] | [TODO]
-- [ ] [ID-2.3.12] | Create UI/Command for viewing all available Trigger Warnings | [INDEPENDENT] | [TODO]
 - [ ] [ID-2.3.13] | Test Profile persistence across sessions | [INDEPENDENT] | [TODO]
 
 ### [EPIC-2.4] Memory Hardening & Security (10 WU)
-- [ ] [ID-2.4.1] | Implement AES-GCM encryption helper for `localStorage` | [INDEPENDENT] | [TODO]
-- [ ] [ID-2.4.2] | Add unit tests for Encryption/Decryption logic | [INDEPENDENT] | [TODO]
-- [ ] [ID-2.4.3] | Integrate encryption into `MemoryService.saveMemories` | [BLOCKS-ID-2.4.1] | [TODO]
-- [ ] [ID-2.4.4] | Integrate decryption into `MemoryService.loadMemories` | [BLOCKS-ID-2.4.3] | [TODO]
 - [ ] [ID-2.4.5] | Create `EmbeddingWorker` class for off-main-thread processing | [INDEPENDENT] | [TODO]
 - [ ] [ID-2.4.6] | Refactor `embeddings.ts` to communicate with Worker | [BLOCKS-ID-2.4.5] | [TODO]
 - [ ] [ID-2.4.7] | Add integration test for Worker communication | [INDEPENDENT] | [TODO]
@@ -29,11 +18,6 @@
 ## Phase 3: Accessibility & UX
 
 ### [EPIC-3.2] UI & Focus Management (10 WU)
-- [ ] [ID-3.2.1] | Audit `TerminalInput` focus management | [INDEPENDENT] | [TODO]
-- [ ] [ID-3.2.2] | Audit `TerminalOutput` live region updates | [INDEPENDENT] | [TODO]
-- [ ] [ID-3.2.3] | Fix missing `aria-labels` on interactive elements | [INDEPENDENT] | [TODO]
-- [ ] [ID-3.2.4] | Implement "Skip to Content" link for keyboard users | [INDEPENDENT] | [TODO]
-- [ ] [ID-3.2.5] | Add keyboard shortcuts for common commands (Ctrl+K, etc.) | [INDEPENDENT] | [TODO]
 - [ ] [ID-3.2.6] | Test focus trap implementation in modal dialogs (if any) | [INDEPENDENT] | [TODO]
 - [ ] [ID-3.2.7] | Verify high contrast mode support in Windows/macOS | [INDEPENDENT] | [TODO]
 - [ ] [ID-3.2.8] | Add visual focus indicators for all interactive elements | [INDEPENDENT] | [TODO]

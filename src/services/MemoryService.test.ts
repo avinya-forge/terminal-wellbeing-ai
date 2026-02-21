@@ -4,8 +4,8 @@ import { cosineSimilarity } from '../utils/embeddings';
 
 // Mock dependencies
 jest.mock('../utils/embeddings', () => ({
-  calculateEmbedding: jest.fn(),
-  cosineSimilarity: jest.fn()
+  calculateEmbedding: jest.fn().mockResolvedValue([0.1, 0.2, 0.3]),
+  cosineSimilarity: jest.fn().mockReturnValue(0.9)
 }));
 
 describe('MemoryService', () => {
@@ -13,24 +13,17 @@ describe('MemoryService', () => {
   const mockCalculateEmbedding = calculateEmbedding as jest.Mock;
   const mockCosineSimilarity = cosineSimilarity as jest.Mock;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.clearAllMocks();
     window.localStorage.clear();
     // Re-instantiate if possible or use existing singleton
     service = MemoryService.getInstance();
-    service.clearMemories();
-
-    // Mock cosine similarity implementation (basic one for tests)
-    mockCosineSimilarity.mockImplementation((a: number[], b: number[]) => {
-        let dot = 0;
-        for(let i=0; i<a.length; i++) dot += a[i]*b[i];
-        return dot; // Simplified for test control
-    });
+    // Ensure service is initialized and cleared
+    await service.initialize();
+    await service.clearMemories();
   });
 
   it('should add memory correctly', async () => {
-    mockCalculateEmbedding.mockResolvedValue([0.1, 0.2, 0.3]);
-
     const entry = await service.addMemory('test content', 'user');
 
     expect(entry).not.toBeNull();
@@ -54,9 +47,10 @@ describe('MemoryService', () => {
     // Search Query (matches Memory 1)
     mockCalculateEmbedding.mockResolvedValueOnce([1, 0, 0]);
 
-    // Setup cosine mock to return high score for mem1 and low for mem2
+    // Setup cosine mock
     mockCosineSimilarity.mockImplementation((a, b) => {
-        if (a[0] === 1 && b[0] === 1) return 1.0; // Perfect match
+        // Simple dot product for mocking
+        if (a[0] === 1 && b[0] === 1) return 1.0;
         return 0.0;
     });
 
@@ -81,25 +75,31 @@ describe('MemoryService', () => {
     await service.addMemory('3', 'user');
 
     expect(service.getMemoryCount()).toBe(2);
-    const contents = service.getMemories().map(m => m.content);
+
+    const memories = service.getMemories();
+    const contents = memories.map(m => m.content);
+
     // Should contain 2 and 3 (newest), 1 should be gone
+    // Note: The service sorts by timestamp DESCENDING (newest first) on save
+    // So we expect the newest (3, 2) to be present.
     expect(contents).toContain('2');
     expect(contents).toContain('3');
     expect(contents).not.toContain('1');
   });
 
-  it('should persist to localStorage', async () => {
-      mockCalculateEmbedding.mockResolvedValue([0.1]);
+  it('should persist to localStorage (encrypted)', async () => {
       await service.addMemory('persist me', 'user');
 
       const stored = window.localStorage.getItem('wellbeing_long_term_memory');
       expect(stored).not.toBeNull();
-      expect(stored).toContain('persist me');
+      // Should NOT contain plain text
+      expect(stored).not.toContain('persist me');
+      // Should look like base64 (alphanumeric + +/=)
+      expect(stored).toMatch(/^[A-Za-z0-9+/=]+$/);
   });
 
   it('should respect privacy mode', async () => {
-    service.setPrivacyMode(true);
-    mockCalculateEmbedding.mockResolvedValue([0.1]);
+    await service.setPrivacyMode(true);
 
     const entry = await service.addMemory('secret', 'user');
     expect(entry).toBeNull();
@@ -109,7 +109,7 @@ describe('MemoryService', () => {
     expect(window.localStorage.getItem('wellbeing_long_term_memory')).toBeNull();
 
     // Turn off privacy mode
-    service.setPrivacyMode(false);
+    await service.setPrivacyMode(false);
     // Should reload from storage (which is empty/cleared)
     expect(service.getMemoryCount()).toBe(0);
 
