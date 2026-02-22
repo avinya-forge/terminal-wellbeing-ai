@@ -1,4 +1,4 @@
-import { forwardRef, useState, KeyboardEvent } from 'react';
+import { forwardRef, useState, KeyboardEvent, memo } from 'react';
 
 interface TerminalInputProps {
   onSendMessage: (message: string) => void;
@@ -39,4 +39,4 @@ const TerminalInput = forwardRef<HTMLInputElement, TerminalInputProps>(
 
 TerminalInput.displayName = 'TerminalInput';
 
-export default TerminalInput;
+export default memo(TerminalInput);

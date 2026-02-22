@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import TerminalHeader from './TerminalHeader';
 import TerminalOutput from './TerminalOutput';
 import TerminalInput from './TerminalInput';
@@ -23,6 +23,14 @@ const Terminal = () => {
   const [isPrivacyMode, setIsPrivacyMode] = useState(getPrivacyMode());
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Ref to keep track of messages without triggering re-renders in callbacks
+  const messagesRef = useRef(messages);
+
+  // Sync messagesRef with messages state
+  useEffect(() => {
+    messagesRef.current = messages;
+  }, [messages]);
 
   // Initialize theme from local storage — themes are stored as plain strings
   useEffect(() => {
@@ -78,7 +86,7 @@ const Terminal = () => {
   }, [isLoading, isPanicMode]);
 
   // Handle sending a new message
-  const handleSendMessage = async (content: string) => {
+  const handleSendMessage = useCallback(async (content: string) => {
     if (!content.trim()) return;
 
     // Check for panic command immediately
@@ -129,7 +137,8 @@ const Terminal = () => {
 
     try {
       // Process the command or generate a response
-      const response = await processCommand(content, messages);
+      // Use ref to access latest messages without adding to dependency array
+      const response = await processCommand(content, messagesRef.current);
 
       // Create bot message
       const botMessage: Message = {
@@ -156,7 +165,7 @@ const Terminal = () => {
     } finally {
       setIsTyping(false);
     }
-  };
+  }, [isPrivacyMode, setMessages]);
 
   // Keyboard shortcuts integration
   useKeyboardShortcuts({

@@ -2,9 +2,14 @@
 
 ## v1.8.1 (Phase 3: Accessibility & Visual Polish)
 
+### [EPIC-3.2] UI & Focus Management (10 WU)
+- [x] [ID-3.2.8] | Add visual focus indicators for all interactive elements | [INDEPENDENT] | [DONE]
+
 ### [EPIC-3.3] Visual Polish (10 WU)
 - [x] [ID-3.3.1] | Profile `TypingIndicator` performance | [INDEPENDENT] | [DONE]
 - [x] [ID-3.3.2] | Refactor `TypingIndicator` to use CSS animations | [INDEPENDENT] | [DONE]
+- [x] [ID-3.3.3] | Optimize re-renders in `Terminal.tsx` | [INDEPENDENT] | [DONE]
+- [x] [ID-3.3.5] | Implement "Reduced Motion" media query support | [INDEPENDENT] | [DONE]
 - [x] [ID-3.3.6] | Standardize spacing using Tailwind utility classes | [INDEPENDENT] | [DONE]
 
 ### [EPIC-3.4] Automated Accessibility Pipeline (10 WU)

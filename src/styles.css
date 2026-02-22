@@ -140,3 +140,23 @@ body {
     font-size: 12px;
   }
 }
+
+/* Accessibility: Focus Indicators (ID-3.2.8) */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* Accessibility: Reduced Motion (ID-3.3.5) */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
