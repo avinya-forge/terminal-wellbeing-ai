@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Terminal from './components/Terminal';
 import ReloadPrompt from './components/ReloadPrompt';
-import { Skeleton } from './components/ui/Skeleton';
+import { Skeleton } from './components/ui/skeleton';
 import './styles.css';
 
 function App() {
