@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Message } from '../types/Message';
 import TerminalMessage from './TerminalMessage';
 import TypingIndicator from './TypingIndicator';
@@ -7,7 +8,7 @@ interface TerminalOutputProps {
   isTyping: boolean;
 }
 
-const TerminalOutput = ({ messages, isTyping }: TerminalOutputProps) => {
+const TerminalOutput = memo(({ messages, isTyping }: TerminalOutputProps) => {
   return (
     <div role="log" aria-live="polite">
       {messages.map((message) => (
@@ -17,6 +18,8 @@ const TerminalOutput = ({ messages, isTyping }: TerminalOutputProps) => {
       {isTyping && <TypingIndicator />}
     </div>
   );
-};
+});
+
+TerminalOutput.displayName = 'TerminalOutput';
 
 export default TerminalOutput;
