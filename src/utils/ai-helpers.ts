@@ -46,16 +46,31 @@ export function filterContent(text: string, warnings: string[] = []): string {
 
 // Post-process the response to improve quality and conversational flow
 export function postProcessResponse(response: string, input: string, warnings: string[] = []): string {
-  // Remove any repetitive phrases
-  const lines = response.split('\n').filter(line => line.trim() !== '');
+  // Logic to preserve Markdown formatting while removing repetitive phrases
   let processedResponse = response;
 
+  const lines = response.split('\n');
   if (lines.length > 1) {
-    // Remove duplicate consecutive lines
-    const uniqueLines = lines.filter((line, index, arr) =>
-      index === 0 || line !== arr[index - 1]
-    );
-    processedResponse = uniqueLines.join('\n');
+    const cleanedLines: string[] = [];
+    let lastNonEmptyLine = '';
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (trimmed === '') {
+        // Keep empty lines for formatting
+        cleanedLines.push(line);
+      } else {
+        // Only add if it's not a duplicate of the last non-empty line
+        if (trimmed !== lastNonEmptyLine) {
+          cleanedLines.push(line);
+          lastNonEmptyLine = trimmed;
+        }
+      }
+    }
+    processedResponse = cleanedLines.join('\n');
+
+    // Collapse 3+ newlines to 2 (one blank line) to prevent excessive spacing
+    processedResponse = processedResponse.replace(/\n{3,}/g, '\n\n');
   }
 
   // Ensure the response doesn't repeat the user's input verbatim

@@ -1,6 +1,7 @@
 import { Message } from "../types/Message";
 import { generateResponse } from "../services/ai";
 import { logger } from "../services/LoggerService";
+import { FIRST_TIME_GREETINGS } from "./phrases";
 
 export interface CommandDefinition {
   name: string;
@@ -40,7 +41,6 @@ export const COMMAND_DEFINITIONS: CommandDefinition[] = [
  * Response content types
  */
 interface SystemResponses {
-  welcome: string[];
   error: string;
 }
 
@@ -48,10 +48,6 @@ interface SystemResponses {
  * System response content
  */
 const SYSTEM_RESPONSES: SystemResponses = {
-  welcome: [
-    "Welcome to WellBeing.sh - Your open-source companion for mental health support.",
-    "I'm here to listen, provide support, and offer resources to help you navigate difficult emotions. Type '/help' to see what I can do."
-  ],
   error: "I'm having trouble processing that right now. Could you try rephrasing, or type /help to see what I can do?"
 };
 
@@ -75,7 +71,19 @@ function createBotMessage(content: string, id?: string): Message {
  * @returns Array of welcome messages
  */
 export function getInitialMessages(): Message[] {
-  return SYSTEM_RESPONSES.welcome.map((content, index) =>
+  const hour = new Date().getHours();
+  let timeGreeting = "Hello";
+  if (hour < 12) {
+    timeGreeting = "Good morning";
+  } else if (hour < 18) {
+    timeGreeting = "Good afternoon";
+  } else {
+    timeGreeting = "Good evening";
+  }
+
+  const welcomeMessages = FIRST_TIME_GREETINGS(timeGreeting);
+
+  return welcomeMessages.map((content, index) =>
     createBotMessage(content, (index + 1).toString())
   );
 }
