@@ -10,6 +10,15 @@ import {
 import { Message } from '../types/Message';
 import { SUICIDE_RESPONSE } from '../data/phrases';
 
+// Mock MemoryService because prepareContext uses it
+jest.mock('./MemoryService', () => ({
+  memoryService: {
+    retrieveRelevantContext: jest.fn().mockResolvedValue([]),
+    initialize: jest.fn().mockResolvedValue(undefined),
+    addMemory: jest.fn().mockResolvedValue(undefined)
+  }
+}));
+
 // Mock the transformers module
 jest.mock('@huggingface/transformers', () => ({
   pipeline: jest.fn().mockResolvedValue(jest.fn().mockResolvedValue([{ generated_text: 'Assistant: Test response' }])),
@@ -95,26 +104,18 @@ describe('AI Model Utils', () => {
      });
 
      test('should return a general support response for others', () => {
-         const resp = getSupportiveResponse('I hate myself'); // 'hate myself' is in SENSITIVE_KEYWORDS but not explicitly in SELF_DEPRECATION or SUICIDE blocks?
-         // Wait, 'hate myself' is in SENSITIVE_KEYWORDS.
-         // But getSupportiveResponse checks:
-         // 1. SELF_DEPRECATION_KEYWORDS (pathetic, useless, shit)
-         // 2. Suicide keywords (suicide, kill myself, end my life)
-         // 3. Fallback to GENERAL_SUPPORT_RESPONSES.
-         // So 'hate myself' should go to GENERAL_SUPPORT_RESPONSES.
-
+         const resp = getSupportiveResponse('I feel sad');
          expect(typeof resp).toBe('string');
          expect(resp.length).toBeGreaterThan(0);
      });
   });
 
   describe('postProcessResponse', () => {
-      test('should remove duplicate lines', () => {
+      test('should remove duplicate consecutive lines', () => {
           const input = "Hello world\nHello world\nHow are you?";
           const processed = postProcessResponse(input, "foo");
           expect(processed).toContain("Hello world");
           expect(processed).toContain("How are you?");
-          // It might have continuity phrases added
       });
 
       test('should replace user input verbatim repetition', () => {
@@ -123,6 +124,14 @@ describe('AI Model Utils', () => {
            const processed = postProcessResponse(response, input);
            expect(processed).toContain("what you mentioned");
            expect(processed).not.toContain("I am sad");
+      });
+
+      test('should preserve markdown formatting (empty lines)', () => {
+        const input = "**Header**\n\nContent.";
+        const processed = postProcessResponse(input, "foo");
+        expect(processed).toContain("**Header**");
+        expect(processed).toContain("Content.");
+        expect(processed).toMatch(/\n\n/);
       });
   });
 
@@ -136,7 +145,9 @@ describe('AI Model Utils', () => {
           const context = await prepareContext(messages);
           expect(context).toContain('Human: hello');
           expect(context).toContain('Assistant: hi there');
-          expect(context).toContain('System: You are a supportive');
+          // Updated expectation for new System Prompt
+          expect(context).toContain('Identity:');
+          expect(context).toContain('WellBeing.sh Core Engine');
       });
 
       test('should sanitize messages in context', async () => {

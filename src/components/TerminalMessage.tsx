@@ -52,7 +52,7 @@ const TerminalMessage = memo(({ message }: TerminalMessageProps) => {
       </span>
 
       {/* Visual Content - Typewriter effect, hidden from screen readers to avoid reading character by character */}
-      <div className="break-words whitespace-pre-wrap tracking-wider shadow-[0_0_5px_hsl(var(--primary)/0.5)]" aria-hidden="true">
+      <div className="break-words whitespace-pre-wrap tracking-wider shadow-[0_0_5px_hsl(var(--primary)/0.5)]" aria-hidden="true" style={{ whiteSpace: 'pre-wrap' }}>
         {displayText}
         {!isComplete && message.sender === 'bot' && (
           <span className="inline-block w-2 h-4 bg-foreground ml-[2px] animate-[blink_0.8s_step-end_infinite] shadow-[0_0_5px_hsl(var(--primary)/0.5)] opacity-80">|</span>

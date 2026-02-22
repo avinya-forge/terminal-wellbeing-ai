@@ -216,7 +216,7 @@ export class AIModelService {
     }
 
     // For suicidal thoughts
-    if (normalizedInput.includes("suicide") || normalizedInput.includes("kill myself") || normalizedInput.includes("end my life")) {
+    if (normalizedInput.includes("suicide") || normalizedInput.includes("kill myself") || normalizedInput.includes("end my life") || normalizedInput.includes("want to die")) {
       return SUICIDE_RESPONSE;
     }
 
