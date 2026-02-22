@@ -12,7 +12,9 @@ export default {
     // Mock PWA registration
     '^virtual:pwa-register/react$': '<rootDir>/__mocks__/pwaRegisterMock.js',
     // Mock worker factory to avoid import.meta issues
-    '.*workerFactory.*': '<rootDir>/__mocks__/workerFactoryMock.js'
+    '.*workerFactory.*': '<rootDir>/__mocks__/workerFactoryMock.js',
+    // Handle path alias
+    '^@/(.*)$': '<rootDir>/src/$1'
   },
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   transform: {

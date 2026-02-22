@@ -20,8 +20,8 @@ describe('App Component', () => {
   it('shows loading state initially', () => {
     render(<App />);
     
-    // Check for loading message
-    expect(screen.getByText(/Loading WellBeing\.sh/i)).toBeInTheDocument();
+    // Check for loading state (skeleton)
+    expect(screen.getByLabelText(/Loading application/i)).toBeInTheDocument();
     
     // Terminal component should not be rendered yet
     expect(screen.queryByTestId('terminal-component')).not.toBeInTheDocument();
@@ -40,7 +40,7 @@ describe('App Component', () => {
       expect(screen.getByTestId('terminal-component')).toBeInTheDocument();
     });
     
-    // Loading message should be gone
-    expect(screen.queryByText(/Loading WellBeing\.sh/i)).not.toBeInTheDocument();
+    // Loading skeleton should be gone
+    expect(screen.queryByLabelText(/Loading application/i)).not.toBeInTheDocument();
   });
 });

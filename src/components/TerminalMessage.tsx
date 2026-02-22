@@ -1,17 +1,24 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { Message } from '../types/Message';
 
 interface TerminalMessageProps {
   message: Message;
 }
 
-const TerminalMessage = ({ message }: TerminalMessageProps) => {
+const TerminalMessage = memo(({ message }: TerminalMessageProps) => {
   const [displayText, setDisplayText] = useState('');
   const [isComplete, setIsComplete] = useState(false);
   
   // Typewriter effect for bot messages
   useEffect(() => {
     if (message.sender === 'user') {
+      setDisplayText(message.content);
+      setIsComplete(true);
+      return;
+    }
+
+    // Skip typewriter effect if user prefers reduced motion
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setDisplayText(message.content);
       setIsComplete(true);
       return;
@@ -53,6 +60,8 @@ const TerminalMessage = ({ message }: TerminalMessageProps) => {
       </div>
     </div>
   );
-};
+});
+
+TerminalMessage.displayName = 'TerminalMessage';
 
 export default TerminalMessage;

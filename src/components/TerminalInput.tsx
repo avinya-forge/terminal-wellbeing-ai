@@ -26,7 +26,7 @@ const TerminalInput = forwardRef<HTMLInputElement, TerminalInputProps>(
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="flex-1 bg-transparent border-none text-foreground font-inherit text-inherit outline-none shadow-[0_0_5px_hsl(var(--primary)/0.5)] caret-transparent"
+          className="flex-1 bg-transparent border-none text-foreground font-inherit text-inherit focus:outline-none focus-visible:ring-2 focus-visible:ring-accent shadow-[0_0_5px_hsl(var(--primary)/0.5)] caret-transparent"
           placeholder="Type your message or /help for commands..."
           disabled={disabled}
           aria-label="Terminal Command Input"
