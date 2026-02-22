@@ -167,12 +167,12 @@ const Terminal = () => {
   });
 
   return (
-    <div className="terminal-container relative">
+    <main className="relative max-w-[800px] mx-auto my-8 border border-primary rounded overflow-hidden shadow-[0_0_10px_hsl(var(--primary)/0.3),0_0_5px_hsl(var(--primary)/0.5)] h-[80vh] flex flex-col bg-background">
       {isPanicMode && <PanicOverlay onClose={() => setIsPanicMode(false)} />}
 
       <TerminalHeader modelLoaded={modelLoaded} loadingStatus={loadingStatus} privacyMode={isPrivacyMode} />
 
-      <div className="terminal-body">
+      <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-2 bg-background relative terminal-grid-bg">
         <TerminalOutput messages={messages} isTyping={isTyping} />
         <div ref={messagesEndRef} />
       </div>
@@ -182,7 +182,7 @@ const Terminal = () => {
         onSendMessage={handleSendMessage}
         disabled={isTyping || isLoading || isPanicMode}
       />
-    </div>
+    </main>
   );
 };
 

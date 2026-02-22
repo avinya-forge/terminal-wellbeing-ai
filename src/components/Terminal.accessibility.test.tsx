@@ -55,10 +55,9 @@ describe('Terminal Accessibility', () => {
       expect(srOnlySpan).toBeInTheDocument();
       expect(srOnlySpan?.textContent).toMatch(/System:.*Hello World/);
 
-      // Check for aria-hidden on the visual part
-      const visualContent = container.querySelector('.message-content');
+      // Check for aria-hidden on the visual part (it's a div, unlike prompts which are spans)
+      const visualContent = container.querySelector('div[aria-hidden="true"]');
       expect(visualContent).toBeInTheDocument();
-      expect(visualContent).toHaveAttribute('aria-hidden', 'true');
     });
   });
 

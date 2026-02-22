@@ -28,6 +28,12 @@ jobs:
     - name: Run tests
       run: npm test -- --coverage
 
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+
+    - name: Run E2E & A11y Tests
+      run: npx playwright test
+
     - name: Upload coverage reports
       uses: codecov/codecov-action@v5
       with:

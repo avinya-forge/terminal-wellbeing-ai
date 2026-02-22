@@ -25,6 +25,7 @@ export default {
     'node_modules/(?!(@huggingface|@radix-ui|lucide-react)/)'
   ],
   extensionsToTreatAsEsm: ['.ts', '.tsx'],
+  testPathIgnorePatterns: ['/node_modules/', '/e2e/'],
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',
     '!src/**/*.d.ts',

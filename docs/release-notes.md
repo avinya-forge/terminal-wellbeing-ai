@@ -1,5 +1,18 @@
 # Release Notes
 
+## v1.8.1 (Phase 3: Accessibility & Visual Polish)
+
+### [EPIC-3.3] Visual Polish (10 WU)
+- [x] [ID-3.3.1] | Profile `TypingIndicator` performance | [INDEPENDENT] | [DONE]
+- [x] [ID-3.3.2] | Refactor `TypingIndicator` to use CSS animations | [INDEPENDENT] | [DONE]
+- [x] [ID-3.3.6] | Standardize spacing using Tailwind utility classes | [INDEPENDENT] | [DONE]
+
+### [EPIC-3.4] Automated Accessibility Pipeline (10 WU)
+- [x] [ID-3.4.1] | Install `playwright` and `@axe-core/playwright` | [INDEPENDENT] | [DONE]
+- [x] [ID-3.4.2] | Create `a11y.spec.ts` for automated audit | [BLOCKS-ID-3.4.1] | [DONE]
+- [x] [ID-3.4.3] | Implement "Critical Path" accessibility tests | [BLOCKS-ID-3.4.2] | [DONE]
+- [x] [ID-3.4.4] | Configure CI to fail on accessibility violations | [INDEPENDENT] | [DONE]
+
 ## v1.8.0 (Phase 1: Resilience & Architecture)
 
 ### [EPIC-1.1] AI Service Resilience (10 WU)
