@@ -16,16 +16,13 @@
 ### [EPIC-3.2] UI & Focus Management (10 WU)
 - [ ] [ID-3.2.6] | Test focus trap implementation in modal dialogs (if any) | [INDEPENDENT] | [TODO]
 - [ ] [ID-3.2.7] | Verify high contrast mode support in Windows/macOS | [INDEPENDENT] | [TODO]
-- [ ] [ID-3.2.8] | Add visual focus indicators for all interactive elements | [INDEPENDENT] | [TODO]
 - [ ] [ID-3.2.9] | Test with NVDA screen reader (manual) | [INDEPENDENT] | [TODO]
 - [ ] [ID-3.2.10] | Test with VoiceOver screen reader (manual) | [INDEPENDENT] | [TODO]
 
 ### [EPIC-3.3] Visual Polish (10 WU)
 - [x] [ID-3.3.1] | Profile `TypingIndicator` performance | [INDEPENDENT] | [DONE]
 - [x] [ID-3.3.2] | Refactor `TypingIndicator` to use CSS animations | [INDEPENDENT] | [DONE]
-- [ ] [ID-3.3.3] | Optimize re-renders in `Terminal.tsx` | [INDEPENDENT] | [TODO]
 - [ ] [ID-3.3.4] | Verify "smooth scrolling" behavior | [INDEPENDENT] | [TODO]
-- [ ] [ID-3.3.5] | Implement "Reduced Motion" media query support | [INDEPENDENT] | [TODO]
 - [x] [ID-3.3.6] | Standardize spacing using Tailwind utility classes | [INDEPENDENT] | [DONE]
 - [ ] [ID-3.3.7] | Add loading skeletons for initial load | [INDEPENDENT] | [TODO]
 - [ ] [ID-3.3.8] | Polish scrollbar styling for cross-browser consistency | [INDEPENDENT] | [TODO]
