@@ -49,10 +49,9 @@ describe('TerminalOutput Component', () => {
     expect(screen.getByText('>')).toBeInTheDocument();
     expect(screen.getByText('Thinking')).toBeInTheDocument();
     
-    // The animation dots should be present
-    const animatedElement = screen.getByText('...');
-    expect(animatedElement).toBeInTheDocument();
-    expect(animatedElement).toHaveClass('typing-dots');
+    // The animation dots should be present (3 dots)
+    const dots = screen.getAllByText('.');
+    expect(dots.length).toBeGreaterThanOrEqual(3);
   });
 
   it('does not show typing indicator when isTyping is false', () => {

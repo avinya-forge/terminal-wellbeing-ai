@@ -33,8 +33,8 @@ const TerminalMessage = ({ message }: TerminalMessageProps) => {
   }, [message.content, message.sender]);
 
   return (
-    <div className={`message ${message.sender === 'bot' ? 'bot-message' : 'user-message'}`}>
-      <span className={`message-prompt ${message.sender === 'bot' ? 'bot-prompt' : 'user-prompt'}`} aria-hidden="true">
+    <div className={`flex mb-2 ${message.sender === 'bot' ? 'text-primary mb-3' : 'text-foreground mb-3'}`}>
+      <span className={`mr-2 font-bold shadow-[0_0_5px_hsl(var(--primary)/0.5)] ${message.sender === 'bot' ? 'text-primary' : 'text-foreground'}`} aria-hidden="true">
         {message.sender === 'bot' ? '$' : '>'}
       </span>
 
@@ -45,10 +45,10 @@ const TerminalMessage = ({ message }: TerminalMessageProps) => {
       </span>
 
       {/* Visual Content - Typewriter effect, hidden from screen readers to avoid reading character by character */}
-      <div className="message-content" aria-hidden="true">
+      <div className="break-words whitespace-pre-wrap tracking-wider shadow-[0_0_5px_hsl(var(--primary)/0.5)]" aria-hidden="true">
         {displayText}
         {!isComplete && message.sender === 'bot' && (
-          <span className="cursor">|</span>
+          <span className="inline-block w-2 h-4 bg-foreground ml-[2px] animate-[blink_0.8s_step-end_infinite] shadow-[0_0_5px_hsl(var(--primary)/0.5)] opacity-80">|</span>
         )}
       </div>
     </div>

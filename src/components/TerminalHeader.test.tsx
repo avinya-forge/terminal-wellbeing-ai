@@ -12,8 +12,9 @@ describe('TerminalHeader Component', () => {
     expect(screen.getByText('AI: Loading...')).toBeInTheDocument();
 
     // Check for status indicators (dots) — there are 3 decorative traffic lights
-    const dots = document.querySelectorAll('.status-indicator');
-    expect(dots.length).toBe(3);
+    expect(screen.getByTitle('Close')).toBeInTheDocument();
+    expect(screen.getByTitle('Minimize')).toBeInTheDocument();
+    expect(screen.getByTitle(/AI Model: Loading/i)).toBeInTheDocument();
   });
 
   it('renders with model loaded state when specified', () => {
@@ -23,8 +24,9 @@ describe('TerminalHeader Component', () => {
     expect(screen.getByText('AI: Ready')).toBeInTheDocument();
 
     // Check for green status indicator (the third dot becomes green when ready)
-    const greenDot = document.querySelector('.status-green');
+    const greenDot = document.querySelector('[title="AI Model: Ready"]');
     expect(greenDot).toBeInTheDocument();
+    expect(greenDot).toHaveClass('bg-[var(--success)]');
   });
 
   it('shows custom loading status when provided', () => {
