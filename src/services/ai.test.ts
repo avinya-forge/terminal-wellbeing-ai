@@ -15,7 +15,8 @@ jest.mock('./MemoryService', () => ({
   memoryService: {
     retrieveRelevantContext: jest.fn().mockResolvedValue([]),
     initialize: jest.fn().mockResolvedValue(undefined),
-    addMemory: jest.fn().mockResolvedValue(undefined)
+    addMemory: jest.fn().mockResolvedValue(undefined),
+    setPrivacyMode: jest.fn().mockResolvedValue(undefined)
   }
 }));
 

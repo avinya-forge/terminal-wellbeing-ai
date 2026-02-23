@@ -28,8 +28,8 @@ describe('Responses Data', () => {
       });
       
       // Check message content
-      expect(messages[0].content).toContain('Welcome to WellBeing.sh');
-      expect(messages[1].content).toContain("I'm here to listen");
+      expect(messages[0].content).toContain('INITIALIZING...');
+      expect(messages[1].content).toContain('SYSTEM BOOT');
     });
   });
 

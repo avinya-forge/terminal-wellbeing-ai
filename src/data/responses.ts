@@ -71,17 +71,8 @@ function createBotMessage(content: string, id?: string): Message {
  * @returns Array of welcome messages
  */
 export function getInitialMessages(): Message[] {
-  const hour = new Date().getHours();
-  let timeGreeting = "Hello";
-  if (hour < 12) {
-    timeGreeting = "Good morning";
-  } else if (hour < 18) {
-    timeGreeting = "Good afternoon";
-  } else {
-    timeGreeting = "Good evening";
-  }
-
-  const welcomeMessages = FIRST_TIME_GREETINGS(timeGreeting);
+  // Time greeting logic removed as it's no longer used in FIRST_TIME_GREETINGS
+  const welcomeMessages = FIRST_TIME_GREETINGS();
 
   return welcomeMessages.map((content, index) =>
     createBotMessage(content, (index + 1).toString())

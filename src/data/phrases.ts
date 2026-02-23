@@ -63,7 +63,7 @@ export const GREETINGS = (timeGreeting: string) => [
   `**INTERFACE READY**\n\nWelcome back.\n\n---\n*   **Diagnostic:** How are your energy levels?\n\n*System Observation: Logging start time.*`
 ];
 
-export const FIRST_TIME_GREETINGS = (timeGreeting: string) => [
+export const FIRST_TIME_GREETINGS = () => [
   `**INITIALIZING...**\n\nIdentity: WellBeing.sh Core Engine (SUB-ARCHITECT).\n\n---\n*   **Mission:** Optimization of user wellbeing.\n*   **Protocol:** Non-judgmental analysis.\n\n*System Observation: New user profile created.*`,
   `**SYSTEM BOOT**\n\nCore Engine Online.\n\n---\n*   **Role:** I am your grounded support system.\n*   **Action:** Tell me about your current state.\n\n*System Observation: Initialization complete.*`
 ];
