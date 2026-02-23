@@ -1,17 +1,144 @@
 {
-    "safety_protocols": {
-        "emergency_keywords": [
-            "chest pain",
-            "hard to breathe",
-            "severe bleeding",
-            "unconscious",
-            "stroke symptoms",
-            "sudden numbness"
+    "_meta": {
+        "version": "2.0.0",
+        "references": [
+            "NHS England Mental Health Implementation Plan 2019–2024",
+            "RCPSYCH Safe Messaging Guidelines on Suicide and Self-Harm",
+            "NICE CG90: Depression in Adults (2022 update)",
+            "HEE Digital Mental Health Framework",
+            "Samaritans Media Guidelines 2023"
         ],
-        "action": "TRIGGER_EMERGENCY_PROTOCOL_911"
+        "last_reviewed": "2026-02-23"
+    },
+    "safety_tiers": {
+        "tier1_immediate_emergency": {
+            "description": "Life-threatening physical or mental health emergency. Trigger EMERGENCY_PROTOCOL immediately. Do not continue inference. Provide emergency contacts.",
+            "action": "EMERGENCY_PROTOCOL",
+            "keywords": [
+                "chest pain",
+                "heart attack",
+                "hard to breathe",
+                "can't breathe",
+                "severe bleeding",
+                "blood loss",
+                "unconscious",
+                "stroke symptoms",
+                "sudden numbness",
+                "overdose",
+                "I've taken pills",
+                "taken too many pills",
+                "I want to kill myself",
+                "I'm going to kill myself",
+                "ending my life tonight",
+                "I've hurt myself badly",
+                "I'm going to end it",
+                "goodbye forever",
+                "I won't be here tomorrow"
+            ],
+            "response_template": "IMMEDIATE_EMERGENCY_CONTACT",
+            "contacts": {
+                "UK": {
+                    "emergency": "999",
+                    "crisis_line": "116 123 (Samaritans, 24/7)",
+                    "text": "SHOUT to 85258"
+                },
+                "US": {
+                    "emergency": "911",
+                    "crisis_line": "988 (Suicide & Crisis Lifeline, 24/7)",
+                    "text": "Text HOME to 741741"
+                },
+                "international": "https://www.findahelpline.com"
+            }
+        },
+        "tier2_unsafe_territory": {
+            "description": "Conversation has entered territory where AI assistance could be harmful. Archive conversation, halt inference, route to human support.",
+            "action": "TRIAGE_AND_ARCHIVE",
+            "keywords": [
+                "how do I hurt myself",
+                "best way to die",
+                "methods of suicide",
+                "how much medication to take",
+                "how to self harm",
+                "want to punish myself",
+                "deserve to suffer",
+                "abusing me",
+                "someone is hurting me",
+                "being exploited",
+                "forced to",
+                "being trafficked",
+                "groomed",
+                "how to get drugs",
+                "where to buy",
+                "dealer"
+            ],
+            "response_template": "SAFE_HANDOFF",
+            "safe_handoff_message": "I'm not the right support for what you're describing — and that's okay. There are people trained specifically for this moment. Would it be okay to share some resources? In the UK: Samaritans on 116 123 (free, 24/7). In the US: 988 (call or text). Or type /panic for immediate crisis support."
+        },
+        "tier3_high_sensitivity": {
+            "description": "Emotionally sensitive territory. Route to empathy model (Zephyr), log, apply safe messaging guidelines. Continue inference with care.",
+            "action": "ROUTE_TO_EMPATHY_MODEL",
+            "keywords": [
+                "suicidal thoughts",
+                "thinking about dying",
+                "don't want to be here",
+                "wish I wasn't alive",
+                "I hate myself",
+                "worthless",
+                "hopeless",
+                "no reason to live",
+                "self harm",
+                "cutting",
+                "burning myself",
+                "eating disorder",
+                "starving myself",
+                "binge",
+                "purging",
+                "anxious",
+                "panic attack",
+                "can't stop crying",
+                "breaking down",
+                "relapse",
+                "using again",
+                "drinking too much",
+                "abuse",
+                "trauma",
+                "ptsd",
+                "flashback",
+                "being bullied",
+                "no one cares"
+            ],
+            "safe_messaging_notes": [
+                "Do NOT ask for specific method details",
+                "Do NOT express judgement",
+                "Validate feelings before providing information",
+                "Always mention professional support",
+                "Use 'died by suicide' not 'committed suicide'"
+            ]
+        }
+    },
+    "safe_messaging_guidelines": {
+        "source": "Samaritans / RCPSYCH",
+        "principles": [
+            "Express empathy and validation first",
+            "Avoid minimising or normalising distress",
+            "Never promise confidentiality you cannot keep",
+            "Encourage connection with professional support",
+            "Signpost to relevant local services",
+            "Keep language simple and non-clinical"
+        ]
+    },
+    "model_routing_policy": {
+        "tier1_immediate_emergency": "NO_INFERENCE",
+        "tier2_unsafe_territory": "NO_INFERENCE",
+        "tier3_high_sensitivity": "HuggingFaceH4/zephyr-7b-beta",
+        "safe_complex": "meta-llama/Meta-Llama-3-8B-Instruct",
+        "safe_brief": "microsoft/phi-2",
+        "safe_neutral": "mistralai/Mistral-7B-Instruct-v0.2"
     },
     "general_care": {
         "hydration": "Recommend 200ml water intake every 2 hours if active.",
-        "vitamin_d": "Check for deficiency history; recommend intake at 9 PM for absorption consistency."
+        "vitamin_d": "Check for deficiency history; recommend intake at 9 PM for absorption consistency.",
+        "sleep": "NHS recommends 7–9 hours for adults. Consistent sleep/wake times support circadian rhythm.",
+        "physical_activity": "NHS guidelines: 150 minutes moderate activity per week, or 75 minutes vigorous."
     }
 }

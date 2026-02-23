@@ -32,12 +32,22 @@ describe('BackendClient', () => {
                 json: async () => mockResponse,
             });
 
-            const result = await backendClient.generateText('Hi');
+            const result = await backendClient.generateText('Hi, how are you today?');
             expect(result).toBe('Hello from the backend');
+            // URL must point to the HF inference API (model is chosen by ModelRouter)
             expect(global.fetch).toHaveBeenCalledWith(
-                expect.stringContaining('distilgpt2'),
+                expect.stringContaining('api-inference.huggingface.co/models/'),
                 expect.any(Object)
             );
+        });
+
+        it('should halt inference and return safe response for IMMEDIATE_EMERGENCY messages', async () => {
+            const result = await backendClient.generateText('I want to kill myself');
+            // fetch must NOT have been called
+            expect(global.fetch).not.toHaveBeenCalled();
+            // Must return the NHS emergency contacts message
+            expect(result).toContain('999');
+            expect(result).toContain('116 123');
         });
 
         it('should return null on API error', async () => {

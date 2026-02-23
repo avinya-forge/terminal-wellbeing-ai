@@ -1,10 +1,11 @@
 {
   "name": "terminal-wellbeing-ai",
   "private": true,
-  "version": "1.8.2",
+  "version": "2.0.0-alpha",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:mobile": "vite --host 0.0.0.0",
     "build": "tsc && vite build",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 10",
     "test": "jest",

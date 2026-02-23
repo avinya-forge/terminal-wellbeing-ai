@@ -172,21 +172,46 @@ const Terminal = () => {
     onClear: () => setMessages(getInitialMessages()),
     onFocus: () => inputRef.current?.focus(),
     onPanic: () => setIsPanicMode(true),
-    // Simulate user typing /profile view
     onProfile: () => handleSendMessage('/profile view')
   });
 
   return (
-    <main className="relative max-w-[800px] mx-auto my-8 border border-primary rounded overflow-hidden shadow-[0_0_10px_hsl(var(--primary)/0.3),0_0_5px_hsl(var(--primary)/0.5)] h-[80vh] flex flex-col bg-background">
+    /* ── Full-screen terminal — fills the entire flex column from #root → App ── */
+    <main
+      aria-label="Terminal"
+      style={{
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        width: '100%',
+        minHeight: 0,
+        background: 'hsl(var(--card))',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
       {isPanicMode && <PanicOverlay onClose={() => setIsPanicMode(false)} />}
 
+      {/* Header */}
       <TerminalHeader modelLoaded={modelLoaded} loadingStatus={loadingStatus} privacyMode={isPrivacyMode} />
 
-      <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-2 bg-background relative terminal-grid-bg">
+      {/* Scrollable message body — takes all remaining height */}
+      <div
+        className="scanlines"
+        style={{
+          flex: 1,
+          overflowY: 'auto',
+          padding: '1.25rem 2rem',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+        onClick={() => inputRef.current?.focus()}
+      >
         <TerminalOutput messages={messages} isTyping={isTyping} />
         <div ref={messagesEndRef} />
       </div>
 
+      {/* Input bar — always at bottom */}
       <TerminalInput
         ref={inputRef}
         onSendMessage={handleSendMessage}

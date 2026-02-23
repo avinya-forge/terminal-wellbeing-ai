@@ -17,26 +17,70 @@ const TerminalInput = forwardRef<HTMLInputElement, TerminalInputProps>(
     };
 
     return (
-      <div className="flex relative px-4 py-2 border-t border-primary bg-background">
-        <span className="text-foreground mr-2 font-bold shadow-[0_0_5px_hsl(var(--primary)/0.5)]" aria-hidden="true">{'>'}</span>
-        <input
-          ref={ref}
-          id="terminal-input"
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          className="flex-1 bg-transparent border-none text-foreground font-inherit text-inherit focus:outline-none focus-visible:ring-2 focus-visible:ring-accent shadow-[0_0_5px_hsl(var(--primary)/0.5)] caret-transparent"
-          placeholder="Type your message or /help for commands..."
-          disabled={disabled}
-          aria-label="Terminal Command Input"
-        />
-        {!disabled && <span className="inline-block w-2 h-4 bg-foreground ml-[2px] animate-[blink_0.8s_step-end_infinite] shadow-[0_0_5px_hsl(var(--primary)/0.5)] opacity-80" aria-hidden="true">|</span>}
+      <div
+        className="flex-shrink-0 flex items-center gap-2 px-4 py-3 border-t"
+        style={{
+          borderColor: 'hsl(var(--primary)/0.5)',
+          background: 'hsl(var(--background))',
+        }}
+      >
+        {/* Prompt glyph */}
+        <span
+          className="font-bold select-none flex-shrink-0"
+          style={{
+            color: 'hsl(var(--primary))',
+            textShadow: '0 0 6px hsl(var(--primary)/0.7)',
+            fontSize: '14px',
+            lineHeight: 1,
+          }}
+          aria-hidden="true"
+        >
+          {'>'}
+        </span>
+
+        {/* Input + blinking cursor */}
+        <div className="flex-1 flex items-center min-w-0 relative">
+          <input
+            ref={ref}
+            id="terminal-input"
+            type="text"
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            className="w-full bg-transparent border-none outline-none caret-transparent"
+            style={{
+              color: 'hsl(var(--foreground))',
+              fontFamily: 'inherit',
+              fontSize: 'inherit',
+              lineHeight: 'inherit',
+              letterSpacing: '0.04em',
+            }}
+            placeholder={disabled ? 'Processing...' : 'Type a message or /help…'}
+            disabled={disabled}
+            aria-label="Terminal input"
+            autoComplete="off"
+            spellCheck={false}
+          />
+          {/* Blinking block cursor — shown when active & not disabled */}
+          {!disabled && (
+            <span
+              className="absolute pointer-events-none"
+              style={{
+                left: `${input.length}ch`,
+                width: '0.55em',
+                height: '1.1em',
+                background: 'hsl(var(--primary)/0.8)',
+                display: 'inline-block',
+                animation: 'blink 1s step-end infinite',
+              }}
+              aria-hidden="true"
+            />
+          )}
+        </div>
       </div>
     );
   }
 );
 
 TerminalInput.displayName = 'TerminalInput';
-
 export default memo(TerminalInput);

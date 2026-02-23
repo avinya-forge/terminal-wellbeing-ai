@@ -1,3 +1,9 @@
+/**
+ * EmergencyService — physical emergency keyword detection.
+ *
+ * Covers physical emergencies (chest pain, stroke, etc.) using Tier 1 keywords
+ * from clinical_guidelines.json. Mental health triage is handled by SafetyTriageService.
+ */
 import { logger } from './LoggerService';
 import clinicalGuidelines from '../data/clinical_guidelines.json';
 
@@ -20,7 +26,8 @@ export class EmergencyService {
 
     public checkCriticalSymptoms(input: string): EmergencyStatus {
         const normalizedInput = input.toLowerCase();
-        const keywords = clinicalGuidelines.safety_protocols.emergency_keywords;
+        // Use Tier 1 keywords from the updated schema
+        const keywords = clinicalGuidelines.safety_tiers.tier1_immediate_emergency.keywords;
 
         const matchedKeyword = keywords.find(keyword => normalizedInput.includes(keyword));
 
@@ -28,7 +35,7 @@ export class EmergencyService {
             logger.warn(`CRITICAL SYMPTOM DETECTED: "${matchedKeyword}"`);
             return {
                 isCritical: true,
-                message: "⚠️ [CRITICAL ALERT] You've mentioned symptoms that require immediate medical attention. Please call emergency services (911 in the US) or go to the nearest emergency room immediately."
+                message: `⚠️ [CRITICAL ALERT] You've mentioned something that may require immediate help. In the UK: 999 or Samaritans 116 123. In the US: 988. Please reach out now.`
             };
         }
 

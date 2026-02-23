@@ -1,5 +1,26 @@
 // Add any global test setup here
+
+// ─── GLOBAL FETCH GUARD ─────────────────────────────────────────────────────
+// Prevents ANY real HTTP call to the Hugging Face Inference API during tests.
+// This is belt-and-suspenders: individual test files must still mock `fetch`,
+// but this failsafe catches any forgotten mocks.
+const BLOCKED_HOSTS = ['api-inference.huggingface.co', 'huggingface.co'];
+const _originalFetch = global.fetch;
+global.fetch = function guardedFetch(input, init) {
+  const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
+  if (url && BLOCKED_HOSTS.some(host => url.includes(host))) {
+    throw new Error(
+      `[TEST GUARD] Attempted live HF API call blocked: ${url}\n` +
+      `Tests must mock global.fetch before calling BackendClient methods.\n` +
+      `Add: global.fetch = jest.fn() in your beforeEach().`
+    );
+  }
+  return _originalFetch ? _originalFetch.call(this, input, init) : Promise.reject(new Error('fetch not available'));
+};
+// ─────────────────────────────────────────────────────────────────────────────
+
 require('@testing-library/jest-dom');
+
 
 // Mock matchMedia for components that use media queries
 Object.defineProperty(window, 'matchMedia', {
@@ -55,16 +76,16 @@ const webCrypto = {
 
 // Polyfill global crypto if missing
 if (!global.crypto) {
-    Object.defineProperty(global, 'crypto', {
-      value: webCrypto
-    });
+  Object.defineProperty(global, 'crypto', {
+    value: webCrypto
+  });
 }
 
 // Polyfill window.crypto for JSDOM
 if (typeof window !== 'undefined') {
-    Object.defineProperty(window, 'crypto', {
-      configurable: true,
-      writable: true,
-      value: webCrypto
-    });
+  Object.defineProperty(window, 'crypto', {
+    configurable: true,
+    writable: true,
+    value: webCrypto
+  });
 }

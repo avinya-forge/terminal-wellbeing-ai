@@ -1,0 +1,201 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TerminalHeader matches snapshot in default state 1`] = `
+<header
+  class="flex-shrink-0 flex items-center justify-between px-5 py-2 border-b"
+>
+  <div
+    class="flex items-center gap-2"
+  >
+    <svg
+      aria-hidden="true"
+      class="lucide lucide-terminal"
+      fill="none"
+      height="14"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="14"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <polyline
+        points="4 17 10 11 4 5"
+      />
+      <line
+        x1="12"
+        x2="20"
+        y1="19"
+        y2="19"
+      />
+    </svg>
+    <h1
+      class="text-sm font-bold tracking-widest"
+      style="margin: 0px;"
+    >
+      WellBeing.sh
+    </h1>
+  </div>
+  <div
+    class="flex items-center gap-4"
+  >
+    <div
+      aria-live="polite"
+      class="flex items-center gap-2"
+      role="status"
+    >
+      <span
+        aria-hidden="true"
+        class="relative flex"
+        title="Connecting…"
+      >
+        <span
+          class="relative inline-flex rounded-full"
+          style="width: 8px; height: 8px; box-shadow: none; transition: background 0.5s ease, box-shadow 0.5s ease;"
+        />
+      </span>
+      <span
+        class="text-xs font-mono"
+        style="text-shadow: none; transition: color 0.5s ease;"
+      >
+        Connecting...
+      </span>
+    </div>
+    <div
+      aria-hidden="true"
+      class="flex items-center gap-1.5"
+    >
+      <span
+        class="w-2.5 h-2.5 rounded-full"
+        title="Close"
+      />
+      <span
+        class="w-2.5 h-2.5 rounded-full"
+        title="Minimise"
+      />
+      <span
+        class="w-2.5 h-2.5 rounded-full"
+        style="opacity: 0.35;"
+        title="Maximise"
+      />
+    </div>
+  </div>
+</header>
+`;
+
+exports[`TerminalHeader matches snapshot in online+privacy state 1`] = `
+<header
+  class="flex-shrink-0 flex items-center justify-between px-5 py-2 border-b"
+>
+  <div
+    class="flex items-center gap-2"
+  >
+    <svg
+      aria-hidden="true"
+      class="lucide lucide-terminal"
+      fill="none"
+      height="14"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="14"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <polyline
+        points="4 17 10 11 4 5"
+      />
+      <line
+        x1="12"
+        x2="20"
+        y1="19"
+        y2="19"
+      />
+    </svg>
+    <h1
+      class="text-sm font-bold tracking-widest"
+      style="margin: 0px;"
+    >
+      WellBeing.sh
+    </h1>
+    <span
+      aria-live="polite"
+      class="flex items-center gap-1 text-xs px-2 py-0.5 rounded"
+      role="status"
+      style="background: rgba(124, 58, 237, 0.2); color: rgb(196, 181, 253); border: 1px solid rgba(124,58,237,0.3);"
+    >
+      <svg
+        aria-hidden="true"
+        class="lucide lucide-shield-check"
+        fill="none"
+        height="10"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="10"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"
+        />
+        <path
+          d="m9 12 2 2 4-4"
+        />
+      </svg>
+      PRIVACY MODE
+    </span>
+  </div>
+  <div
+    class="flex items-center gap-4"
+  >
+    <div
+      aria-live="polite"
+      class="flex items-center gap-2"
+      role="status"
+    >
+      <span
+        aria-hidden="true"
+        class="relative flex"
+        title="Service online"
+      >
+        <span
+          class="absolute inline-flex h-full w-full rounded-full opacity-75"
+          style="animation: heartbeat-ring 2s ease-in-out infinite;"
+        />
+        <span
+          class="relative inline-flex rounded-full"
+          style="width: 8px; height: 8px; box-shadow: 0 0 6px hsl(var(--primary)/0.8); transition: background 0.5s ease, box-shadow 0.5s ease;"
+        />
+      </span>
+      <span
+        class="text-xs font-mono"
+        style="text-shadow: 0 0 8px hsl(var(--primary)/0.5); transition: color 0.5s ease;"
+      >
+        Online
+      </span>
+    </div>
+    <div
+      aria-hidden="true"
+      class="flex items-center gap-1.5"
+    >
+      <span
+        class="w-2.5 h-2.5 rounded-full"
+        title="Close"
+      />
+      <span
+        class="w-2.5 h-2.5 rounded-full"
+        title="Minimise"
+      />
+      <span
+        class="w-2.5 h-2.5 rounded-full"
+        style="opacity: 1;"
+        title="Maximise"
+      />
+    </div>
+  </div>
+</header>
+`;
