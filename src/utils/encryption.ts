@@ -1,5 +1,5 @@
 // Helper to get crypto object
-const getCrypto = () => {
+export const getCrypto = () => {
   if (typeof window !== 'undefined' && window.crypto) {
     return window.crypto;
   }

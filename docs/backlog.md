@@ -24,8 +24,8 @@
 - [x] [ID-3.3.2] | Refactor `TypingIndicator` to use CSS animations | [INDEPENDENT] | [DONE]
 - [ ] [ID-3.3.4] | Verify "smooth scrolling" behavior | [INDEPENDENT] | [TODO]
 - [x] [ID-3.3.6] | Standardize spacing using Tailwind utility classes | [INDEPENDENT] | [DONE]
-- [ ] [ID-3.3.7] | Add loading skeletons for initial load | [INDEPENDENT] | [TODO]
-- [ ] [ID-3.3.8] | Polish scrollbar styling for cross-browser consistency | [INDEPENDENT] | [TODO]
+- [x] [ID-3.3.7] | Add loading skeletons for initial load | [INDEPENDENT] | [DONE]
+- [x] [ID-3.3.8] | Polish scrollbar styling for cross-browser consistency | [INDEPENDENT] | [DONE]
 - [ ] [ID-3.3.9] | Fix any z-index layering issues | [INDEPENDENT] | [TODO]
 - [ ] [ID-3.3.10] | Create "Visual Regression" baseline screenshots | [INDEPENDENT] | [TODO]
 
@@ -34,7 +34,7 @@
 - [x] [ID-3.4.2] | Create `a11y.spec.ts` for automated audit | [BLOCKS-ID-3.4.1] | [DONE]
 - [x] [ID-3.4.3] | Implement "Critical Path" accessibility tests | [BLOCKS-ID-3.4.2] | [DONE]
 - [x] [ID-3.4.4] | Configure CI to fail on accessibility violations | [INDEPENDENT] | [DONE]
-- [ ] [ID-3.4.5] | Create `A11yReport` generator for CI artifacts | [INDEPENDENT] | [TODO]
+- [x] [ID-3.4.5] | Create `A11yReport` generator for CI artifacts | [INDEPENDENT] | [DONE]
 - [ ] [ID-3.4.6] | Add `pa11y-ci` for static analysis | [INDEPENDENT] | [TODO]
 - [ ] [ID-3.4.7] | Integrate Lighthouse CI check | [INDEPENDENT] | [TODO]
 - [ ] [ID-3.4.8] | Document A11y standards for contributors | [INDEPENDENT] | [TODO]
@@ -70,13 +70,13 @@
 ## Phase 5: Security & Privacy (Sprint 2.1.0)
 
 ### [EPIC-5.1] Local Data Encryption (10 WU)
-- [ ] [ID-5.1.1] | Research Web Crypto API (SubtleCrypto) | [INDEPENDENT] | [TODO]
-- [ ] [ID-5.1.2] | Implement `KeyManager` for deriving keys from user salt | [BLOCKS-ID-5.1.1] | [TODO]
-- [ ] [ID-5.1.3] | Implement `encryptData(data, key)` utility | [BLOCKS-ID-5.1.2] | [TODO]
-- [ ] [ID-5.1.4] | Implement `decryptData(data, key)` utility | [BLOCKS-ID-5.1.2] | [TODO]
+- [x] [ID-5.1.1] | Research Web Crypto API (SubtleCrypto) | [INDEPENDENT] | [DONE]
+- [x] [ID-5.1.2] | Implement `KeyManager` for deriving keys from user salt | [BLOCKS-ID-5.1.1] | [DONE]
+- [x] [ID-5.1.3] | Implement `encryptData(data, key)` utility | [BLOCKS-ID-5.1.2] | [DONE]
+- [x] [ID-5.1.4] | Implement `decryptData(data, key)` utility | [BLOCKS-ID-5.1.2] | [DONE]
 - [ ] [ID-5.1.5] | Migrate `localStorage` (Journal) to encrypted format | [BLOCKS-ID-5.1.3] | [TODO]
 - [ ] [ID-5.1.6] | Migrate `localStorage` (Profile) to encrypted format | [BLOCKS-ID-5.1.3] | [TODO]
-- [ ] [ID-5.1.7] | Handle key rotation/regeneration scenarios | [INDEPENDENT] | [TODO]
+- [x] [ID-5.1.7] | Handle key rotation/regeneration scenarios | [INDEPENDENT] | [DONE]
 - [ ] [ID-5.1.8] | Add "Forgot Key" (Data Wipe) flow | [INDEPENDENT] | [TODO]
 - [ ] [ID-5.1.9] | Verify performance impact of encryption | [INDEPENDENT] | [TODO]
 - [ ] [ID-5.1.10] | Audit for potential side-channel leaks | [INDEPENDENT] | [TODO]

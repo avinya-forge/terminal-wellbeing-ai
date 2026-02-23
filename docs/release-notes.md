@@ -1,5 +1,21 @@
 # Release Notes
 
+## v1.8.2 (Phase 5: Security Foundation & A11y Polish)
+
+### [EPIC-5.1] Local Data Encryption (Foundation)
+- [x] [ID-5.1.1] | Research & Document Web Crypto API (SubtleCrypto) usage | [INDEPENDENT] | [DONE]
+- [x] [ID-5.1.2] | Implement `KeyManager` with PBKDF2 key derivation | [BLOCKS-ID-5.1.1] | [DONE]
+- [x] [ID-5.1.3] | Verify/Refine `encryptData(data, key)` utility | [BLOCKS-ID-5.1.2] | [DONE]
+- [x] [ID-5.1.4] | Verify/Refine `decryptData(data, key)` utility | [BLOCKS-ID-5.1.2] | [DONE]
+- [x] [ID-5.1.7] | Implement `rotateKey` for secure key rotation | [INDEPENDENT] | [DONE]
+
+### [EPIC-3.3] Visual Polish (Backlog Cleanup)
+- [x] [ID-3.3.7] | Verify Loading Skeletons implementation | [INDEPENDENT] | [DONE]
+- [x] [ID-3.3.8] | Verify Custom Scrollbar styling | [INDEPENDENT] | [DONE]
+
+### [EPIC-3.4] Automated Accessibility Pipeline
+- [x] [ID-3.4.5] | Create `generate-a11y-report` script for CI artifacts | [INDEPENDENT] | [DONE]
+
 ## v1.8.1 (Phase 3: Accessibility & Visual Polish)
 
 ### [EPIC-3.2] UI & Focus Management (10 WU)
