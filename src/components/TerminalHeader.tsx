@@ -23,8 +23,8 @@ const TerminalHeader = memo(({ modelLoaded = false, loadingStatus, privacyMode =
       <div className="flex items-center gap-2 text-xs" role="status" aria-live="polite">
         <span className="text-xs opacity-70 mr-1">
           {modelLoaded
-            ? 'AI: Ready'
-            : (loadingStatus || 'AI: Loading...')}
+            ? 'Service: Online'
+            : (loadingStatus || 'Service: Connecting...')}
         </span>
         {/* Traffic lights - decorative only (macOS style) */}
         <span className="w-2 h-2 rounded-full inline-block bg-[var(--error)]" aria-hidden="true" title="Close" />
@@ -32,8 +32,8 @@ const TerminalHeader = memo(({ modelLoaded = false, loadingStatus, privacyMode =
         <span
           className={`w-2 h-2 rounded-full inline-block ${modelLoaded ? 'bg-[var(--success)]' : 'bg-[var(--warning)] animate-pulse'}`}
           role="img"
-          aria-label={modelLoaded ? 'AI Model: Ready' : 'AI Model: Loading'}
-          title={modelLoaded ? 'AI Model: Ready' : 'AI Model: Loading'}
+          aria-label={modelLoaded ? 'Service: Online' : 'Service: Connecting'}
+          title={modelLoaded ? 'Service: Online' : 'Service: Connecting'}
         />
       </div>
     </header>

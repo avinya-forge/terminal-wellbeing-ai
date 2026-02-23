@@ -1,5 +1,12 @@
 # Release Notes
 
+## v2.0.0 (Phase 7: The Backend Shift) - PLANNED
+- **Architecture:** Transitioning AI inference from client-side to a scalable backend.
+- **Delivery:** Implementing daily automated deployments for continuous feedback.
+- **UX:** Simplified terminal interface, abstracting complex model management.
+- **Deployment:** Staging environment accessible via browser for daily testing.
+
+
 ## v1.8.2 (Phase 5: Security Foundation & A11y Polish)
 
 ### [EPIC-5.1] Local Data Encryption (Foundation)

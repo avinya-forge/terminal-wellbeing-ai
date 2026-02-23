@@ -71,14 +71,28 @@ export async function processCommand(input: string, messages: Message[]): Promis
 
     // Check if valid command
     if (commandHandler) {
-      // For non-slash commands, strictly verify it is intended as a command.
-      // If the input does NOT start with '/', we treat it as a command ONLY if:
+      // Natural Language Heuristics:
+      // If the input does NOT start with '/', we treat it as a command if:
       // 1. It matches the command name exactly (no arguments).
-      // This preserves existing behavior where "help" works but "help me" is chat.
+      // 2. It matches a common "Simple Command" pattern (e.g., "help me", "show resources").
 
       const isSlash = input.trim().startsWith('/');
-      if (!isSlash && parsed.args.length > 0) {
-        return await getResponseForMessage(input, messages);
+
+      if (!isSlash) {
+        const normalized = input.trim().toLowerCase();
+
+        // Allowed simple patterns for non-slash commands
+        const simpleCommands = ['help', 'clear', 'stats', 'quote', 'breathe', 'privacy', 'resources', 'notes', 'profile', 'art'];
+        const isSimpleCommandMatch = simpleCommands.some(cmd =>
+          normalized === cmd ||
+          normalized.startsWith(`${cmd} `) ||
+          (cmd === 'help' && (normalized.includes('how to use') || normalized.includes('what can you do'))) ||
+          (cmd === 'resources' && (normalized.includes('get help') || normalized.includes('need support')))
+        );
+
+        if (!isSimpleCommandMatch) {
+          return await getResponseForMessage(input, messages);
+        }
       }
 
       return await commandHandler(parsed, messages);

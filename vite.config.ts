@@ -5,6 +5,7 @@ import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: "/terminal-wellbeing-ai/",
   server: {
     host: "::",
     port: 8080,

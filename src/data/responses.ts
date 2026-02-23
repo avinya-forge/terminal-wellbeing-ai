@@ -8,6 +8,7 @@ export interface CommandDefinition {
   description: string;
   category: "General" | "Mental Health" | "Utilities" | "System";
   usage?: string;
+  hidden?: boolean;
 }
 
 export const COMMAND_DEFINITIONS: CommandDefinition[] = [
@@ -32,8 +33,8 @@ export const COMMAND_DEFINITIONS: CommandDefinition[] = [
   { name: "/art", description: "Display ASCII art by mood", usage: "/art <mood>", category: "Utilities" },
   { name: "/profile", description: "Manage user profile & preferences", usage: "/profile [view|name|tone|length|warnings|reset|export]", category: "Utilities" },
   // System
-  { name: "/models", description: "List available AI models", category: "System" },
-  { name: "/model", description: "Switch AI model", usage: "/model <index>", category: "System" },
+  { name: "/models", description: "List available AI models", category: "System", hidden: true },
+  { name: "/model", description: "Switch AI model", usage: "/model <index>", category: "System", hidden: true },
 ];
 
 
@@ -90,7 +91,7 @@ export function getHelpResponse(): string {
   let helpText = "Available commands:\n\n";
 
   categories.forEach(category => {
-    const cmds = COMMAND_DEFINITIONS.filter(cmd => cmd.category === category);
+    const cmds = COMMAND_DEFINITIONS.filter(cmd => cmd.category === category && !cmd.hidden);
     if (cmds.length > 0) {
       helpText += `--- ${category} ---\n`;
       cmds.forEach(cmd => {

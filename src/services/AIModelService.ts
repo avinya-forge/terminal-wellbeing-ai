@@ -29,6 +29,8 @@ import {
 import { CircuitBreaker, CircuitBreakerOpenError } from "../utils/CircuitBreaker";
 import { logger } from "./LoggerService";
 import { memoryService } from "./MemoryService";
+import { backendClient, InferenceOptions } from "./BackendClient";
+import { emergencyService } from "./EmergencyService";
 
 // Cache for the text generators
 interface ModelCache {
@@ -65,10 +67,20 @@ export class AIModelService {
         // Initialize memory service (encryption key generation, etc.)
         await memoryService.initialize();
 
-        // Start with the default model
+        // Check if we have a backend token
+        const hasBackend = !!import.meta.env.VITE_HF_TOKEN;
+
+        if (hasBackend) {
+          logger.info("Backend inference token detected. Using Backend-First approach.");
+          onProgress?.("Backend configured (Simplicity Mode)");
+          this.initialized = true;
+          return true;
+        }
+
+        // Start with the default model local fallback
         const defaultModel = AVAILABLE_MODELS[DEFAULT_MODEL_INDEX];
-        logger.info(`Initializing primary AI model (${defaultModel.displayName})...`);
-        onProgress?.(`Loading ${defaultModel.displayName}...`);
+        logger.info(`Initializing local fallback AI model (${defaultModel.displayName})...`);
+        onProgress?.(`Loading local ${defaultModel.displayName}...`);
 
         await this.circuitBreaker.execute(async () => {
           this.textGenerators[defaultModel.name] = (await pipeline(
@@ -160,7 +172,7 @@ export class AIModelService {
   }
 
   // Get list of available models for UI display
-  public getAvailableModels(): Array<{name: string, displayName: string, description: string}> {
+  public getAvailableModels(): Array<{ name: string, displayName: string, description: string }> {
     return AVAILABLE_MODELS.map(model => ({
       name: model.name,
       displayName: model.displayName,
@@ -186,14 +198,14 @@ export class AIModelService {
     // We use the last user message to query memory
     const lastUserMessage = messages.slice().reverse().find(m => m.sender === 'user');
     if (lastUserMessage && lastUserMessage.content) {
-        try {
-            const memories = await memoryService.retrieveRelevantContext(lastUserMessage.content);
-            if (memories.length > 0) {
-                context += `Relevant Past Memories:\n${memories.map(m => `- ${m.content}`).join('\n')}\n\n`;
-            }
-        } catch (error) {
-            logger.warn('Failed to retrieve memory context', error);
+      try {
+        const memories = await memoryService.retrieveRelevantContext(lastUserMessage.content);
+        if (memories.length > 0) {
+          context += `Relevant Past Memories:\n${memories.map(m => `- ${m.content}`).join('\n')}\n\n`;
         }
+      } catch (error) {
+        logger.warn('Failed to retrieve memory context', error);
+      }
     }
 
     // Add conversation history with proper formatting
@@ -251,15 +263,21 @@ export class AIModelService {
   // Helper to save interactions to memory asynchronously
   private async saveInteractionToMemory(userInput: string, assistantResponse: string) {
     try {
-        await memoryService.addMemory(userInput, 'user');
-        await memoryService.addMemory(assistantResponse, 'assistant');
+      await memoryService.addMemory(userInput, 'user');
+      await memoryService.addMemory(assistantResponse, 'assistant');
     } catch (error) {
-        logger.error('Failed to save interaction to memory:', error);
+      logger.error('Failed to save interaction to memory:', error);
     }
   }
 
   // Generate response using the AI model or fallback methods
   public async generateResponse(input: string, messages: Message[]): Promise<string> {
+    // 0. [EMERGENCY_PROTOCOL] - Immediate Triage
+    const emergencyCheck = emergencyService.checkCriticalSymptoms(input);
+    if (emergencyCheck.isCritical) {
+      return emergencyCheck.message || "EMERGENCY DETECTED. PLEASE CALL 911.";
+    }
+
     // Check for greetings and introductions to make conversation more natural
     if (isGreeting(input)) {
       return this.getGreetingResponse(input, messages);
@@ -277,15 +295,51 @@ export class AIModelService {
       .map(msg => msg.content.toLowerCase());
 
     if (recentUserMessages.length >= 2 &&
-        recentUserMessages.slice(0, -1).some(msg =>
-          msg === input.toLowerCase() ||
-          (msg.length > 10 && input.toLowerCase().includes(msg))
-        )) {
+      recentUserMessages.slice(0, -1).some(msg =>
+        msg === input.toLowerCase() ||
+        (msg.length > 10 && input.toLowerCase().includes(msg))
+      )) {
       return this.getUniqueResponse(SYSTEM_RESPONSES.repetitive);
     }
 
     // Get the current model configuration
     const currentModel = this.getCurrentModel();
+
+    // 1. Try Backend Abstraction First (Primary path)
+    try {
+      const context = await this.prepareContext(messages);
+      const sanitizedInput = sanitizePromptContent(input);
+      const prompt = `${context}\nHuman: ${sanitizedInput}\nAssistant:`;
+
+      const options: InferenceOptions = {
+        model: currentModel.name,
+        temperature: currentModel.temperature,
+        max_length: currentModel.maxLength,
+        top_p: currentModel.topP,
+      };
+
+      logger.info(`Attempting backend inference for model: ${currentModel.name}`);
+      const backendResponse = await backendClient.generateText(prompt, options);
+
+      if (backendResponse) {
+        let responseText = backendResponse;
+
+        // Post-process (handle redactions, filterings)
+        const profile = getUserProfile();
+        const warnings = profile.triggerWarnings || [];
+        responseText = postProcessResponse(responseText, input, warnings);
+
+        if (responseText.length > 5) {
+          this.recentResponses.add(responseText);
+          this.saveInteractionToMemory(input, responseText);
+          return responseText;
+        }
+      }
+    } catch (error) {
+      logger.warn("Backend inference failed, falling back to local processing.", error);
+    }
+
+    // 2. Local fallback if backend fails or is not configured
     const modelGenerator = this.textGenerators[currentModel.name];
 
     // Try using the AI model if available
@@ -344,9 +398,9 @@ Assistant:`;
         return await this.tryFallbackModels(input, messages, currentModel.name);
       } catch (error: unknown) {
         if (error instanceof CircuitBreakerOpenError) {
-           logger.warn("Circuit Breaker OPEN during generation. Switching immediately to fallback.");
-           // Fallback to static response immediately if circuit is open
-           return this.getUniqueResponse(SYSTEM_RESPONSES.fallback);
+          logger.warn("Circuit Breaker OPEN during generation. Switching immediately to fallback.");
+          // Fallback to static response immediately if circuit is open
+          return this.getUniqueResponse(SYSTEM_RESPONSES.fallback);
         }
 
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';

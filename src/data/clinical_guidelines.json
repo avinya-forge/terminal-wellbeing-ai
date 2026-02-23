@@ -1,0 +1,17 @@
+{
+    "safety_protocols": {
+        "emergency_keywords": [
+            "chest pain",
+            "hard to breathe",
+            "severe bleeding",
+            "unconscious",
+            "stroke symptoms",
+            "sudden numbness"
+        ],
+        "action": "TRIGGER_EMERGENCY_PROTOCOL_911"
+    },
+    "general_care": {
+        "hydration": "Recommend 200ml water intake every 2 hours if active.",
+        "vitamin_d": "Check for deficiency history; recommend intake at 9 PM for absorption consistency."
+    }
+}
