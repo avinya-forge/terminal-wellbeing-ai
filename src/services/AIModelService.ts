@@ -427,7 +427,7 @@ Assistant:`;
     }
 
     if (isFirstInteraction) {
-      return this.getUniqueResponse([...FIRST_TIME_GREETINGS(timeGreeting), ...GREETINGS(timeGreeting)]);
+      return this.getUniqueResponse([...FIRST_TIME_GREETINGS(), ...GREETINGS(timeGreeting)]);
     }
 
     return this.getUniqueResponse(GREETINGS(timeGreeting));
