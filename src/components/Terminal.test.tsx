@@ -36,8 +36,8 @@ describe('Terminal Component', () => {
     expect(screen.getByPlaceholderText(/Type your message/i)).toBeInTheDocument();
     
     // Check for welcome messages
-    expect(await screen.findByText(/Welcome to WellBeing\.sh/i)).toBeInTheDocument();
-    expect(await screen.findByText(/I'm here to listen/i)).toBeInTheDocument();
+    expect(await screen.findByText(/WellBeing\.sh Core Engine/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Tell me about your current state/i)).toBeInTheDocument();
   });
 
   it('initializes the AI model on mount', async () => {
@@ -97,7 +97,7 @@ describe('Terminal Component', () => {
     });
     
     // Check that welcome messages are displayed again
-    expect(await screen.findByText(/Welcome to WellBeing\.sh/i)).toBeInTheDocument();
+    expect(await screen.findByText(/WellBeing\.sh Core Engine/i)).toBeInTheDocument();
   });
 
   it('handles model loading error gracefully', async () => {
