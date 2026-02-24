@@ -31,6 +31,7 @@ import { logger } from "./LoggerService";
 import { memoryService } from "./MemoryService";
 import { backendClient, InferenceOptions } from "./BackendClient";
 import { emergencyService } from "./EmergencyService";
+import { getEnv } from "../utils/env";
 
 // Cache for the text generators
 interface ModelCache {
@@ -68,7 +69,7 @@ export class AIModelService {
         await memoryService.initialize();
 
         // Check if we have a backend token
-        const hasBackend = !!import.meta.env.VITE_HF_TOKEN;
+        const hasBackend = !!getEnv('VITE_HF_TOKEN');
 
         if (hasBackend) {
           logger.info("Backend inference token detected. Using Backend-First approach.");

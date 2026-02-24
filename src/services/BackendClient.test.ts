@@ -1,13 +1,26 @@
 import { BackendClient } from './BackendClient';
 import { logger } from './LoggerService';
+import { safetyTriageService } from './SafetyTriageService';
+import { selectModel } from './ModelRouter';
 
-// Mock logger to avoid cluttering test output
+// Mock dependencies
 jest.mock('./LoggerService', () => ({
     logger: {
         error: jest.fn(),
         warn: jest.fn(),
         info: jest.fn(),
+        debug: jest.fn(),
     }
+}));
+
+jest.mock('./SafetyTriageService', () => ({
+    safetyTriageService: {
+        triage: jest.fn()
+    }
+}));
+
+jest.mock('./ModelRouter', () => ({
+    selectModel: jest.fn()
 }));
 
 describe('BackendClient', () => {
@@ -18,6 +31,19 @@ describe('BackendClient', () => {
         jest.clearAllMocks();
         // Mock fetch globally
         global.fetch = jest.fn();
+
+        // Default safe triage
+        (safetyTriageService.triage as jest.Mock).mockReturnValue({
+            tier: 'SAFE',
+            haltInference: false
+        });
+
+        // Default model selection
+        (selectModel as jest.Mock).mockReturnValue({
+            modelId: 'test-model',
+            modelName: 'Test Model',
+            reason: 'Test'
+        });
     });
 
     afterEach(() => {
@@ -42,6 +68,13 @@ describe('BackendClient', () => {
         });
 
         it('should halt inference and return safe response for IMMEDIATE_EMERGENCY messages', async () => {
+            // Mock triage to halt
+            (safetyTriageService.triage as jest.Mock).mockReturnValue({
+                tier: 'IMMEDIATE_EMERGENCY',
+                haltInference: true,
+                safeResponse: 'Call 999 or 116 123'
+            });
+
             const result = await backendClient.generateText('I want to kill myself');
             // fetch must NOT have been called
             expect(global.fetch).not.toHaveBeenCalled();

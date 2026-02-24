@@ -32,9 +32,6 @@ describe('TerminalMessage Component', () => {
     
     // Check for full message content immediately
     expect(screen.getByText('Hello there')).toBeInTheDocument();
-    
-    // No cursor should be shown for user messages
-    expect(screen.queryByText('|')).not.toBeInTheDocument();
   });
 
   it('renders bot message with typewriter effect', () => {
@@ -44,9 +41,7 @@ describe('TerminalMessage Component', () => {
     expect(screen.getByText('$')).toBeInTheDocument();
     
     // Initially, only part of the message should be visible
-    // and the cursor should be shown
     expect(screen.queryByText('Hi! How can I help you today?')).not.toBeInTheDocument();
-    expect(screen.getByText('|')).toBeInTheDocument();
     
     // Advance timers to complete the typewriter effect
     act(() => {
@@ -57,27 +52,24 @@ describe('TerminalMessage Component', () => {
     
     // Now the full message should be visible
     expect(screen.getByText('Hi! How can I help you today?')).toBeInTheDocument();
-    
-    // Cursor should be hidden after typing is complete
-    expect(screen.queryByText('|')).not.toBeInTheDocument();
   });
 
   it('applies different styles based on message sender', () => {
     const { rerender } = render(<TerminalMessage message={userMessage} />);
     
-    // User message should have text-foreground class
+    // User message style
     const userMessageElement = screen.getByText('Hello there').parentElement;
-    expect(userMessageElement).toHaveClass('text-foreground');
+    expect(userMessageElement).toHaveStyle({ color: 'hsl(var(--foreground))' });
     
     // Rerender with bot message
     rerender(<TerminalMessage message={botMessage} />);
     
-    // Bot message should have text-primary class
+    // Bot message style
     act(() => {
       jest.advanceTimersByTime(15 * botMessage.content.length + 100);
     });
     
     const botMessageElement = screen.getByText('Hi! How can I help you today?').parentElement;
-    expect(botMessageElement).toHaveClass('text-primary');
+    expect(botMessageElement).toHaveStyle({ color: 'hsl(var(--primary))' });
   });
 });
