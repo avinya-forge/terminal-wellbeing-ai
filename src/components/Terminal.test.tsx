@@ -22,6 +22,20 @@ jest.mock('../commands', () => ({
   formatTimestamp: jest.fn().mockReturnValue('12:34')
 }));
 
+// Mock TerminalOutput to avoid animation delays in integration tests
+jest.mock('./TerminalOutput', () => {
+  return {
+    __esModule: true,
+    default: ({ messages }: { messages: Array<{ id: string; content: string }> }) => (
+      <div data-testid="terminal-output">
+        {messages.map((m) => (
+          <div key={m.id}>{m.content}</div>
+        ))}
+      </div>
+    )
+  };
+});
+
 describe('Terminal Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -33,7 +47,7 @@ describe('Terminal Component', () => {
     
     // Check for terminal elements
     expect(screen.getByText('WellBeing.sh')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/Type your message/i)).toBeInTheDocument();
+    expect(await screen.findByPlaceholderText(/Type a message/i)).toBeInTheDocument();
     
     // Check for welcome messages
     expect(await screen.findByText(/WellBeing\.sh Core Engine/i)).toBeInTheDocument();
@@ -52,7 +66,7 @@ describe('Terminal Component', () => {
     render(<Terminal />);
     
     // Wait for initialization
-    const inputElement = screen.getByPlaceholderText(/Type your message/i);
+    const inputElement = await screen.findByPlaceholderText(/Type a message/i);
     await waitFor(() => expect(inputElement).not.toBeDisabled());
 
     // Type and submit a message
@@ -77,7 +91,7 @@ describe('Terminal Component', () => {
     render(<Terminal />);
     
     // Wait for initialization
-    const inputElement = screen.getByPlaceholderText(/Type your message/i);
+    const inputElement = await screen.findByPlaceholderText(/Type a message/i);
     await waitFor(() => expect(inputElement).not.toBeDisabled());
 
     // Type and submit a message first
@@ -126,7 +140,7 @@ describe('Terminal Component', () => {
     });
     
     // Wait for initialization
-    const inputElement = screen.getByPlaceholderText(/Type your message/i);
+    const inputElement = await screen.findByPlaceholderText(/Type a message/i);
     await waitFor(() => expect(inputElement).not.toBeDisabled());
 
     // Type and submit a message
@@ -149,7 +163,7 @@ describe('Terminal Component', () => {
     render(<Terminal />);
 
     // Wait for initialization
-    const inputElement = screen.getByPlaceholderText(/Type your message/i);
+    const inputElement = await screen.findByPlaceholderText(/Type a message/i);
     await waitFor(() => expect(inputElement).not.toBeDisabled());
 
     // Type /panic

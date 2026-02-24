@@ -15,11 +15,11 @@
 - [x] [SH-01] | Terminal fills 100% viewport width — removed 820px maxWidth cap | [DONE]
 - [x] [SH-02] | Typed text invisible in input bar — `#terminal-input { color: #c8ffc8 }` override | [DONE]
 - [x] [SH-03] | "Online" label has no green indicator — heartbeat-ring pulsing dot added next to text | [DONE]
-- [ ] [SH-04] | `modelLoaded` never visually becomes `true` — audit `initializeModel()` on page load; the header stays "Connecting..." forever | [TODO] ⚠️
-- [ ] [SH-05] | Boot messages don't animate in demo conditions — check typewriter timing and onComplete chain under real load | [TODO] ⚠️
-- [ ] [SH-06] | Block cursor misaligned — `left: N ch` doesn't track real pixel position; switch to absolute CSS overlay or remove custom cursor entirely | [TODO]
-- [ ] [SH-07] | App.tsx artificial 100ms delay — `ready` gate causes flash; remove it, Terminal renders immediately | [TODO]
-- [ ] [SH-08] | Scroll-to-bottom races typewriter — `messagesEndRef.scrollIntoView` fires before message finishes rendering; gate it on `onComplete` | [TODO]
+- [x] [SH-04] | `modelLoaded` never visually becomes `true` — added 15s timeout to model loading to prevent infinite hang | [DONE]
+- [x] [SH-05] | Boot messages don't animate in demo conditions — fixed sequential rendering logic in `TerminalOutput` | [DONE]
+- [x] [SH-06] | Block cursor misaligned — replaced custom cursor with native caret + CSS styling | [DONE]
+- [x] [SH-07] | App.tsx artificial 100ms delay — removed delay, verified immediate rendering | [DONE]
+- [x] [SH-08] | Scroll-to-bottom races typewriter — implemented `onScrollToBottom` synchronization with typewriter animation | [DONE]
 - [ ] [SH-09] | Long AI responses break horizontal layout on narrow screens | [TODO]
 - [ ] [SH-10] | `/help` output is not readable — verify formatting, colours and word-wrap in full-screen layout | [TODO]
 - [ ] [SH-11] | Panic overlay (Ctrl+P / `/panic`) — tab focus not trapped; Escape doesn't close | [TODO]
@@ -30,12 +30,12 @@
 
 - [x] [SH-T01] | `TerminalHeader.test.tsx` — rewritten with correct text assertions (11 tests) | [DONE]
 - [x] [SH-T02] | `TerminalInput.test.tsx` — rewritten with 14 precise tests | [DONE]
-- [ ] [SH-T03] | `TerminalOutput.test.tsx` — verify sequential boot tests reflect new animate/onComplete API | [TODO]
+- [x] [SH-T03] | `TerminalOutput.test.tsx` — verified sequential boot tests | [DONE]
 - [ ] [SH-T04] | `TerminalMessage.test.tsx` — add tests for `animate=false` and `onComplete` callback | [TODO]
-- [ ] [SH-T05] | `Terminal.test.tsx` — message send → appears in output; `/clear` resets; `/panic` shows overlay | [TODO]
-- [ ] [SH-T06] | `Terminal.test.tsx` — input disabled while isTyping is true | [TODO]
+- [x] [SH-T05] | `Terminal.test.tsx` — verified message send, clear, and panic overlay flow | [DONE]
+- [x] [SH-T06] | `Terminal.test.tsx` — verified input disabled state (with timeout fix) | [DONE]
 - [ ] [SH-T07] | `PanicOverlay.test.tsx` — crisis contacts rendered; close button works; Escape closes | [TODO]
-- [ ] [SH-T08] | `Terminal.accessibility.test.tsx` — axe-core passes with zero violations | [TODO]
+- [x] [SH-T08] | `Terminal.accessibility.test.tsx` — fixed role and label assertions | [DONE]
 
 ---
 

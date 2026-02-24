@@ -73,10 +73,14 @@ const Terminal = () => {
   }, []);
 
   // Auto-scroll to bottom of messages
-  useEffect(() => {
+  const scrollToBottom = useCallback(() => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     messagesEndRef.current?.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth' });
-  }, [messages]);
+  }, []);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, scrollToBottom]);
 
   // Focus input field when component mounts or when panic mode is closed
   useEffect(() => {
@@ -207,7 +211,7 @@ const Terminal = () => {
         }}
         onClick={() => inputRef.current?.focus()}
       >
-        <TerminalOutput messages={messages} isTyping={isTyping} />
+        <TerminalOutput messages={messages} isTyping={isTyping} onScrollToBottom={scrollToBottom} />
         <div ref={messagesEndRef} />
       </div>
 

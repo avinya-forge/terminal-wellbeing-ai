@@ -83,11 +83,20 @@ export class AIModelService {
         onProgress?.(`Loading local ${defaultModel.displayName}...`);
 
         await this.circuitBreaker.execute(async () => {
-          this.textGenerators[defaultModel.name] = (await pipeline(
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Model loading timed out')), 15000)
+          );
+
+          const pipelinePromise = pipeline(
             "text-generation",
             defaultModel.name,
             { device: defaultModel.device }
-          )) as unknown as TextGenerator;
+          );
+
+          this.textGenerators[defaultModel.name] = (await Promise.race([
+            pipelinePromise,
+            timeoutPromise
+          ])) as unknown as TextGenerator;
         });
 
         logger.info(`Primary AI model (${defaultModel.displayName}) initialized successfully`);

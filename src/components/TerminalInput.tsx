@@ -47,9 +47,10 @@ const TerminalInput = forwardRef<HTMLInputElement, TerminalInputProps>(
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="w-full bg-transparent border-none outline-none caret-transparent"
+            className="w-full bg-transparent border-none outline-none"
             style={{
               color: 'hsl(var(--foreground))',
+              caretColor: 'hsl(var(--primary))',
               fontFamily: 'inherit',
               fontSize: 'inherit',
               lineHeight: 'inherit',
@@ -61,21 +62,6 @@ const TerminalInput = forwardRef<HTMLInputElement, TerminalInputProps>(
             autoComplete="off"
             spellCheck={false}
           />
-          {/* Blinking block cursor — shown when active & not disabled */}
-          {!disabled && (
-            <span
-              className="absolute pointer-events-none"
-              style={{
-                left: `${input.length}ch`,
-                width: '0.55em',
-                height: '1.1em',
-                background: 'hsl(var(--primary)/0.8)',
-                display: 'inline-block',
-                animation: 'blink 1s step-end infinite',
-              }}
-              aria-hidden="true"
-            />
-          )}
         </div>
       </div>
     );
