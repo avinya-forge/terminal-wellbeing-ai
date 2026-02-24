@@ -7,7 +7,7 @@ test.describe('Accessibility', () => {
 
     // Wait for terminal to be ready
     await expect(page.getByRole('main')).toBeVisible();
-    await expect(page.getByRole('textbox', { name: /terminal command input/i })).toBeVisible();
+    await expect(page.getByRole('textbox', { name: /terminal input/i })).toBeVisible();
 
     const accessibilityScanResults = await new AxeBuilder({ page })
         .exclude('.status-indicator') // These are decorative and might flag contrast issues if not hidden properly, but I marked them aria-hidden="true" so should be fine.
@@ -20,8 +20,8 @@ test.describe('Accessibility', () => {
     await page.goto('/');
 
     // Type /help
-    await page.getByRole('textbox', { name: /terminal command input/i }).fill('/help');
-    await page.getByRole('textbox', { name: /terminal command input/i }).press('Enter');
+    await page.getByRole('textbox', { name: /terminal input/i }).fill('/help');
+    await page.getByRole('textbox', { name: /terminal input/i }).press('Enter');
 
     // Wait for response
     await expect(page.getByText('Available Commands')).toBeVisible();

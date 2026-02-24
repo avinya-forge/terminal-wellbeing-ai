@@ -6,6 +6,7 @@ import TypingIndicator from './TypingIndicator';
 interface TerminalOutputProps {
   messages: Message[];
   isTyping: boolean;
+  onScrollToBottom?: () => void;
 }
 
 /**
@@ -17,7 +18,7 @@ interface TerminalOutputProps {
  * Subsequent conversational messages animate immediately on arrival (the user
  * experience handles the sequencing naturally through request/response flow).
  */
-const TerminalOutput = memo(({ messages, isTyping }: TerminalOutputProps) => {
+const TerminalOutput = memo(({ messages, isTyping, onScrollToBottom }: TerminalOutputProps) => {
   // `revealed` tracks how many boot messages have completed their animation.
   // Once all boot messages are done, all subsequent messages show normally.
   const [revealCount, setRevealCount] = useState(0);
@@ -28,7 +29,8 @@ const TerminalOutput = memo(({ messages, isTyping }: TerminalOutputProps) => {
 
   const handleComplete = useCallback(() => {
     setRevealCount(prev => prev + 1);
-  }, []);
+    onScrollToBottom?.();
+  }, [onScrollToBottom]);
 
   return (
     <div role="list" aria-label="Conversation">
@@ -43,7 +45,7 @@ const TerminalOutput = memo(({ messages, isTyping }: TerminalOutputProps) => {
             <TerminalMessage
               key={message.id}
               message={message}
-              animate={bootIndex === revealCount - 1 || revealCount === 0}
+              animate={bootIndex === revealCount}
               onComplete={bootIndex === revealCount ? handleComplete : undefined}
             />
           );
@@ -57,6 +59,7 @@ const TerminalOutput = memo(({ messages, isTyping }: TerminalOutputProps) => {
             key={message.id}
             message={message}
             animate={i === messages.length - 1 && message.sender === 'bot'}
+            onComplete={onScrollToBottom}
           />
         );
       })}

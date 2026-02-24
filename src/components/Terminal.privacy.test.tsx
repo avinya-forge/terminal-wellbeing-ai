@@ -26,6 +26,20 @@ jest.mock('../utils/sessionManager', () => ({
 // Mock scrollIntoView
 window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
+// Mock TerminalOutput to avoid animation delays
+jest.mock('./TerminalOutput', () => {
+  return {
+    __esModule: true,
+    default: ({ messages }: { messages: Array<{ id: string; content: string }> }) => (
+      <div data-testid="terminal-output">
+        {messages.map((m) => (
+          <div key={m.id}>{m.content}</div>
+        ))}
+      </div>
+    )
+  };
+});
+
 describe('Terminal Privacy Mode', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -36,7 +50,7 @@ describe('Terminal Privacy Mode', () => {
     render(<Terminal />);
 
     // Wait for the input to be enabled
-    const input = screen.getByPlaceholderText(/Type your message/i);
+    const input = await screen.findByPlaceholderText(/Type a message/i);
     await waitFor(() => expect(input).not.toBeDisabled());
 
     // Type /privacy
@@ -63,7 +77,7 @@ describe('Terminal Privacy Mode', () => {
     render(<Terminal />);
 
     // Wait for the input to be enabled
-    const input = screen.getByPlaceholderText(/Type your message/i);
+    const input = await screen.findByPlaceholderText(/Type a message/i);
     await waitFor(() => expect(input).not.toBeDisabled());
 
     // Verify indicator is initially present

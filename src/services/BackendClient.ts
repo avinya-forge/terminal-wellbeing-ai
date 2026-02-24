@@ -1,6 +1,7 @@
 import { logger } from './LoggerService';
 import { selectModel } from './ModelRouter';
 import { safetyTriageService } from './SafetyTriageService';
+import { getEnv } from '../utils/env';
 
 export interface InferenceOptions {
     model?: string;
@@ -23,7 +24,7 @@ export class BackendClient {
     private baseUrl: string = "https://api-inference.huggingface.co/models/";
 
     private constructor() {
-        this.apiToken = import.meta.env.VITE_HF_TOKEN || null;
+        this.apiToken = getEnv('VITE_HF_TOKEN') || null;
     }
 
     public static getInstance(): BackendClient {

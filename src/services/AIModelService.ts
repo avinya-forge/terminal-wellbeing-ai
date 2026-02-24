@@ -31,6 +31,7 @@ import { logger } from "./LoggerService";
 import { memoryService } from "./MemoryService";
 import { backendClient, InferenceOptions } from "./BackendClient";
 import { emergencyService } from "./EmergencyService";
+import { getEnv } from "../utils/env";
 
 // Cache for the text generators
 interface ModelCache {
@@ -68,7 +69,7 @@ export class AIModelService {
         await memoryService.initialize();
 
         // Check if we have a backend token
-        const hasBackend = !!import.meta.env.VITE_HF_TOKEN;
+        const hasBackend = !!getEnv('VITE_HF_TOKEN');
 
         if (hasBackend) {
           logger.info("Backend inference token detected. Using Backend-First approach.");
@@ -83,11 +84,20 @@ export class AIModelService {
         onProgress?.(`Loading local ${defaultModel.displayName}...`);
 
         await this.circuitBreaker.execute(async () => {
-          this.textGenerators[defaultModel.name] = (await pipeline(
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Model loading timed out')), 15000)
+          );
+
+          const pipelinePromise = pipeline(
             "text-generation",
             defaultModel.name,
             { device: defaultModel.device }
-          )) as unknown as TextGenerator;
+          );
+
+          this.textGenerators[defaultModel.name] = (await Promise.race([
+            pipelinePromise,
+            timeoutPromise
+          ])) as unknown as TextGenerator;
         });
 
         logger.info(`Primary AI model (${defaultModel.displayName}) initialized successfully`);

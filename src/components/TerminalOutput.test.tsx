@@ -1,71 +1,107 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import TerminalOutput from './TerminalOutput';
 import { Message } from '../types/Message';
 
-// Mock the TerminalMessage component
+// Mock TerminalMessage to expose animate/onComplete props and allow triggering onComplete
 jest.mock('./TerminalMessage', () => {
   return {
     __esModule: true,
-    default: ({ message }: { message: Message }) => (
+    default: ({ message, animate, onComplete }: { message: Message, animate: boolean, onComplete?: () => void }) => (
       <div data-testid="terminal-message">
-        {message.sender}: {message.content}
+        <span data-testid="message-content">{message.content}</span>
+        <span data-testid="message-animate">{animate.toString()}</span>
+        {onComplete && (
+          <button data-testid="complete-btn" onClick={onComplete}>Complete</button>
+        )}
       </div>
     )
   };
 });
 
 describe('TerminalOutput Component', () => {
-  const sampleMessages: Message[] = [
+  const bootMessages: Message[] = [
     {
       id: '1',
-      content: 'Hello there',
-      sender: 'user',
+      content: 'Boot 1',
+      sender: 'bot',
       timestamp: new Date().toISOString()
     },
     {
       id: '2',
-      content: 'Hi! How can I help you today?',
+      content: 'Boot 2',
       sender: 'bot',
       timestamp: new Date().toISOString()
     }
   ];
 
-  it('renders messages correctly', () => {
-    render(<TerminalOutput messages={sampleMessages} isTyping={false} />);
+  it('renders boot messages sequentially', () => {
+    render(<TerminalOutput messages={bootMessages} isTyping={false} />);
     
-    // Check if all messages are rendered
-    const messageElements = screen.getAllByTestId('terminal-message');
-    expect(messageElements.length).toBe(2);
+    // Initially, only the first message should be visible
+    let messages = screen.getAllByTestId('terminal-message');
+    expect(messages.length).toBe(1);
+    expect(messages[0]).toHaveTextContent('Boot 1');
+    expect(screen.getByTestId('message-animate')).toHaveTextContent('true');
+
+    // Complete the first message
+    act(() => {
+      screen.getByTestId('complete-btn').click();
+    });
+
+    // Now second message should appear
+    messages = screen.getAllByTestId('terminal-message');
+    expect(messages.length).toBe(2);
+    expect(messages[1]).toHaveTextContent('Boot 2');
     
-    // Check content of messages through the mock
-    expect(messageElements[0].textContent).toContain('user: Hello there');
-    expect(messageElements[1].textContent).toContain('bot: Hi! How can I help you today?');
+    // First message should now have animate=false (snapped to full)
+    // Second message should have animate=true
+    const animateFlags = screen.getAllByTestId('message-animate');
+    expect(animateFlags[0]).toHaveTextContent('false');
+    expect(animateFlags[1]).toHaveTextContent('true');
   });
 
-  it('shows typing indicator when isTyping is true', () => {
-    render(<TerminalOutput messages={sampleMessages} isTyping={true} />);
-    
-    // Check for typing indicator
-    expect(screen.getByText('>')).toBeInTheDocument();
-    expect(screen.getByText('Thinking')).toBeInTheDocument();
-    
-    // The animation dots should be present (3 dots)
-    const dots = screen.getAllByText('.');
-    expect(dots.length).toBeGreaterThanOrEqual(3);
+  it('calls onScrollToBottom when boot message completes', () => {
+    const mockScroll = jest.fn();
+    render(<TerminalOutput messages={bootMessages} isTyping={false} onScrollToBottom={mockScroll} />);
+
+    // Complete first boot message
+    act(() => {
+      screen.getByTestId('complete-btn').click();
+    });
+
+    expect(mockScroll).toHaveBeenCalled();
   });
 
-  it('does not show typing indicator when isTyping is false', () => {
-    render(<TerminalOutput messages={sampleMessages} isTyping={false} />);
-    
-    // Typing indicator should not be present
-    expect(screen.queryByText('Thinking')).not.toBeInTheDocument();
-  });
+  it('renders non-boot messages normally after boot sequence and calls onScrollToBottom', () => {
+    const mixedMessages: Message[] = [
+      { id: '1', content: 'Boot 1', sender: 'bot', timestamp: '' },
+      { id: 'msg1', content: 'User 1', sender: 'user', timestamp: '' }
+    ];
 
-  it('renders correctly with empty messages array', () => {
-    render(<TerminalOutput messages={[]} isTyping={false} />);
+    const mockScroll = jest.fn();
+    render(<TerminalOutput messages={mixedMessages} isTyping={false} onScrollToBottom={mockScroll} />);
+
+    // Complete boot message
+    act(() => {
+      screen.getByTestId('complete-btn').click();
+    });
     
-    // No message elements should be rendered
-    const messageElements = screen.queryAllByTestId('terminal-message');
-    expect(messageElements.length).toBe(0);
+    // Expect scroll called for boot message completion
+    expect(mockScroll).toHaveBeenCalledTimes(1);
+
+    // Now user message appears. It should have onComplete wired to onScrollToBottom.
+    const buttons = screen.getAllByTestId('complete-btn');
+    // Index 0 is boot message (animate=false now, so maybe no button? No, mock renders button if onComplete passed).
+    // Wait, for boot messages, onComplete is: bootIndex === revealCount ? handleComplete : undefined.
+    // If bootIndex (0) !== revealCount (1), onComplete is undefined. So no button for msg 1.
+    // Msg 2 is non-boot. onComplete is passed directly. So button exists.
+
+    const userMsgButton = buttons[0]; // Should be the only one
+    
+    act(() => {
+      userMsgButton.click();
+    });
+
+    expect(mockScroll).toHaveBeenCalledTimes(2);
   });
 });

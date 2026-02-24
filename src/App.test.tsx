@@ -1,4 +1,4 @@
-import { render, screen, waitFor, act } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import App from './App';
 
 // Mock the Terminal component
@@ -10,37 +10,10 @@ jest.mock('./components/Terminal', () => {
 });
 
 describe('App Component', () => {
-  // Mock for setTimeout to control loading state
-  jest.useFakeTimers();
-
-  afterEach(() => {
-    jest.clearAllTimers();
-  });
-
-  it('shows loading state initially', () => {
+  it('renders Terminal component immediately', () => {
     render(<App />);
     
-    // Check for loading state (skeleton)
-    expect(screen.getByLabelText(/Loading application/i)).toBeInTheDocument();
-    
-    // Terminal component should not be rendered yet
-    expect(screen.queryByTestId('terminal-component')).not.toBeInTheDocument();
-  });
-
-  it('renders Terminal component after loading completes', async () => {
-    render(<App />);
-    
-    // Advance timers to complete loading
-    act(() => {
-      jest.advanceTimersByTime(500);
-    });
-    
-    // Wait for the Terminal component to appear
-    await waitFor(() => {
-      expect(screen.getByTestId('terminal-component')).toBeInTheDocument();
-    });
-    
-    // Loading skeleton should be gone
-    expect(screen.queryByLabelText(/Loading application/i)).not.toBeInTheDocument();
+    // Terminal component should be rendered immediately
+    expect(screen.getByTestId('terminal-component')).toBeInTheDocument();
   });
 });

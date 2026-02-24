@@ -41,13 +41,17 @@
 
 ### ❌ Known Issues (P0 — being fixed now)
 
-- `modelLoaded` never visually reaches `true` in UI (header shows "Connecting..." permanently)
-- Sequential boot typewriter may not fire `onComplete` reliably under load
-- Block cursor position (`left: N ch`) can be inaccurate for certain characters
-- `App.tsx` has an unnecessary 100ms delay before Terminal renders
-- Scroll-to-bottom races with typewriter animation
 - Theme persistence broken on hard reload
 - Privacy mode does not suppress localStorage writes
+
+### 🩹 Hotfixes (Feb 2026 Sprint)
+
+**Showstopper Fixes**
+- **Model Loading Hang (SH-04):** Added 15s timeout to model initialization circuit breaker to prevent infinite "Connecting..." state.
+- **Boot Animation (SH-05):** Fixed race condition in `TerminalOutput` where boot messages failed to animate sequentially under load.
+- **Cursor Alignment (SH-06):** Replaced custom JS-calculated block cursor with native CSS caret for perfect alignment.
+- **Startup Speed (SH-07):** Removed artificial 100ms delay in `App.tsx`; terminal now renders immediately.
+- **Scroll Sync (SH-08):** `Terminal` scroll now synchronizes with typewriter animation completion, ensuring new messages are always visible.
 
 ---
 

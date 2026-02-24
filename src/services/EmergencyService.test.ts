@@ -11,8 +11,10 @@ jest.mock('./LoggerService', () => ({
 
 // Mock clinical guidelines
 jest.mock('../data/clinical_guidelines.json', () => ({
-    safety_protocols: {
-        emergency_keywords: ["chest pain", "hard to breathe"]
+    safety_tiers: {
+        tier1_immediate_emergency: {
+            keywords: ["chest pain", "hard to breathe"]
+        }
     }
 }), { virtual: true });
 

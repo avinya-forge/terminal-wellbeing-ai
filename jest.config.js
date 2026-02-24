@@ -13,6 +13,8 @@ export default {
     '^virtual:pwa-register/react$': '<rootDir>/__mocks__/pwaRegisterMock.js',
     // Mock worker factory to avoid import.meta issues
     '.*workerFactory.*': '<rootDir>/__mocks__/workerFactoryMock.js',
+    // Mock env utility to avoid import.meta syntax error in Jest
+    '^.*/utils/env$': '<rootDir>/__mocks__/envMock.js',
     // Handle path alias
     '^@/(.*)$': '<rootDir>/src/$1'
   },
