@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { getPrivacyMode } from '../utils/sessionManager';
 
 function useLocalStorage<T>(key: string, initialValue: T): [T, React.Dispatch<React.SetStateAction<T>>] {
   // State to store our value
@@ -23,6 +24,10 @@ function useLocalStorage<T>(key: string, initialValue: T): [T, React.Dispatch<Re
   useEffect(() => {
     try {
       if (typeof window !== 'undefined') {
+        // Respect privacy mode - do not write if enabled
+        if (getPrivacyMode()) {
+          return;
+        }
         window.localStorage.setItem(key, JSON.stringify(storedValue));
       }
     } catch (error) {
