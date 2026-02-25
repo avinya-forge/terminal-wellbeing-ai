@@ -3,52 +3,16 @@ import { forwardRef, useState, KeyboardEvent, memo } from 'react';
 interface TerminalInputProps {
   onSendMessage: (message: string) => void;
   disabled?: boolean;
-  history?: string[];
 }
 
 const TerminalInput = forwardRef<HTMLInputElement, TerminalInputProps>(
-  ({ onSendMessage, disabled = false, history = [] }, ref) => {
+  ({ onSendMessage, disabled = false }, ref) => {
     const [input, setInput] = useState('');
-    const [historyIndex, setHistoryIndex] = useState(-1);
-    const [tempInput, setTempInput] = useState('');
 
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter' && !disabled && input.trim()) {
         onSendMessage(input);
         setInput('');
-        setHistoryIndex(-1);
-        setTempInput('');
-        return;
-      }
-
-      // History navigation
-      if (e.key === 'ArrowUp' && history.length > 0) {
-        e.preventDefault();
-
-        if (historyIndex === -1) {
-          // Start navigation: save current input
-          setTempInput(input);
-          const newIndex = 0;
-          setHistoryIndex(newIndex);
-          setInput(history[history.length - 1 - newIndex] || '');
-        } else if (historyIndex < history.length - 1) {
-          // Continue going back
-          const newIndex = historyIndex + 1;
-          setHistoryIndex(newIndex);
-          setInput(history[history.length - 1 - newIndex] || '');
-        }
-      } else if (e.key === 'ArrowDown') {
-        if (historyIndex > -1) {
-          e.preventDefault();
-          const newIndex = historyIndex - 1;
-          setHistoryIndex(newIndex);
-
-          if (newIndex === -1) {
-            setInput(tempInput);
-          } else {
-            setInput(history[history.length - 1 - newIndex] || '');
-          }
-        }
       }
     };
 

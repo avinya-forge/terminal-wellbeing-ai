@@ -1,49 +1,14 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 
 interface PanicOverlayProps {
   onClose: () => void;
 }
 
 const PanicOverlay: React.FC<PanicOverlayProps> = ({ onClose }) => {
-  const buttonRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-        return;
-      }
-
-      // Trap focus since we only have one interactive element
-      if (e.key === 'Tab') {
-        e.preventDefault();
-        buttonRef.current?.focus();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-
-    // Focus the button on mount
-    // Use timeout to ensure DOM is ready and prevent potential conflicts
-    const timeoutId = setTimeout(() => {
-      buttonRef.current?.focus();
-    }, 50);
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      clearTimeout(timeoutId);
-    };
-  }, [onClose]);
-
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="panic-title"
-    >
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4">
       <div className="w-full max-w-2xl border-4 border-red-600 bg-black p-8 text-center shadow-[0_0_50px_rgba(220,38,38,0.5)]">
-        <h1 id="panic-title" className="mb-8 text-4xl font-bold uppercase tracking-widest text-red-500 animate-pulse">
+        <h1 className="mb-8 text-4xl font-bold uppercase tracking-widest text-red-500 animate-pulse">
           Crisis Resources
         </h1>
 
@@ -70,7 +35,6 @@ const PanicOverlay: React.FC<PanicOverlayProps> = ({ onClose }) => {
         </p>
 
         <button
-          ref={buttonRef}
           onClick={onClose}
           className="rounded border-2 border-white bg-transparent px-8 py-3 text-lg font-bold text-white transition-colors hover:bg-white hover:text-black focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-black"
         >

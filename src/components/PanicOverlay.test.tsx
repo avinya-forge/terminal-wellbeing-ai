@@ -21,23 +21,4 @@ describe('PanicOverlay', () => {
 
     expect(handleClose).toHaveBeenCalledTimes(1);
   });
-
-  it('calls onClose when Escape key is pressed', () => {
-    const handleClose = jest.fn();
-    render(<PanicOverlay onClose={handleClose} />);
-
-    fireEvent.keyDown(document, { key: 'Escape' });
-
-    expect(handleClose).toHaveBeenCalledTimes(1);
-  });
-
-  it('traps focus (focuses button on mount)', async () => {
-    const handleClose = jest.fn();
-    render(<PanicOverlay onClose={handleClose} />);
-
-    const button = screen.getByText('RETURN TO TERMINAL');
-    // Wait for timeout used in component (50ms)
-    await new Promise(r => setTimeout(r, 60));
-    expect(button).toHaveFocus();
-  });
 });

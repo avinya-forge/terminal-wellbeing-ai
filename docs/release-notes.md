@@ -41,8 +41,8 @@
 
 ### ❌ Known Issues (P0 — being fixed now)
 
-- Long AI responses break horizontal layout on narrow screens (SH-09)
-- `/help` output is not readable (SH-10)
+- Theme persistence broken on hard reload
+- Privacy mode does not suppress localStorage writes
 
 ### 🩹 Hotfixes (Feb 2026 Sprint)
 
@@ -52,10 +52,6 @@
 - **Cursor Alignment (SH-06):** Replaced custom JS-calculated block cursor with native CSS caret for perfect alignment.
 - **Startup Speed (SH-07):** Removed artificial 100ms delay in `App.tsx`; terminal now renders immediately.
 - **Scroll Sync (SH-08):** `Terminal` scroll now synchronizes with typewriter animation completion, ensuring new messages are always visible.
-- **Theme Persistence (SH-12):** Moved theme initialization to `App.tsx` root to ensure correct application on mount.
-- **Privacy Leak (SH-13):** `useLocalStorage` now respects global privacy mode, preventing writes to local storage. `terminal_messages` are explicitly cleared when entering privacy mode.
-- **Panic Overlay (SH-11):** Implemented focus trap and Escape key listener for better accessibility and usability.
-- **Input History (P1-05):** Added Up/Down arrow navigation for command history in `TerminalInput`.
 
 ---
 

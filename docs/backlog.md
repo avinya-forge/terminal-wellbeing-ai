@@ -22,9 +22,9 @@
 - [x] [SH-08] | Scroll-to-bottom races typewriter — implemented `onScrollToBottom` synchronization with typewriter animation | [DONE]
 - [ ] [SH-09] | Long AI responses break horizontal layout on narrow screens | [TODO]
 - [ ] [SH-10] | `/help` output is not readable — verify formatting, colours and word-wrap in full-screen layout | [TODO]
-- [x] [SH-11] | Panic overlay (Ctrl+P / `/panic`) — tab focus not trapped; Escape doesn't close | [DONE]
-- [x] [SH-12] | Theme persistence broken — `/theme` saves to localStorage but `applyTheme()` reads wrong key on reload | [DONE]
-- [x] [SH-13] | Privacy mode doesn't suppress localStorage — `useLocalStorage` still writes when privacy is ON | [DONE]
+- [ ] [SH-11] | Panic overlay (Ctrl+P / `/panic`) — tab focus not trapped; Escape doesn't close | [TODO]
+- [ ] [SH-12] | Theme persistence broken — `/theme` saves to localStorage but `applyTheme()` reads wrong key on reload | [TODO]
+- [ ] [SH-13] | Privacy mode doesn't suppress localStorage — `useLocalStorage` still writes when privacy is ON | [TODO]
 
 ### Test Coverage (Stale / Missing)
 
@@ -50,7 +50,7 @@
 
 ### UI Quality
 
-- [x] [P1-05] | Input: Up arrow recalls last sent message (standard terminal muscle memory) | [DONE]
+- [ ] [P1-05] | Input: Up arrow recalls last sent message (standard terminal muscle memory) | [TODO]
 - [ ] [P1-06] | TypingIndicator "Thinking…" announced to screen readers via `aria-live` | [TODO]
 - [ ] [P1-07] | Input: multi-line paste flattened to single line before send | [TODO]
 - [ ] [P1-08] | Replace all "Model Loading" text in UI with "Service Status" terminology | [TODO]

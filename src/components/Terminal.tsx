@@ -9,6 +9,7 @@ import { getInitialMessages } from '../data/responses';
 import { getPrivacyMode, setPrivacyMode } from '../utils/sessionManager';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { Message } from '../types/Message';
+import { applyTheme } from '../utils/themes';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 import { logger } from '../services/LoggerService';
 
@@ -30,6 +31,24 @@ const Terminal = () => {
   useEffect(() => {
     messagesRef.current = messages;
   }, [messages]);
+
+  // Initialize theme from local storage — themes are stored as plain strings
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('terminal_theme');
+    if (savedTheme && savedTheme.trim()) {
+      try {
+        // Handle legacy JSON-encoded values (e.g. '"modern"') for backward compat
+        const themeName = savedTheme.startsWith('"')
+          ? JSON.parse(savedTheme) as string
+          : savedTheme;
+        applyTheme(themeName);
+      } catch {
+        applyTheme('modern');
+      }
+    } else {
+      applyTheme('modern');
+    }
+  }, []);
 
   // Initialize AI model on component mount
   useEffect(() => {
@@ -201,7 +220,6 @@ const Terminal = () => {
         ref={inputRef}
         onSendMessage={handleSendMessage}
         disabled={isTyping || isLoading || isPanicMode}
-        history={messages.filter(m => m.sender === 'user').map(m => m.content)}
       />
     </main>
   );

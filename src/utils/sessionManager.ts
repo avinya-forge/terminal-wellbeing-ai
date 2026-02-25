@@ -183,8 +183,6 @@ export async function setPrivacyMode(enabled: boolean): Promise<void> {
   await memoryService.setPrivacyMode(enabled);
   if (enabled) {
     localStorage.removeItem(STORAGE_KEY);
-    // Explicitly clear sensitive session data
-    localStorage.removeItem('terminal_messages');
   } else {
     saveProfile(currentProfile, true);
   }
