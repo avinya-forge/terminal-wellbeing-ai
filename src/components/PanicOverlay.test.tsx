@@ -56,10 +56,6 @@ describe('PanicOverlay Component', () => {
     const button = screen.getByRole('button', { name: /return to terminal/i });
 
     // Simulate Tab press
-    const event = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true });
-    const preventDefaultSpy = jest.spyOn(event, 'preventDefault');
-    const focusSpy = jest.spyOn(button, 'focus');
-
     // Manually dispatch since fireEvent doesn't support spy easily on preventDefault for synthetic events in this context sometimes
     // But testing library fireEvent is easier.
 
