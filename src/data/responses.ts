@@ -96,7 +96,8 @@ export function getHelpResponse(): string {
       helpText += `--- ${category} ---\n`;
       cmds.forEach(cmd => {
         const usage = cmd.usage || cmd.name;
-        helpText += `${usage.padEnd(20)} - ${cmd.description}\n`;
+        // Use a vertical layout for better readability on mobile
+        helpText += `${usage}\n  ${cmd.description}\n`;
       });
       helpText += "\n";
     }

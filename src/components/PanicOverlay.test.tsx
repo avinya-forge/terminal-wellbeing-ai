@@ -1,10 +1,20 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import PanicOverlay from './PanicOverlay';
 
-describe('PanicOverlay', () => {
+describe('PanicOverlay Component', () => {
+  const mockOnClose = jest.fn();
+
+  beforeEach(() => {
+    mockOnClose.mockClear();
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   it('renders crisis resources correctly', () => {
-    render(<PanicOverlay onClose={() => {}} />);
+    render(<PanicOverlay onClose={mockOnClose} />);
 
     expect(screen.getByText('Crisis Resources')).toBeInTheDocument();
     expect(screen.getByText('988')).toBeInTheDocument();
@@ -12,32 +22,54 @@ describe('PanicOverlay', () => {
     expect(screen.getByText('911')).toBeInTheDocument();
   });
 
-  it('calls onClose when return button is clicked', () => {
-    const handleClose = jest.fn();
-    render(<PanicOverlay onClose={handleClose} />);
+  it('focuses the return button on mount', () => {
+    render(<PanicOverlay onClose={mockOnClose} />);
 
-    const button = screen.getByText('RETURN TO TERMINAL');
-    fireEvent.click(button);
+    act(() => {
+      jest.advanceTimersByTime(100);
+    });
 
-    expect(handleClose).toHaveBeenCalledTimes(1);
+    const button = screen.getByRole('button', { name: /return to terminal/i });
+    expect(button).toHaveFocus();
   });
 
-  it('calls onClose when Escape key is pressed', () => {
-    const handleClose = jest.fn();
-    render(<PanicOverlay onClose={handleClose} />);
+  it('calls onClose when clicking the return button', () => {
+    render(<PanicOverlay onClose={mockOnClose} />);
+
+    const button = screen.getByRole('button', { name: /return to terminal/i });
+    fireEvent.click(button);
+
+    expect(mockOnClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('calls onClose when pressing Escape', () => {
+    render(<PanicOverlay onClose={mockOnClose} />);
 
     fireEvent.keyDown(document, { key: 'Escape' });
 
-    expect(handleClose).toHaveBeenCalledTimes(1);
+    expect(mockOnClose).toHaveBeenCalledTimes(1);
   });
 
-  it('traps focus (focuses button on mount)', async () => {
-    const handleClose = jest.fn();
-    render(<PanicOverlay onClose={handleClose} />);
+  it('traps focus when pressing Tab', () => {
+    render(<PanicOverlay onClose={mockOnClose} />);
 
-    const button = screen.getByText('RETURN TO TERMINAL');
-    // Wait for timeout used in component (50ms)
-    await new Promise(r => setTimeout(r, 60));
+    const button = screen.getByRole('button', { name: /return to terminal/i });
+
+    // Simulate Tab press
+    const event = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true });
+    const preventDefaultSpy = jest.spyOn(event, 'preventDefault');
+    const focusSpy = jest.spyOn(button, 'focus');
+
+    // Manually dispatch since fireEvent doesn't support spy easily on preventDefault for synthetic events in this context sometimes
+    // But testing library fireEvent is easier.
+
+    fireEvent.keyDown(document, { key: 'Tab' });
+
+    // The component attaches listener to document.
+    // If we verify that focus is called on the button again.
+
     expect(button).toHaveFocus();
+    // Since we are mocking focus implementation in JSDOM sometimes, let's just check if our logic ran.
+    // The component calls buttonRef.current?.focus() on Tab.
   });
 });

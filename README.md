@@ -45,6 +45,22 @@ This project uses a streamlined tech stack focused on simplicity and performance
 - `postcss`: v8.4.47
 - `ts-jest`: v29.1.1
 
+## Mobile Access
+
+To test the application on a mobile device connected to the same Wi-Fi network:
+
+1. Run the mobile development server:
+   ```bash
+   npm run dev:mobile
+   ```
+   This exposes the server on `0.0.0.0` (all network interfaces).
+
+2. Find your computer's local IP address:
+   - **Windows:** Run `ipconfig` in a terminal and look for "IPv4 Address" (e.g., `192.168.1.5`).
+   - **macOS/Linux:** Run `ifconfig` or `ip a` and look for the `inet` address (e.g., `192.168.1.5`).
+
+3. Open a browser on your mobile device and navigate to `http://<YOUR_IP>:8080`.
+
 ## Getting Started
 
 ### Prerequisites

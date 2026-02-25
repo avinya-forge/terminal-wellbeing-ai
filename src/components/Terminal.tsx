@@ -182,11 +182,10 @@ const Terminal = () => {
 
       {/* Scrollable message body — takes all remaining height */}
       <div
-        className="scanlines"
+        className="scanlines p-4 md:p-8"
         style={{
           flex: 1,
           overflowY: 'auto',
-          padding: '1.25rem 2rem',
           display: 'flex',
           flexDirection: 'column',
         }}
