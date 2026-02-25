@@ -40,4 +40,18 @@ describe('PanicOverlay', () => {
     await new Promise(r => setTimeout(r, 60));
     expect(button).toHaveFocus();
   });
+
+  it('traps focus when Tab is pressed', () => {
+    const handleClose = jest.fn();
+    render(<PanicOverlay onClose={handleClose} />);
+
+    // Create a custom event to spy on preventDefault
+    const event = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true });
+    const preventDefaultSpy = jest.spyOn(event, 'preventDefault');
+
+    // Dispatch event on document since the listener is attached there
+    document.dispatchEvent(event);
+
+    expect(preventDefaultSpy).toHaveBeenCalled();
+  });
 });

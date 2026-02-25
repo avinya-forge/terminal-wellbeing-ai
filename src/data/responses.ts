@@ -89,6 +89,7 @@ export function getHelpResponse(): string {
   const categories = ["General", "Mental Health", "Utilities", "System"] as const;
 
   let helpText = "Available commands:\n\n";
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   categories.forEach(category => {
     const cmds = COMMAND_DEFINITIONS.filter(cmd => cmd.category === category && !cmd.hidden);
@@ -96,7 +97,11 @@ export function getHelpResponse(): string {
       helpText += `--- ${category} ---\n`;
       cmds.forEach(cmd => {
         const usage = cmd.usage || cmd.name;
-        helpText += `${usage.padEnd(20)} - ${cmd.description}\n`;
+        if (isMobile) {
+          helpText += `${usage}\n${cmd.description}\n\n`;
+        } else {
+          helpText += `${usage.padEnd(20)} - ${cmd.description}\n`;
+        }
       });
       helpText += "\n";
     }
