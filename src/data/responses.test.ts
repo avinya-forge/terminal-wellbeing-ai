@@ -34,13 +34,42 @@ describe('Responses Data', () => {
   });
 
   describe('getHelpResponse', () => {
-    it('should return help information', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let originalWindow: any;
+
+    beforeAll(() => {
+      originalWindow = global.window;
+    });
+
+    afterAll(() => {
+      global.window = originalWindow;
+    });
+
+    it('should return aligned format on desktop', () => {
+      // Mock desktop width
+      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 1024 });
+
+      const help = getHelpResponse();
+
+      expect(help).toContain('Available commands');
+      // Should contain aligned format (command + padding + dash + description)
+      // We look for a line containing the command and description separated by " - "
+      expect(help).toMatch(/\/help\s+- Show this help message/);
+      // It should NOT contain the vertical format pattern (command followed by newline followed by description)
+      // This is harder to regex negatively without being fragile, so we rely on the positive match above.
+    });
+
+    it('should return vertical format on mobile', () => {
+      // Mock mobile width
+      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 500 });
+
       const help = getHelpResponse();
       
       expect(help).toContain('Available commands');
-      expect(help).toContain('/help');
-      expect(help).toContain('/resources');
-      expect(help).toContain('/clear');
+      // Should contain vertical format:
+      // /help
+      // Show this help message
+      expect(help).toContain('/help\nShow this help message');
     });
   });
 

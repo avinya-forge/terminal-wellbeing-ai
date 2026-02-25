@@ -72,4 +72,31 @@ describe('TerminalMessage Component', () => {
     const botMessageElement = screen.getByText('Hi! How can I help you today?').parentElement;
     expect(botMessageElement).toHaveStyle({ color: 'hsl(var(--primary))' });
   });
+
+  it('respects animate=false for bot messages', () => {
+    const onComplete = jest.fn();
+    render(<TerminalMessage message={botMessage} animate={false} onComplete={onComplete} />);
+
+    // Should be visible immediately
+    expect(screen.getByText('Hi! How can I help you today?')).toBeInTheDocument();
+
+    // onComplete should be called immediately
+    expect(onComplete).toHaveBeenCalledTimes(1);
+  });
+
+  it('calls onComplete after animation finishes', () => {
+    const onComplete = jest.fn();
+    render(<TerminalMessage message={botMessage} animate={true} onComplete={onComplete} />);
+
+    // Initially not called
+    expect(onComplete).not.toHaveBeenCalled();
+
+    // Advance timers
+    act(() => {
+      jest.advanceTimersByTime(15 * botMessage.content.length + 100);
+    });
+
+    // Should be called now
+    expect(onComplete).toHaveBeenCalledTimes(1);
+  });
 });
