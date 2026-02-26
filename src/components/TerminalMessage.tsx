@@ -78,9 +78,9 @@ const TerminalMessage = memo(({ message, animate = true, onComplete }: TerminalM
         style={{
           flex: 1,
           minWidth: 0,
+          maxWidth: '100%',
           whiteSpace: 'pre-wrap',
           overflowWrap: 'anywhere',
-          wordBreak: 'break-word',
           color: isBot ? 'hsl(var(--primary))' : 'hsl(var(--foreground))',
           textShadow: isBot ? '0 0 4px hsl(var(--primary)/0.3)' : 'none',
           letterSpacing: '0.03em',

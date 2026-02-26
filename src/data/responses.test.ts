@@ -68,8 +68,8 @@ describe('Responses Data', () => {
       expect(help).toContain('Available commands');
       // Should contain vertical format:
       // /help
-      // Show this help message
-      expect(help).toContain('/help\nShow this help message');
+      //    Show this help message
+      expect(help).toContain('/help\n   Show this help message');
     });
   });
 

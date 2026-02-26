@@ -4,7 +4,7 @@ interface TypingIndicatorProps {
 
 const TypingIndicator = ({ label = "Thinking" }: TypingIndicatorProps) => {
   return (
-    <div className="flex items-center text-primary" aria-label={`${label}...`} role="status">
+    <div className="flex items-center text-primary" aria-label={`${label}...`} role="status" aria-live="polite">
       <span className="font-bold mr-2 text-primary" aria-hidden="true">{'>'}</span>
       <span>{label}</span>
       <span className="flex ml-0.5 gap-0.5" aria-hidden="true">

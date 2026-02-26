@@ -98,7 +98,7 @@ export function getHelpResponse(): string {
       cmds.forEach(cmd => {
         const usage = cmd.usage || cmd.name;
         if (isMobile) {
-          helpText += `${usage}\n${cmd.description}\n\n`;
+          helpText += `${usage}\n   ${cmd.description}\n\n`;
         } else {
           helpText += `${usage.padEnd(20)} - ${cmd.description}\n`;
         }

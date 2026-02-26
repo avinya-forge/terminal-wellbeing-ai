@@ -41,8 +41,7 @@
 
 ### ❌ Known Issues (P0 — being fixed now)
 
-- Long AI responses break horizontal layout on narrow screens (SH-09)
-- `/help` output is not readable (SH-10)
+(None)
 
 ### 🩹 Hotfixes (Feb 2026 Sprint)
 
@@ -56,6 +55,10 @@
 - **Privacy Leak (SH-13):** `useLocalStorage` now respects global privacy mode, preventing writes to local storage. `terminal_messages` are explicitly cleared when entering privacy mode.
 - **Panic Overlay (SH-11):** Implemented focus trap and Escape key listener for better accessibility and usability.
 - **Input History (P1-05):** Added Up/Down arrow navigation for command history in `TerminalInput`.
+- **Layout Robustness (SH-09):** Fixed horizontal overflow issues with long strings (e.g., URLs) by enforcing `maxWidth: 100%` and `overflow-wrap: anywhere`.
+- **Mobile Help (SH-10):** Improved `/help` command formatting on mobile devices with proper indentation.
+- **Accessibility (P1-06):** Added `aria-live="polite"` to `TypingIndicator` for screen reader announcements.
+- **Input UX (P1-07):** Added paste handler to flatten multi-line input into a single line before sending.
 
 ---
 
