@@ -20,8 +20,8 @@
 - [x] [SH-06] | Block cursor misaligned — replaced custom cursor with native caret + CSS styling | [DONE]
 - [x] [SH-07] | App.tsx artificial 100ms delay — removed delay, verified immediate rendering | [DONE]
 - [x] [SH-08] | Scroll-to-bottom races typewriter — implemented `onScrollToBottom` synchronization with typewriter animation | [DONE]
-- [ ] [SH-09] | Long AI responses break horizontal layout on narrow screens | [TODO]
-- [ ] [SH-10] | `/help` output is not readable — verify formatting, colours and word-wrap in full-screen layout | [TODO]
+- [x] [SH-09] | Long AI responses break horizontal layout on narrow screens — added `maxWidth: 100%` and `overflow-wrap: anywhere` | [DONE]
+- [x] [SH-10] | `/help` output is not readable — improved mobile formatting with indentation | [DONE]
 - [x] [SH-11] | Panic overlay (Ctrl+P / `/panic`) — tab focus not trapped; Escape doesn't close | [DONE]
 - [x] [SH-12] | Theme persistence broken — `/theme` saves to localStorage but `applyTheme()` reads wrong key on reload | [DONE]
 - [x] [SH-13] | Privacy mode doesn't suppress localStorage — `useLocalStorage` still writes when privacy is ON | [DONE]
@@ -31,10 +31,10 @@
 - [x] [SH-T01] | `TerminalHeader.test.tsx` — rewritten with correct text assertions (11 tests) | [DONE]
 - [x] [SH-T02] | `TerminalInput.test.tsx` — rewritten with 14 precise tests | [DONE]
 - [x] [SH-T03] | `TerminalOutput.test.tsx` — verified sequential boot tests | [DONE]
-- [ ] [SH-T04] | `TerminalMessage.test.tsx` — add tests for `animate=false` and `onComplete` callback | [TODO]
+- [x] [SH-T04] | `TerminalMessage.test.tsx` — add tests for `animate=false` and `onComplete` callback | [DONE]
 - [x] [SH-T05] | `Terminal.test.tsx` — verified message send, clear, and panic overlay flow | [DONE]
 - [x] [SH-T06] | `Terminal.test.tsx` — verified input disabled state (with timeout fix) | [DONE]
-- [ ] [SH-T07] | `PanicOverlay.test.tsx` — crisis contacts rendered; close button works; Escape closes | [TODO]
+- [x] [SH-T07] | `PanicOverlay.test.tsx` — crisis contacts rendered; close button works; Escape closes | [DONE]
 - [x] [SH-T08] | `Terminal.accessibility.test.tsx` — fixed role and label assertions | [DONE]
 
 ---
@@ -51,8 +51,8 @@
 ### UI Quality
 
 - [x] [P1-05] | Input: Up arrow recalls last sent message (standard terminal muscle memory) | [DONE]
-- [ ] [P1-06] | TypingIndicator "Thinking…" announced to screen readers via `aria-live` | [TODO]
-- [ ] [P1-07] | Input: multi-line paste flattened to single line before send | [TODO]
+- [x] [P1-06] | TypingIndicator "Thinking…" announced to screen readers via `aria-live` | [DONE]
+- [x] [P1-07] | Input: multi-line paste flattened to single line before send | [DONE]
 - [ ] [P1-08] | Replace all "Model Loading" text in UI with "Service Status" terminology | [TODO]
 
 ---

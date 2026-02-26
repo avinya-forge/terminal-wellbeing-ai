@@ -3,7 +3,8 @@
   "compilerOptions": {
     "types": ["jest", "@testing-library/jest-dom"],
     "esModuleInterop": true,
-    "allowJs": true
+    "allowJs": true,
+    "allowImportingTsExtensions": false
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "**/*.test.ts", "**/*.test.tsx"]
 }

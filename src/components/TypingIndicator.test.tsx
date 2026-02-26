@@ -28,4 +28,10 @@ describe('TypingIndicator Component', () => {
     const container = screen.getByRole('status');
     expect(container).toHaveAttribute('aria-label', 'Thinking...');
   });
+
+  it('announces status via aria-live', () => {
+    render(<TypingIndicator />);
+    const container = screen.getByRole('status');
+    expect(container).toHaveAttribute('aria-live', 'polite');
+  });
 });

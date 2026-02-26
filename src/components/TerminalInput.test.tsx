@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, createEvent } from '@testing-library/react';
 import TerminalInput from './TerminalInput';
 
 describe('TerminalInput', () => {
@@ -203,5 +203,25 @@ describe('TerminalInput', () => {
     // Should be reset, so Up arrow starts from bottom again
     fireEvent.keyDown(input, { key: 'ArrowUp' });
     expect(input).toHaveValue('cmd1');
+  });
+
+  // ── Paste Handling ────────────────────────────────────────────────────────
+
+  it('flattens multi-line paste content to single line', () => {
+    // Need createEvent to mock clipboard data properly
+    render(<TerminalInput onSendMessage={mockSend} />);
+    const input = screen.getByRole('textbox');
+
+    const pasteEvent = createEvent.paste(input, {
+      clipboardData: {
+        getData: () => 'line1\nline2\r\nline3',
+      },
+    });
+
+    fireEvent(input, pasteEvent);
+
+    // Expect newlines to be replaced by single spaces
+    // input is controlled, so fireEvent needs to trigger the handler which updates state
+    expect(input).toHaveValue('line1 line2 line3');
   });
 });
