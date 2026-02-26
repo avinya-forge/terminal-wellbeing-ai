@@ -66,10 +66,21 @@ describe('Responses Data', () => {
       const help = getHelpResponse();
       
       expect(help).toContain('Available commands');
-      // Should contain vertical format:
+      // Should contain vertical format with indentation:
       // /help
-      // Show this help message
-      expect(help).toContain('/help\nShow this help message');
+      //     Show this help message
+      expect(help).toContain('/help\n    Show this help message');
+    });
+
+    it('should force vertical format for long commands even on desktop', () => {
+      // Mock desktop width
+      Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 1024 });
+
+      const help = getHelpResponse();
+
+      // The /profile command has a long usage string, so it should be vertical
+      // Usage: /profile [view|name|tone|length|warnings|reset|export]
+      expect(help).toContain('/profile [view|name|tone|length|warnings|reset|export]\n    Manage user profile & preferences');
     });
   });
 

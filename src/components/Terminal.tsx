@@ -182,14 +182,7 @@ const Terminal = () => {
 
       {/* Scrollable message body — takes all remaining height */}
       <div
-        className="scanlines"
-        style={{
-          flex: 1,
-          overflowY: 'auto',
-          padding: '1.25rem 2rem',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
+        className="scanlines flex-1 overflow-y-auto flex flex-col p-4 md:p-8"
         onClick={() => inputRef.current?.focus()}
       >
         <TerminalOutput messages={messages} isTyping={isTyping} onScrollToBottom={scrollToBottom} />

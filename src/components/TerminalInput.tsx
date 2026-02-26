@@ -1,4 +1,4 @@
-import { forwardRef, useState, KeyboardEvent, memo } from 'react';
+import { forwardRef, useState, KeyboardEvent, ClipboardEvent, memo } from 'react';
 
 interface TerminalInputProps {
   onSendMessage: (message: string) => void;
@@ -11,6 +11,24 @@ const TerminalInput = forwardRef<HTMLInputElement, TerminalInputProps>(
     const [input, setInput] = useState('');
     const [historyIndex, setHistoryIndex] = useState(-1);
     const [tempInput, setTempInput] = useState('');
+
+    const handlePaste = (e: ClipboardEvent<HTMLInputElement>) => {
+      e.preventDefault();
+      const text = e.clipboardData.getData('text').replace(/[\r\n]+/g, ' ');
+
+      const target = e.currentTarget;
+      const start = target.selectionStart || 0;
+      const end = target.selectionEnd || 0;
+
+      const newValue = input.substring(0, start) + text + input.substring(end);
+      setInput(newValue);
+
+      // Restore cursor position after state update
+      const newCursorPos = start + text.length;
+      setTimeout(() => {
+        target.setSelectionRange(newCursorPos, newCursorPos);
+      }, 0);
+    };
 
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter' && !disabled && input.trim()) {
@@ -83,6 +101,7 @@ const TerminalInput = forwardRef<HTMLInputElement, TerminalInputProps>(
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
+            onPaste={handlePaste}
             className="w-full bg-transparent border-none outline-none"
             style={{
               color: 'hsl(var(--foreground))',

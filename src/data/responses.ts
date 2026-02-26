@@ -97,10 +97,11 @@ export function getHelpResponse(): string {
       helpText += `--- ${category} ---\n`;
       cmds.forEach(cmd => {
         const usage = cmd.usage || cmd.name;
-        if (isMobile) {
-          helpText += `${usage}\n${cmd.description}\n\n`;
+        // Use vertical layout for mobile OR long command strings to preserve readability
+        if (isMobile || usage.length > 25) {
+          helpText += `${usage}\n    ${cmd.description}\n\n`;
         } else {
-          helpText += `${usage.padEnd(20)} - ${cmd.description}\n`;
+          helpText += `${usage.padEnd(30)} - ${cmd.description}\n`;
         }
       });
       helpText += "\n";

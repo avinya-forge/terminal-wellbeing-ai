@@ -204,4 +204,49 @@ describe('TerminalInput', () => {
     fireEvent.keyDown(input, { key: 'ArrowUp' });
     expect(input).toHaveValue('cmd1');
   });
+
+  // ── Paste Handling ────────────────────────────────────────────────────────
+
+  it('handles paste by replacing newlines with spaces', () => {
+    render(<TerminalInput onSendMessage={mockSend} />);
+    const input = screen.getByRole('textbox');
+
+    // Simulate paste event
+    const pasteEvent = {
+      clipboardData: {
+        getData: jest.fn().mockReturnValue('Line 1\nLine 2\r\nLine 3'),
+      },
+      preventDefault: jest.fn(),
+      currentTarget: input,
+    };
+
+    fireEvent.paste(input, pasteEvent);
+
+    // Verify value update (newlines replaced by spaces)
+    expect(input).toHaveValue('Line 1 Line 2 Line 3');
+  });
+
+  it('preserves existing text when pasting', () => {
+    render(<TerminalInput onSendMessage={mockSend} />);
+    const input = screen.getByRole('textbox');
+
+    fireEvent.change(input, { target: { value: 'Start ' } });
+
+    // We can manually set properties on the input element for the test
+    // explicit casting to writable to bypass read-only definition in JSDOM if necessary
+    Object.defineProperty(input, 'selectionStart', { value: 6, writable: true });
+    Object.defineProperty(input, 'selectionEnd', { value: 6, writable: true });
+
+    const pasteEvent = {
+      clipboardData: {
+        getData: jest.fn().mockReturnValue('Pasted'),
+      },
+      preventDefault: jest.fn(),
+      currentTarget: input,
+    };
+
+    fireEvent.paste(input, pasteEvent);
+
+    expect(input).toHaveValue('Start Pasted');
+  });
 });
