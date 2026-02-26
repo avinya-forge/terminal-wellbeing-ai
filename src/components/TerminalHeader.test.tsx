@@ -10,9 +10,9 @@ describe('TerminalHeader', () => {
     expect(screen.getByText('WellBeing.sh')).toBeInTheDocument();
   });
 
-  it('shows "Connecting..." status when not loaded (default)', () => {
+  it('shows "Service Status: Connecting..." status when not loaded (default)', () => {
     render(<TerminalHeader />);
-    expect(screen.getByText('Connecting...')).toBeInTheDocument();
+    expect(screen.getByText('Service Status: Connecting...')).toBeInTheDocument();
   });
 
   it('shows "Online" status when modelLoaded is true', () => {

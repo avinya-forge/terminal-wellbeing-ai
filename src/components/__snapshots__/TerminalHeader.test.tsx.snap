@@ -59,7 +59,7 @@ exports[`TerminalHeader matches snapshot in default state 1`] = `
         class="text-xs font-mono"
         style="text-shadow: none; transition: color 0.5s ease;"
       >
-        Connecting...
+        Service Status: Connecting...
       </span>
     </div>
     <div
