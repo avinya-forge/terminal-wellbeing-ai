@@ -35,7 +35,7 @@ describe('AI Model Utils', () => {
 
       expect(success).toBe(true);
       expect(onProgress).toHaveBeenCalled();
-      expect(onProgress).toHaveBeenCalledWith(expect.stringContaining('Service Status: Loading'));
+      expect(onProgress).toHaveBeenCalledWith(expect.stringContaining('Service Status: Initializing'));
       expect(onProgress).toHaveBeenCalledWith(expect.stringContaining('Service Status:'));
     });
   });

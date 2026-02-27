@@ -8,8 +8,8 @@ describe('TypingIndicator Component', () => {
   });
 
   it('renders custom label', () => {
-    render(<TypingIndicator label="Loading" />);
-    expect(screen.getByText('Loading')).toBeInTheDocument();
+    render(<TypingIndicator label="Service Status: Initializing" />);
+    expect(screen.getByText('Service Status: Initializing')).toBeInTheDocument();
   });
 
   it('renders 3 animated dots', () => {

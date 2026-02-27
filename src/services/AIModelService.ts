@@ -81,7 +81,7 @@ export class AIModelService {
         // Start with the default model local fallback
         const defaultModel = AVAILABLE_MODELS[DEFAULT_MODEL_INDEX];
         logger.info(`Initializing local fallback AI model (${defaultModel.displayName})...`);
-        onProgress?.(`Service Status: Loading local ${defaultModel.displayName}...`);
+        onProgress?.(`Service Status: Initializing local ${defaultModel.displayName}...`);
 
         await this.circuitBreaker.execute(async () => {
           const timeoutPromise = new Promise((_, reject) =>
