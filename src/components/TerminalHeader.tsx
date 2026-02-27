@@ -8,7 +8,8 @@ interface TerminalHeaderProps {
 }
 
 const TerminalHeader = memo(({ modelLoaded = false, loadingStatus, privacyMode = false }: TerminalHeaderProps) => {
-  const statusText = modelLoaded ? 'Online' : (loadingStatus || 'Connecting...');
+  // If loaded, show Online. If not loaded, show the status or default to "Service Status: Connecting..."
+  const statusText = modelLoaded ? 'Online' : (loadingStatus || 'Service Status: Connecting...');
 
   return (
     <header

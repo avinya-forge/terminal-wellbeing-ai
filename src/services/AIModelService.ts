@@ -73,7 +73,7 @@ export class AIModelService {
 
         if (hasBackend) {
           logger.info("Backend inference token detected. Using Backend-First approach.");
-          onProgress?.("Backend configured (Simplicity Mode)");
+          onProgress?.("Service Status: Backend configured (Simplicity Mode)");
           this.initialized = true;
           return true;
         }
@@ -81,7 +81,7 @@ export class AIModelService {
         // Start with the default model local fallback
         const defaultModel = AVAILABLE_MODELS[DEFAULT_MODEL_INDEX];
         logger.info(`Initializing local fallback AI model (${defaultModel.displayName})...`);
-        onProgress?.(`Loading local ${defaultModel.displayName}...`);
+        onProgress?.(`Service Status: Loading local ${defaultModel.displayName}...`);
 
         await this.circuitBreaker.execute(async () => {
           const timeoutPromise = new Promise((_, reject) =>
@@ -101,7 +101,7 @@ export class AIModelService {
         });
 
         logger.info(`Primary AI model (${defaultModel.displayName}) initialized successfully`);
-        onProgress?.(`${defaultModel.displayName} ready`);
+        onProgress?.(`Service Status: ${defaultModel.displayName} ready`);
 
         // Initialize other models in the background after the primary model is loaded
         setTimeout(() => {
@@ -113,13 +113,13 @@ export class AIModelService {
       } catch (error: unknown) {
         if (error instanceof CircuitBreakerOpenError) {
           logger.warn("Circuit Breaker is OPEN. Skipping initialization.");
-          onProgress?.("Service temporarily unavailable (Circuit Breaker)");
+          onProgress?.("Service Status: Unavailable (Circuit Breaker)");
           return false;
         }
 
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
         logger.error(`Error initializing AI model (attempt ${retries + 1}/${MAX_RETRIES}): ${errorMessage}`);
-        onProgress?.(`Error: ${errorMessage}. Retrying...`);
+        onProgress?.(`Service Status: Error - ${errorMessage}. Retrying...`);
         return false;
       }
     };
@@ -131,7 +131,7 @@ export class AIModelService {
     while (!success && retries < MAX_RETRIES - 1) {
       retries++;
       logger.info(`Retrying model initialization in ${RETRY_DELAY}ms... (${retries}/${MAX_RETRIES - 1})`);
-      onProgress?.(`Retrying initialization (${retries}/${MAX_RETRIES - 1})...`);
+      onProgress?.(`Service Status: Retrying initialization (${retries}/${MAX_RETRIES - 1})...`);
 
       // Wait before retrying
       await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
