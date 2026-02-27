@@ -13,9 +13,7 @@
     "preview": "vite preview",
     "ci": "npm run lint && npm test && npm run build",
     "manage": "node scripts/manage.js",
-    "generate:icons": "node scripts/generate-pwa-icons.mjs",
-    "preview:tunnel": "npx ngrok http 5173",
-    "preview:mobile": "vite --host 0.0.0.0"
+    "generate:icons": "node scripts/generate-pwa-icons.mjs"
   },
   "dependencies": {
     "@huggingface/transformers": "^3.5.1",

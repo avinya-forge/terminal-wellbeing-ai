@@ -71,28 +71,6 @@ npm run dev
 
 The application will be available at http://localhost:8080
 
-### Mobile Access
-
-To test the application on a mobile device connected to the same network:
-
-1. **Find your local IP address:**
-   - **Windows:** Open Command Prompt and run `ipconfig`. Look for "IPv4 Address".
-   - **macOS/Linux:** Open Terminal and run `ifconfig` or `ip a`. Look for "inet" under your active network interface (usually `en0` or `wlan0`).
-
-2. **Start the development server with host exposure:**
-   ```bash
-   npm run preview:mobile
-   ```
-   Or explicitly:
-   ```bash
-   vite --host 0.0.0.0
-   ```
-
-3. **Access on mobile:**
-   - Open your mobile browser.
-   - Navigate to `http://<YOUR_LOCAL_IP>:5173`.
-   - Ensure your firewall allows incoming connections on port 5173.
-
 ### Testing
 
 Run tests:
