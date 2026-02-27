@@ -17,7 +17,7 @@ const Terminal = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [modelLoaded, setModelLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [loadingStatus, setLoadingStatus] = useState("Service Status: Initializing...");
+  const [loadingStatus, setLoadingStatus] = useState("Initializing...");
   const [isPanicMode, setIsPanicMode] = useState(false);
   const [isPrivacyMode, setIsPrivacyMode] = useState(getPrivacyMode());
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -40,11 +40,11 @@ const Terminal = () => {
         });
         setModelLoaded(success);
         if (!success) {
-          setLoadingStatus("Service Status: Using fallback responses");
+          setLoadingStatus("AI Model: Using fallback responses");
         }
       } catch (error) {
         logger.error('Failed to initialize model:', error);
-        setLoadingStatus("Service Status: Error");
+        setLoadingStatus("Error initializing model");
       } finally {
         setIsLoading(false);
       }

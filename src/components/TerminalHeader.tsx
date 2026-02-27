@@ -8,7 +8,7 @@ interface TerminalHeaderProps {
 }
 
 const TerminalHeader = memo(({ modelLoaded = false, loadingStatus, privacyMode = false }: TerminalHeaderProps) => {
-  const statusText = modelLoaded ? 'Online' : (loadingStatus || 'Service Status: Connecting...');
+  const statusText = modelLoaded ? 'Online' : (loadingStatus || 'Connecting...');
 
   return (
     <header
@@ -47,7 +47,7 @@ const TerminalHeader = memo(({ modelLoaded = false, loadingStatus, privacyMode =
           <span
             className="relative flex"
             aria-hidden="true"
-            title={modelLoaded ? 'Service online' : 'Service Status: Connecting...'}
+            title={modelLoaded ? 'Service online' : 'Connecting…'}
           >
             {/* Outer ping ring — only when online */}
             {modelLoaded && (
