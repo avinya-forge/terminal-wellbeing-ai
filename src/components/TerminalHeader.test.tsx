@@ -21,8 +21,8 @@ describe('TerminalHeader', () => {
   });
 
   it('shows a custom loadingStatus when provided and not yet loaded', () => {
-    render(<TerminalHeader loadingStatus="Service Status: Initializing models…" />);
-    expect(screen.getByText('Service Status: Initializing models…')).toBeInTheDocument();
+    render(<TerminalHeader loadingStatus="Loading models…" />);
+    expect(screen.getByText('Loading models…')).toBeInTheDocument();
   });
 
   // ── Privacy mode ──────────────────────────────────────────────────────────

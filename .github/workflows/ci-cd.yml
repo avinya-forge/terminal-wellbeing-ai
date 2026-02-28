@@ -1,10 +1,12 @@
 name: CI/CD Pipeline
 
+# Disabled temporarily due to GitHub billing issues.
+# TODO: Re-enable CI pipeline at the start of the next month.
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  # push:
+  #   branches: [ main ]
+  # pull_request:
+  #   branches: [ main ]
   # schedule:
   #   - cron: '0 0 * * *' # Daily at midnight UTC
 

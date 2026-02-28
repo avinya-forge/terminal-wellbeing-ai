@@ -53,7 +53,7 @@
 - [x] [P1-05] | Input: Up arrow recalls last sent message (standard terminal muscle memory) | [DONE]
 - [x] [P1-06] | TypingIndicator "Thinking…" announced to screen readers via `aria-live` | [DONE]
 - [x] [P1-07] | Input: multi-line paste flattened to single line before send | [DONE]
-- [ ] [P1-08] | Replace all "Model Loading" text in UI with "Service Status" terminology | [TODO]
+- [x] [P1-08] | Replace all "Model Loading" text in UI with "Service Status" terminology | [DONE]
 
 ---
 
