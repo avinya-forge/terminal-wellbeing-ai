@@ -22,7 +22,7 @@ describe('Terminal Accessibility', () => {
       // The status is presented via role="status" and visible text
       const status = screen.getByRole('status');
       expect(status).toBeInTheDocument();
-      expect(status).toHaveTextContent('Online');
+      expect(status).toHaveTextContent('Service Status: Connected');
     });
   });
 

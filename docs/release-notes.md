@@ -9,6 +9,7 @@
 ### ✅ What's Working
 
 **Visual / Interaction Basics**
+- Status Consistency: Replaced disparate UI state strings with standardized "Service Status: Loading...", "Service Status: Connected", and "Service Status: Error" text patterns.
 - Terminal fills 100% viewport width — removed 820px maxWidth cap
 - Typed text invisible in input bar — `#terminal-input { color: #c8ffc8 }` override
 - "Online" label has no green indicator — heartbeat-ring pulsing dot added next to text

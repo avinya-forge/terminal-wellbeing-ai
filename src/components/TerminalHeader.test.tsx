@@ -10,14 +10,14 @@ describe('TerminalHeader', () => {
     expect(screen.getByText('WellBeing.sh')).toBeInTheDocument();
   });
 
-  it('shows "Service Status: Connecting..." status when not loaded (default)', () => {
+  it('shows "Service Status: Loading..." status when not loaded (default)', () => {
     render(<TerminalHeader />);
-    expect(screen.getByText('Service Status: Connecting...')).toBeInTheDocument();
+    expect(screen.getByText('Service Status: Loading...')).toBeInTheDocument();
   });
 
-  it('shows "Online" status when modelLoaded is true', () => {
+  it('shows "Service Status: Connected" status when modelLoaded is true', () => {
     render(<TerminalHeader modelLoaded={true} />);
-    expect(screen.getByText('Online')).toBeInTheDocument();
+    expect(screen.getByText('Service Status: Connected')).toBeInTheDocument();
   });
 
   it('shows a custom loadingStatus when provided and not yet loaded', () => {
@@ -39,15 +39,15 @@ describe('TerminalHeader', () => {
 
   // ── Status dot colour / label ─────────────────────────────────────────────
 
-  it('labels the service as "Service online" when modelLoaded is true', () => {
+  it('labels the service as "Service Status: Connected" when modelLoaded is true', () => {
     render(<TerminalHeader modelLoaded={true} />);
     // The outer ping ring <span> carries the title attribute
-    expect(document.querySelector('[title="Service online"]')).toBeInTheDocument();
+    expect(document.querySelector('[title="Service Status: Connected"]')).toBeInTheDocument();
   });
 
-  it('labels the service as "Connecting…" when not loaded', () => {
+  it('labels the service as "Service Status: Loading..." when not loaded', () => {
     render(<TerminalHeader modelLoaded={false} />);
-    expect(document.querySelector('[title="Connecting…"]')).toBeInTheDocument();
+    expect(document.querySelector('[title="Service Status: Loading..."]')).toBeInTheDocument();
   });
 
   // ── Traffic lights ────────────────────────────────────────────────────────

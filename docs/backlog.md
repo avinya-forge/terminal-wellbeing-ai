@@ -20,9 +20,9 @@
 - [ ] [P1-10] | Add visual indicator in UI for active tunnel connection | [TODO]
 
 ### Epic 2: UI Quality & Accessibility Refinements (10 Tasks)
-- [ ] [P1-11] | Replace all "Model Loading" text in UI with "Service Status: Loading..." | [TODO]
-- [ ] [P1-12] | Replace all "Model Error" text in UI with "Service Status: Error" | [TODO]
-- [ ] [P1-13] | Standardize "Service Status: Connected" across UI | [TODO]
+- [x] [P1-11] | Replace all "Model Loading" text in UI with "Service Status: Loading..." | [DONE]
+- [x] [P1-12] | Replace all "Model Error" text in UI with "Service Status: Error" | [DONE]
+- [x] [P1-13] | Standardize "Service Status: Connected" across UI | [DONE]
 - [ ] [P1-14] | Write Playwright tests for "Service Status" text rendering | [TODO]
 - [ ] [P1-15] | Verify keyboard navigation sequence (Tab index) for all actionable terminal UI elements | [TODO]
 - [ ] [P1-16] | Add `aria-label` to dynamically rendered terminal inputs | [TODO]
