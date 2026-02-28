@@ -1,5 +1,44 @@
 # Release Notes
 
+## v2.0.0-beta — Demo 2 Ready (Mar 2026)
+
+> **Internal milestone.** Demo 2 is unblocked. Showstoppers and critical accessibility issues addressed.
+> This beta establishes the foundational UI layer and comprehensive test coverage.
+> What was fixed: 13 Visual/Interaction basics and 8 Test Coverage gaps.
+
+### ✅ What's Working
+
+**Visual / Interaction Basics**
+- Terminal fills 100% viewport width — removed 820px maxWidth cap
+- Typed text invisible in input bar — `#terminal-input { color: #c8ffc8 }` override
+- "Online" label has no green indicator — heartbeat-ring pulsing dot added next to text
+- `modelLoaded` never visually becomes `true` — added 15s timeout to model loading to prevent infinite hang
+- Boot messages don't animate in demo conditions — fixed sequential rendering logic in `TerminalOutput`
+- Block cursor misaligned — replaced custom cursor with native caret + CSS styling
+- App.tsx artificial 100ms delay — removed delay, verified immediate rendering
+- Scroll-to-bottom races typewriter — implemented `onScrollToBottom` synchronization with typewriter animation
+- Long AI responses break horizontal layout on narrow screens — added `maxWidth: 100%` and `overflow-wrap: anywhere`
+- `/help` output is not readable — improved mobile formatting with indentation
+- Panic overlay (Ctrl+P / `/panic`) — tab focus not trapped; Escape doesn't close
+- Theme persistence broken — `/theme` saves to localStorage but `applyTheme()` reads wrong key on reload
+- Privacy mode doesn't suppress localStorage — `useLocalStorage` still writes when privacy is ON
+
+**Test Coverage (Stale / Missing)**
+- `TerminalHeader.test.tsx` — rewritten with correct text assertions (11 tests)
+- `TerminalInput.test.tsx` — rewritten with 14 precise tests
+- `TerminalOutput.test.tsx` — verified sequential boot tests
+- `TerminalMessage.test.tsx` — add tests for `animate=false` and `onComplete` callback
+- `Terminal.test.tsx` — verified message send, clear, and panic overlay flow
+- `Terminal.test.tsx` — verified input disabled state (with timeout fix)
+- `PanicOverlay.test.tsx` — crisis contacts rendered; close button works; Escape closes
+- `Terminal.accessibility.test.tsx` — fixed role and label assertions
+
+**High Priority Improvements**
+- `npm run dev:mobile` script — `vite --host 0.0.0.0` exposes on local Wi-Fi
+- Input: Up arrow recalls last sent message (standard terminal muscle memory)
+- TypingIndicator "Thinking…" announced to screen readers via `aria-live`
+- Input: multi-line paste flattened to single line before send
+
 ## v2.0.0-alpha — Post-Demo 1 Reset (23 Feb 2026)
 
 > **Internal milestone.** First public demo attempted. Demo surfaced critical UI regressions.

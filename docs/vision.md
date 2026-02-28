@@ -20,14 +20,25 @@ Every design decision, every model choice, every line of code must serve this mi
 
 ---
 
-## Principles (in priority order)
+## The Constitution
 
-1. **Safety First.** Crisis and emergency signals bypass all AI inference. NHS-aligned 3-tier triage (`clinical_guidelines.json`) runs before any model is called. No exceptions, no configuration.
-2. **It Must Work.** A broken UI is worse than no UI. Every screen element must be visible, interactive, and correct before any new feature is added.
-3. **Empathy Through Intelligence.** No single model handles every message. Adaptive model routing (ModelRouter) selects the most therapeutically appropriate model per message — Zephyr for distress, Llama for clinical complexity, Phi-2 for quick exchanges, Mistral for everything else.
-4. **Friend-to-Friend Language.** Zero medical jargon in any response. All output must be translatable to a conversation between two people who trust each other.
-5. **Privacy by Default.** No data leaves the device without explicit consent. Privacy Mode disables all localStorage writes. Future: full local encryption.
-6. **Actionability.** Care guidance must be specific and achievable (e.g. "drink 200ml of water", not "stay hydrated").
+### Ideal State
+A completely self-contained, offline-capable terminal companion that provides zero-latency, context-aware empathetic support while maintaining absolute mathematical certainty over user privacy and immediate intervention routing. It serves as an invisible safety net that feels like a friend.
+
+### Pipeline Laws
+1. **Law of Triage:** Safety checks (`clinical_guidelines.json`) must ALWAYS run before any AI inference. No exceptions.
+2. **Law of Stability (Latest Stable Env Only):** Features must be built on the latest stable environment; a broken UI is worse than no UI.
+3. **Law of Routing:** No single model handles every message. Adaptive routing ensures the most therapeutically appropriate model is selected per message.
+4. **Law of Tone:** Zero medical jargon in any response. All output must be friend-to-friend language.
+5. **Law of Sovereignty:** No data leaves the device without explicit consent. Privacy by Default.
+6. **Law of Pragmatism:** Care guidance must be specific and actionable.
+
+### Definition of Done (DoD)
+- Code merged to `main` with 0 TypeScript compilation errors (`npm run build`).
+- Unit and Integration tests passing with >80% coverage.
+- Accessibility passes automated axe-core pipeline and manual checks.
+- Changes deployed to GitHub Pages without regressions.
+- Version bumped and changelog updated in `docs/release-notes.md`.
 
 ---
 
