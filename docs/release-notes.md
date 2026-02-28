@@ -9,6 +9,8 @@
 ### ✅ What's Working
 
 **Visual / Interaction Basics**
+- Standardized Service Status UI text — replaced vague strings with "Service Status: Loading...", "Service Status: Error", and "Service Status: Connected"
+- Added Playwright test for Service Status text rendering
 - Terminal fills 100% viewport width — removed 820px maxWidth cap
 - Typed text invisible in input bar — `#terminal-input { color: #c8ffc8 }` override
 - "Online" label has no green indicator — heartbeat-ring pulsing dot added next to text

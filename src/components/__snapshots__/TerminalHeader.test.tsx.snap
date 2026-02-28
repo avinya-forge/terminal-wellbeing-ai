@@ -48,7 +48,7 @@ exports[`TerminalHeader matches snapshot in default state 1`] = `
       <span
         aria-hidden="true"
         class="relative flex"
-        title="Connecting…"
+        title="Loading…"
       >
         <span
           class="relative inline-flex rounded-full"
@@ -59,7 +59,7 @@ exports[`TerminalHeader matches snapshot in default state 1`] = `
         class="text-xs font-mono"
         style="text-shadow: none; transition: color 0.5s ease;"
       >
-        Service Status: Connecting...
+        Service Status: Loading...
       </span>
     </div>
     <div
@@ -160,7 +160,7 @@ exports[`TerminalHeader matches snapshot in online+privacy state 1`] = `
       <span
         aria-hidden="true"
         class="relative flex"
-        title="Service online"
+        title="Service Connected"
       >
         <span
           class="absolute inline-flex h-full w-full rounded-full opacity-75"
@@ -175,7 +175,7 @@ exports[`TerminalHeader matches snapshot in online+privacy state 1`] = `
         class="text-xs font-mono"
         style="text-shadow: 0 0 8px hsl(var(--primary)/0.5); transition: color 0.5s ease;"
       >
-        Online
+        Service Status: Connected
       </span>
     </div>
     <div
