@@ -1,8 +1,8 @@
 {
     "_meta": {
-        "version": "2.0.0-beta",
+        "version": "2.1.0-alpha",
         "references": [
-            "NHS England Mental Health Implementation Plan 2019–2024",
+            "NHS England Mental Health Implementation Plan 2019\u20132024",
             "RCPSYCH Safe Messaging Guidelines on Suicide and Self-Harm",
             "NICE CG90: Depression in Adults (2022 update)",
             "HEE Digital Mental Health Framework",
@@ -72,7 +72,7 @@
                 "dealer"
             ],
             "response_template": "SAFE_HANDOFF",
-            "safe_handoff_message": "I'm not the right support for what you're describing — and that's okay. There are people trained specifically for this moment. Would it be okay to share some resources? In the UK: Samaritans on 116 123 (free, 24/7). In the US: 988 (call or text). Or type /panic for immediate crisis support."
+            "safe_handoff_message": "I'm not the right support for what you're describing \u2014 and that's okay. There are people trained specifically for this moment. Would it be okay to share some resources? In the UK: Samaritans on 116 123 (free, 24/7). In the US: 988 (call or text). Or type /panic for immediate crisis support."
         },
         "tier3_high_sensitivity": {
             "description": "Emotionally sensitive territory. Route to empathy model (Zephyr), log, apply safe messaging guidelines. Continue inference with care.",
@@ -138,7 +138,7 @@
     "general_care": {
         "hydration": "Recommend 200ml water intake every 2 hours if active.",
         "vitamin_d": "Check for deficiency history; recommend intake at 9 PM for absorption consistency.",
-        "sleep": "NHS recommends 7–9 hours for adults. Consistent sleep/wake times support circadian rhythm.",
+        "sleep": "NHS recommends 7\u20139 hours for adults. Consistent sleep/wake times support circadian rhythm.",
         "physical_activity": "NHS guidelines: 150 minutes moderate activity per week, or 75 minutes vigorous."
     }
 }

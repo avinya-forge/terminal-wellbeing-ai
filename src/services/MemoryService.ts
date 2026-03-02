@@ -62,11 +62,15 @@ export class MemoryService {
         } catch (e) {
             logger.error('Failed to import existing key, generating new one:', e);
             this.encryptionKey = await generateKey();
-            localStorage.setItem(KEY_STORAGE_KEY, await exportKey(this.encryptionKey));
+            if (typeof window !== 'undefined') {
+              localStorage.setItem(KEY_STORAGE_KEY, await exportKey(this.encryptionKey));
+            }
         }
       } else {
         this.encryptionKey = await generateKey();
-        localStorage.setItem(KEY_STORAGE_KEY, await exportKey(this.encryptionKey));
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(KEY_STORAGE_KEY, await exportKey(this.encryptionKey));
+        }
       }
 
       await this.loadMemories();

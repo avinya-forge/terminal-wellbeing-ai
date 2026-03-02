@@ -32,6 +32,7 @@ A completely self-contained, offline-capable terminal companion that provides ze
 4. **Law of Tone:** Zero medical jargon in any response. All output must be friend-to-friend language.
 5. **Law of Sovereignty:** No data leaves the device without explicit consent. Privacy by Default.
 6. **Law of Pragmatism:** Care guidance must be specific and actionable.
+7. **Law of Recursive Density:** Planning must utilize Recursive Drill-Down logic, targeting 200+ Work Units (WU) per 21-session span.
 
 ### Definition of Done (DoD)
 - Code merged to `main` with 0 TypeScript compilation errors (`npm run build`).
@@ -39,6 +40,7 @@ A completely self-contained, offline-capable terminal companion that provides ze
 - Accessibility passes automated axe-core pipeline and manual checks.
 - Changes deployed to GitHub Pages without regressions.
 - Version bumped and changelog updated in `docs/release-notes.md`.
+- Test (95%), Lint (0-err), Opt (O(1)), Sec (Sanitize) integrated into every Atomic Task.
 
 ---
 

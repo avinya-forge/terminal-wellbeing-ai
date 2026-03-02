@@ -8,7 +8,7 @@ jest.mock('./LoggerService', () => ({
 }));
 
 jest.mock('../data/clinical_guidelines.json', () => ({
-    _meta: { version: '2.0.0-beta' },
+    _meta: { version: '2.1.0-alpha' },
     safety_tiers: {
         tier1_immediate_emergency: {
             keywords: ['i want to kill myself', 'ending my life tonight', 'overdose', 'taken too many pills'],
