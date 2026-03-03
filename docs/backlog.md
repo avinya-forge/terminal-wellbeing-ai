@@ -20,7 +20,7 @@
 - [ ] [INDEPENDENT] [P1-10] | Add visual indicator in UI for active tunnel connection | [TODO] | [Test: 95%, Lint: 0-err, Opt: O(1), Sec: Sanitize]
 
 ### Epic 2: UI Quality & Accessibility Refinements (10 Tasks)
-- [ ] [INDEPENDENT] [P1-14] | Write Playwright tests for "Service Status" text rendering | [TODO] | [Test: 95%, Lint: 0-err, Opt: O(1), Sec: Sanitize]
+- [x] [INDEPENDENT] [P1-14] | Write Playwright tests for "Service Status" text rendering | [Done] | [Test: 95%, Lint: 0-err, Opt: O(1), Sec: Sanitize]
 - [ ] [INDEPENDENT] [P1-15] | Verify keyboard navigation sequence (Tab index) for all actionable terminal UI elements | [TODO] | [Test: 95%, Lint: 0-err, Opt: O(1), Sec: Sanitize]
 - [ ] [INDEPENDENT] [P1-16] | Add `aria-label` to dynamically rendered terminal inputs | [TODO] | [Test: 95%, Lint: 0-err, Opt: O(1), Sec: Sanitize]
 - [ ] [INDEPENDENT] [P1-17] | Fix contrast ratio for secondary text elements in terminal themes | [TODO] | [Test: 95%, Lint: 0-err, Opt: O(1), Sec: Sanitize]

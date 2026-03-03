@@ -1,6 +1,11 @@
 import { renderHook, act } from '@testing-library/react';
 import useLocalStorage from './useLocalStorage';
 
+// Mock sessionManager since it uses MemoryService underneath, which causes async issues in tests if not mocked
+jest.mock('../utils/sessionManager', () => ({
+  getPrivacyMode: jest.fn().mockReturnValue(false)
+}));
+
 describe('useLocalStorage', () => {
   beforeEach(() => {
     window.localStorage.clear();
