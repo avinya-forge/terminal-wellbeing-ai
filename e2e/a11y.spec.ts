@@ -24,7 +24,7 @@ test.describe('Accessibility', () => {
     await page.getByRole('textbox', { name: /terminal input/i }).press('Enter');
 
     // Wait for response
-    await expect(page.getByText('Available Commands')).toBeVisible();
+    await expect(page.getByText(/Available commands/i)).toBeVisible();
 
     const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
     expect(accessibilityScanResults.violations).toEqual([]);

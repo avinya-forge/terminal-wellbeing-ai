@@ -62,3 +62,4 @@ playwright-report/
 a11y-report.md
 
 .memory/
+test-results/
