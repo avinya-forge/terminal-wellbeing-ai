@@ -8,7 +8,7 @@
 ## 🟠 P1 — High Priority (Must be done before Demo 2)
 
 ### Epic 1: Mobile Preview & Remote Access Infrastructure (10 Tasks)
-- [ ] [INDEPENDENT] [P1-01] | Document the exact steps to access on mobile (ipconfig → phone browser) in README | [TODO] | [Test: 95%, Lint: 0-err, Opt: O(1), Sec: Sanitize]
+- [x] [INDEPENDENT] [P1-01] | Document the exact steps to access on mobile (ipconfig → phone browser) in README | [Done] | [Test: 95%, Lint: 0-err, Opt: O(1), Sec: Sanitize]
 - [ ] [INDEPENDENT] [P1-02] | Implement ngrok one-liner: `npx ngrok http 5173` | [TODO] | [Test: 95%, Lint: 0-err, Opt: O(1), Sec: Sanitize]
 - [ ] [INDEPENDENT] [P1-03] | Test remote mobile access using ngrok URL | [TODO] | [Test: 95%, Lint: 0-err, Opt: O(1), Sec: Sanitize]
 - [ ] [INDEPENDENT] [P1-04] | Create single start script: `npm run preview-mobile` to start Vite + ngrok | [TODO] | [Test: 95%, Lint: 0-err, Opt: O(1), Sec: Sanitize]

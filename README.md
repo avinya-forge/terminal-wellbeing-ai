@@ -69,7 +69,20 @@ Start the development server:
 npm run dev
 ```
 
-The application will be available at http://localhost:8080
+The application will be available at http://localhost:5173
+
+#### Mobile Preview (Local Network)
+
+To preview the application on a mobile device connected to the same local network:
+
+1. Start the development server with network access exposed:
+   ```bash
+   npm run dev:mobile
+   ```
+2. Find your computer's local IP address:
+   - **Windows**: Open Command Prompt and run `ipconfig` (look for "IPv4 Address").
+   - **macOS/Linux**: Open Terminal and run `ifconfig` or `ip a` (look for `inet` under your active network interface like `en0` or `wlan0`).
+3. Open a browser on your mobile device and navigate to `http://<your-local-ip>:5173` (e.g., `http://192.168.1.5:5173`).
 
 ### Testing
 
