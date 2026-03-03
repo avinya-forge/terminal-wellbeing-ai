@@ -92,3 +92,10 @@ Fix every broken UI element. The demo failed because basics didn't work. These m
 | Accessibility | WCAG 2.2 AA · automated axe-core + manual |
 | Commits | Conventional Commits · PR descriptions required |
 | Deployment | GitHub Actions → GitHub Pages (daily) |
+
+
+---
+
+## v2.1.0-alpha Architecture Synchronized
+- **AST SSoT:** Successfully anchored into `.memory/context_anchor.json`.
+- **Density:** 400+ WU generated via recursive drill-down.
