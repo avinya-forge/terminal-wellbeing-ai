@@ -961,3 +961,4 @@ This backlog has been refined to follow the **Breadth-Then-Depth** and **AI-Read
 | ID | User Story | Technical Scope | Acceptance Criteria | Priority | Effort | AI Context |
 |---|---|---|---|---|---|---|
 | DOC: D8-001 | As a developer, I want to audit and finalize vision.md and release-notes.md against ssot standards so that code quality is maintained. | Project/Config | Test: 95%, Lint: 0-err, Opt: O(1), Sec: Sanitize | Could Have | 1-2hrs | Index: 916 of 916<br>LOC: ~50 LOC<br>Logic: Implement changes fulfilling DoD.<br>Next: None |
+| [Done] CHORE: C9-999 | As a developer, I want to remove unused Shadcn UI components so that the codebase is lean and redundant code is pruned. | src/components/ui | Test: 95%, Lint: 0-err, Opt: O(1), Sec: Sanitize | Could Have | 2hrs | Index: N/A<br>LOC: ~4379 LOC<br>Logic: Delete unused files.<br>Next: None |
