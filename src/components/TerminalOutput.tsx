@@ -23,8 +23,8 @@ const TerminalOutput = memo(({ messages, isTyping, onScrollToBottom }: TerminalO
   // Once all boot messages are done, all subsequent messages show normally.
   const [revealCount, setRevealCount] = useState(0);
 
-  // Count how many messages look like "boot" messages (IDs "1", "2", …)
-  const bootCount = messages.filter(m => /^\d+$/.test(m.id) && m.sender === 'bot').length;
+  // Count how many messages look like "boot" messages (IDs "boot-1", "boot-2", …)
+  const bootCount = messages.filter(m => /^boot-\d+$/.test(m.id) && m.sender === 'bot').length;
   const bootComplete = revealCount >= bootCount;
 
   const handleComplete = useCallback(() => {
@@ -35,8 +35,8 @@ const TerminalOutput = memo(({ messages, isTyping, onScrollToBottom }: TerminalO
   return (
     <div role="list" aria-label="Conversation">
       {messages.map((message, i) => {
-        const isBoot = /^\d+$/.test(message.id) && message.sender === 'bot';
-        const bootIndex = isBoot ? parseInt(message.id, 10) - 1 : -1;
+        const isBoot = /^boot-\d+$/.test(message.id) && message.sender === 'bot';
+        const bootIndex = isBoot ? parseInt(message.id.replace('boot-', ''), 10) - 1 : -1;
 
         // Boot messages: only render when the preceding one has finished
         if (isBoot) {

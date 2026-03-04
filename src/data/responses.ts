@@ -76,7 +76,7 @@ export function getInitialMessages(): Message[] {
   const welcomeMessages = FIRST_TIME_GREETINGS();
 
   return welcomeMessages.map((content, index) =>
-    createBotMessage(content, (index + 1).toString())
+    createBotMessage(content, `boot-${index + 1}`)
   );
 }
 

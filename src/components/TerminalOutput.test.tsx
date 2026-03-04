@@ -21,13 +21,13 @@ jest.mock('./TerminalMessage', () => {
 describe('TerminalOutput Component', () => {
   const bootMessages: Message[] = [
     {
-      id: '1',
+      id: 'boot-1',
       content: 'Boot 1',
       sender: 'bot',
       timestamp: new Date().toISOString()
     },
     {
-      id: '2',
+      id: 'boot-2',
       content: 'Boot 2',
       sender: 'bot',
       timestamp: new Date().toISOString()
@@ -74,7 +74,7 @@ describe('TerminalOutput Component', () => {
 
   it('renders non-boot messages normally after boot sequence and calls onScrollToBottom', () => {
     const mixedMessages: Message[] = [
-      { id: '1', content: 'Boot 1', sender: 'bot', timestamp: '' },
+      { id: 'boot-1', content: 'Boot 1', sender: 'bot', timestamp: '' },
       { id: 'msg1', content: 'User 1', sender: 'user', timestamp: '' }
     ];
 

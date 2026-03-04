@@ -191,6 +191,8 @@ const Terminal = () => {
           flexDirection: 'column',
         }}
         onClick={() => inputRef.current?.focus()}
+        tabIndex={0}
+        aria-label="Terminal Output Scrollable Region"
       >
         <TerminalOutput messages={messages} isTyping={isTyping} onScrollToBottom={scrollToBottom} />
         <div ref={messagesEndRef} />
