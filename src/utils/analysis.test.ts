@@ -59,6 +59,11 @@ describe('Analysis Utils', () => {
         expect(analyzeSentiment('I love this ❤️')).toBeGreaterThan(0.5);
         expect(analyzeSentiment('This is terrible 💔')).toBeLessThan(-0.5);
     });
+
+    it('handles text with no valid tokens', () => {
+        expect(analyzeSentiment('   ')).toBe(0);
+        expect(analyzeSentiment('---+++***')).toBe(0);
+    });
   });
 
   describe('extractTopics', () => {
@@ -86,6 +91,10 @@ describe('Analysis Utils', () => {
       // "pain" is a keyword for health. "painting" contains "pain".
       expect(extractTopics('I am painting a picture')).not.toContain('health');
     });
+
+    it('handles empty text extraction', () => {
+        expect(extractTopics('')).toEqual([]);
+    });
   });
 
   describe('analyzeText', () => {
@@ -101,6 +110,32 @@ describe('Analysis Utils', () => {
         const result = analyzeText('I am grieving the loss of my father');
         expect(result.topics).toContain('grief');
         expect(result.mood).toBe('Grief');
+    });
+
+    it('identifies anxious mood', () => {
+      const result = analyzeText('I am feeling very worried and panicking');
+      expect(result.topics).toContain('anxiety');
+      expect(result.mood).toBe('Anxious');
+    });
+
+    it('identifies distressed mood', () => {
+      const result = analyzeText('I am feeling so incredibly terrible and worthless. I hate everything and everyone.');
+      expect(result.mood).toBe('Distressed');
+    });
+
+    it('identifies negative mood', () => {
+      const result = analyzeText('I am feeling a bit unhappy today.');
+      expect(result.mood).toBe('Negative');
+    });
+
+    it('identifies positive mood', () => {
+      const result = analyzeText('I had a great time today!');
+      expect(result.mood).toBe('Positive');
+    });
+
+    it('identifies neutral mood', () => {
+        const result = analyzeText('I am going to work now.');
+        expect(result.mood).toBe('Neutral');
     });
   });
 
