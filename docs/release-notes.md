@@ -1,18 +1,19 @@
 # release notes
-
+**Current Session ID:** session-001
+**Last Action:** synchronized ssot across markdown documents
 
 ## v2.1.0-alpha — autonomous backlog provisioning
 
 > **automated architectural sync.**
 > executed recursive drill-down logic to provision >400 wu of atomic tasks.
-> synchronized ssot across `vision.md`, `backlog.md`, and `.memory/context_anchor.json`.
+> synchronized ssot across `vision.md`, `backlog.md`, and `.memory/context-anchor.json`.
 
 ### ✅ what's working
 - [x] provisioned epic 1-3: critical fixes & stability gate (forced to top)
 - [x] provisioned epic 4-5: chore & dependency audits
 - [x] provisioned epic 6-7: feature gap closure
 - [x] provisioned epic 8-9: long term vision & documentation
-- [x] generated .memory/context_anchor.json with complete ast summary and dependency graph.
+- [x] generated .memory/context-anchor.json with complete ast summary and dependency graph.
 - [x] provisioned epic 2.5: ssot synchronization & dependency audits
 - [x] identified dependency gaps against latest stable
 - [x] prioritized chore tasks above feature implementation to honor stability gate
