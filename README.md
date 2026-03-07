@@ -1,9 +1,7 @@
 # terminal wellbeing ai
-> **"a terminal where you feel heard, not assessed."**
+**North Star:** "a terminal where you feel heard, not assessed."
 
 ![version](https://img.shields.io/badge/version-v2.1.0--alpha-green)
-
-A mental health chatbot with a terminal-like interface, built using React and TypeScript. This application provides a supportive conversation experience for users seeking mental health support.
 
 ## the pulse
 | milestone | version | phase | status | tech debt | backlog density |
@@ -11,12 +9,12 @@ A mental health chatbot with a terminal-like interface, built using React and Ty
 | demo 2 | v2.1.0-alpha | audit & release preparation | no-go | 52% coverage (req >95%) | 55/60 |
 
 ## documentation map
-- [vision](./docs/vision.md)
-- [backlog](./docs/backlog.md)
-- [release notes](./docs/release-notes.md)
-- [habits](./docs/rules/habits.md)
-- [hygiene](./docs/rules/hygiene.md)
-- [ultra-lean standard](./docs/standards/ultra-lean.md)
+- [vision.md](./docs/vision.md)
+- [backlog.md](./docs/backlog.md)
+- [release-notes.md](./docs/release-notes.md)
+- [rules/habits.md](./docs/rules/habits.md)
+- [rules/hygiene.md](./docs/rules/hygiene.md)
+- [standards/ultra-lean.md](./docs/standards/ultra-lean.md)
 
 ## quick start
 **active milestone: demo 2 blockers & ui re-engineering**

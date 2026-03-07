@@ -120,3 +120,7 @@ fix every broken ui element. the demo failed because basics didn't work. these m
 - **eta:** n/a
 - **next:** test: t7-001
 - **action:** complete test backlog tasks to reach 95% coverage requirement. recommend pr `gh pr create --fill --label "zero-waste-release"`.
+
+### system health
+- **api parity:** n/a
+- **mock coverage:** n/a
