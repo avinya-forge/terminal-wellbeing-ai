@@ -13,10 +13,10 @@ A mental health chatbot with a terminal-like interface, built using React and Ty
 ## documentation map
 - [vision](./docs/vision.md)
 - [backlog](./docs/backlog.md)
-- [release notes](./docs/release-notes.md)
+- [release-notes](./docs/release-notes.md)
 - [habits](./docs/rules/habits.md)
 - [hygiene](./docs/rules/hygiene.md)
-- [ultra-lean standard](./docs/standards/ultra-lean.md)
+- [ultra-lean](./docs/standards/ultra-lean.md)
 
 ## quick start
 **active milestone: demo 2 blockers & ui re-engineering**
