@@ -63,7 +63,7 @@ this backlog has been refined to follow the **breadth-then-depth** and **ai-read
 - **TASK [E9-008]: Test Coverage for toast.tsx component** | [TODO] | [Pillar-Testing]
 - **SPEC:** Add unit tests to bridge the coverage gap (currently 20 uncovered statements) in src/components/ui/toast.tsx.
 
-- **TASK [E9-009]: Test Coverage for profile.ts handler** | [TODO] | [Pillar-Testing]
+- **TASK [E9-009]: Test Coverage for profile.ts handler** | [DONE] | [Pillar-Testing]
 - **SPEC:** Add unit tests to bridge the coverage gap (currently 19 uncovered statements) in src/commands/handlers/profile.ts.
 
 - **TASK [E9-010]: Test Coverage for embeddings.worker.ts** | [TODO] | [Pillar-Testing]

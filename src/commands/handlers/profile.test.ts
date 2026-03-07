@@ -81,4 +81,61 @@ describe('handleProfileCommand', () => {
     expect(result).toContain('User Profile Details');
     expect(result).toContain('TestUser');
   });
+
+  it('should update length', async () => {
+    const result = await handleProfileCommand({ command: 'profile', args: ['length', 'short'], originalInput: '/profile length short' });
+    expect(result).toContain('Profile updated');
+    expect(updateUserProfile).toHaveBeenCalledWith(expect.objectContaining({
+      preferences: expect.objectContaining({ responseLength: 'short' })
+    }));
+  });
+
+  it('should validate length', async () => {
+    const result = await handleProfileCommand({ command: 'profile', args: ['length', 'invalid'], originalInput: '/profile length invalid' });
+    expect(result).toContain('Invalid length');
+    expect(updateUserProfile).not.toHaveBeenCalled();
+  });
+
+  it('should update speed', async () => {
+    const result = await handleProfileCommand({ command: 'profile', args: ['speed', 'fast'], originalInput: '/profile speed fast' });
+    expect(result).toContain('Profile updated');
+    expect(updateUserProfile).toHaveBeenCalledWith(expect.objectContaining({
+      preferences: expect.objectContaining({ speed: 'fast' })
+    }));
+  });
+
+  it('should validate speed', async () => {
+    const result = await handleProfileCommand({ command: 'profile', args: ['speed', 'invalid'], originalInput: '/profile speed invalid' });
+    expect(result).toContain('Invalid speed');
+    expect(updateUserProfile).not.toHaveBeenCalled();
+  });
+
+  it('should display current warnings when args are missing', async () => {
+    const result = await handleProfileCommand({ command: 'profile', args: ['warnings'], originalInput: '/profile warnings' });
+    expect(result).toContain('Current Trigger Warnings: test');
+    expect(updateUserProfile).not.toHaveBeenCalled();
+  });
+
+  it('should display None for current warnings when none are set and args are missing', async () => {
+    // Mock getUserProfile for this specific test
+    const { getUserProfile } = require('../../utils/sessionManager');
+    getUserProfile.mockImplementationOnce(() => ({
+      userName: 'TestUser',
+      triggerWarnings: []
+    }));
+    const result = await handleProfileCommand({ command: 'profile', args: ['warnings'], originalInput: '/profile warnings' });
+    expect(result).toContain('Current Trigger Warnings: None');
+    expect(updateUserProfile).not.toHaveBeenCalled();
+  });
+
+  it('should update warnings', async () => {
+    const result = await handleProfileCommand({ command: 'profile', args: ['warnings', 'topic1,', 'topic2'], originalInput: '/profile warnings topic1, topic2' });
+    expect(result).toContain('Trigger warnings updated: topic1, topic2');
+    expect(updateUserProfile).toHaveBeenCalledWith({ triggerWarnings: ['topic1', 'topic2'] });
+  });
+
+  it('should handle unknown subcommand', async () => {
+    const result = await handleProfileCommand({ command: 'profile', args: ['unknown', 'arg'], originalInput: '/profile unknown arg' });
+    expect(result).toContain('Unknown subcommand');
+  });
 });
