@@ -1,4 +1,4 @@
-# System Health
+# system health
 
-- API Parity: N/A
-- Mock Coverage: N/A
+- api parity: n/a
+- mock coverage: n/a

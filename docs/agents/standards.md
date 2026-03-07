@@ -1,4 +1,4 @@
-# Standards
+# standards
 
-- Force modularity.
-- No one-off components.
+- force modularity.
+- no one-off components.
