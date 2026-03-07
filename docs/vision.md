@@ -1,122 +1,122 @@
-# Vision — WellBeing.sh
+# vision — wellbeing.sh
 
-> **"A terminal where you feel heard, not assessed."**
-
----
-
-## What We Are Building
-
-**WellBeing.sh** is a terminal-style AI health companion designed to reduce the cognitive load of managing wellbeing — not through clinical forms or dashboards, but through a calm, human conversation that feels like talking to a knowledgeable friend.
-
-The application runs in the browser as a full-screen terminal. It listens, it understands context, and it routes every message to the most appropriate AI model for that moment. It never lectures. It never panics. And when things are serious, it immediately puts the right help in front of the user.
+> **"a terminal where you feel heard, not assessed."**
 
 ---
 
-## Core Mission
+## what we are building
 
-**Reduce friction between a person in distress and the right support.**
+**wellbeing.sh** is a terminal-style ai health companion designed to reduce the cognitive load of managing wellbeing — not through clinical forms or dashboards, but through a calm, human conversation that feels like talking to a knowledgeable friend.
 
-Every design decision, every model choice, every line of code must serve this mission. Features that don't reduce friction don't belong here.
-
----
-
-## The Constitution
-
-### Ideal State
-A completely self-contained, offline-capable terminal companion that provides zero-latency, context-aware empathetic support while maintaining absolute mathematical certainty over user privacy and immediate intervention routing. It serves as an invisible safety net that feels like a friend.
-
-### Pipeline Laws
-1. **Law of Triage:** Safety checks (`clinical_guidelines.json`) must ALWAYS run before any AI inference. No exceptions.
-2. **Law of Stability (Latest Stable Env Only):** Features must be built on the latest stable environment; a broken UI is worse than no UI.
-3. **Law of Routing:** No single model handles every message. Adaptive routing ensures the most therapeutically appropriate model is selected per message.
-4. **Law of Tone:** Zero medical jargon in any response. All output must be friend-to-friend language.
-5. **Law of Sovereignty:** No data leaves the device without explicit consent. Privacy by Default.
-6. **Law of Pragmatism:** Care guidance must be specific and actionable.
-7. **Law of Recursive Density:** Planning must utilize Recursive Drill-Down logic, targeting 200+ Work Units (WU) per 21-session span.
-
-### Definition of Done (DoD)
-- Code merged to `main` with 0 TypeScript compilation errors (`npm run build`).
-- Unit and Integration tests passing with >80% coverage.
-- Accessibility passes automated axe-core pipeline and manual checks.
-- Changes deployed to GitHub Pages without regressions.
-- Version bumped and changelog updated in `docs/release-notes.md`.
-- Test (95%), Lint (0-err), Opt (O(1)), Sec (Sanitize) integrated into every Atomic Task.
+the application runs in the browser as a full-screen terminal. it listens, it understands context, and it routes every message to the most appropriate ai model for that moment. it never lectures. it never panics. and when things are serious, it immediately puts the right help in front of the user.
 
 ---
 
-## What the Product Looks Like (MVP Target — Feb 2026 Demo 2)
+## core mission
 
-- A full-screen dark terminal, monospace font, green-on-black aesthetic
-- A pulsing green `●` dot next to **Online** when the AI is ready
-- A visible, responsive input bar where you can see every character as you type
-- Boot sequence that animates line by line, making the product feel alive
-- AI responses that adapt their empathy level, complexity, and speed to the message
-- Crisis inputs that immediately surface 999, Samaritans, and 988 — never passed to a model
-- Runs on laptop, accessible from mobile via local network or ngrok tunnel
+**reduce friction between a person in distress and the right support.**
+
+every design decision, every model choice, every line of code must serve this mission. features that don't reduce friction don't belong here.
 
 ---
 
-## Roadmap
+## the constitution
 
-### 🔴 Right Now (Demo 2 Blockers — Week of Feb 24)
-Fix every broken UI element. The demo failed because basics didn't work. These must be done first.
+### ideal state
+a completely self-contained, offline-capable terminal companion that provides zero-latency, context-aware empathetic support while maintaining absolute mathematical certainty over user privacy and immediate intervention routing. it serves as an invisible safety net that feels like a friend.
 
-### 🟠 Short Term (Feb–Mar 2026)
-- Mobile preview infrastructure (ngrok / LAN access)
-- `modelLoaded` status correctly transitions to Online
-- Sequential boot animation completes reliably
-- Full unit + integration test coverage for all UI components
+### pipeline laws
+1. **law of triage:** safety checks (`clinical_guidelines.json`) must always run before any ai inference. no exceptions.
+2. **law of stability (latest stable env only):** features must be built on the latest stable environment; a broken ui is worse than no ui.
+3. **law of routing:** no single model handles every message. adaptive routing ensures the most therapeutically appropriate model is selected per message.
+4. **law of tone:** zero medical jargon in any response. all output must be friend-to-friend language.
+5. **law of sovereignty:** no data leaves the device without explicit consent. privacy by default.
+6. **law of pragmatism:** care guidance must be specific and actionable.
+7. **law of recursive density:** planning must utilize recursive drill-down logic, targeting 200+ work units (wu) per 21-session span.
 
-### 🟡 Medium Term (Mar–Apr 2026)
+### definition of done (dod)
+- code merged to `main` with 0 typescript compilation errors (`npm run build`).
+- unit and integration tests passing with >80% coverage.
+- accessibility passes automated axe-core pipeline and manual checks.
+- changes deployed to github pages without regressions.
+- version bumped and changelog updated in `docs/release-notes.md`.
+- test (95%), lint (0-err), opt (o(1)), sec (sanitize) integrated into every atomic task.
+
+---
+
+## what the product looks like (mvp target — feb 2026 demo 2)
+
+- a full-screen dark terminal, monospace font, green-on-black aesthetic
+- a pulsing green `●` dot next to **online** when the ai is ready
+- a visible, responsive input bar where you can see every character as you type
+- boot sequence that animates line by line, making the product feel alive
+- ai responses that adapt their empathy level, complexity, and speed to the message
+- crisis inputs that immediately surface 999, samaritans, and 988 — never passed to a model
+- runs on laptop, accessible from mobile via local network or ngrok tunnel
+
+---
+
+## roadmap
+
+### 🔴 right now (demo 2 blockers — week of feb 24)
+fix every broken ui element. the demo failed because basics didn't work. these must be done first.
+
+### 🟠 short term (feb–mar 2026)
+- mobile preview infrastructure (ngrok / lan access)
+- `modelloaded` status correctly transitions to online
+- sequential boot animation completes reliably
+- full unit + integration test coverage for all ui components
+
+### 🟡 medium term (mar–apr 2026)
 - `/care` daily action plan command
-- Medication and hydration tracking
-- Privacy Mode correctly suppresses localStorage writes
-- Theme persistence across sessions fixed
+- medication and hydration tracking
+- privacy mode correctly suppresses localstorage writes
+- theme persistence across sessions fixed
 
-### 🟢 Longer Term
-- Backend inference microservice (remove HF token from browser)
-- HIPAA-compliant health data schema
-- Voice interface feasibility study
-- Multi-device sync via encrypted backend storage
+### 🟢 longer term
+- backend inference microservice (remove hf token from browser)
+- hipaa-compliant health data schema
+- voice interface feasibility study
+- multi-device sync via encrypted backend storage
 
 ---
 
-## Development Standards
+## development standards
 
-| Area | Standard |
+| area | standard |
 |---|---|
-| Language | TypeScript (strict) |
-| UI | React (functional/hooks), Tailwind CSS |
-| Testing | Jest + ts-jest · >80% coverage on all services |
-| Safety | 100% pass rate on `clinical_guidelines.json` triage |
-| Accessibility | WCAG 2.2 AA · automated axe-core + manual |
-| Commits | Conventional Commits · PR descriptions required |
-| Deployment | GitHub Actions → GitHub Pages (daily) |
+| language | typescript (strict) |
+| ui | react (functional/hooks), tailwind css |
+| testing | jest + ts-jest · >80% coverage on all services |
+| safety | 100% pass rate on `clinical_guidelines.json` triage |
+| accessibility | wcag 2.2 aa · automated axe-core + manual |
+| commits | conventional commits · pr descriptions required |
+| deployment | github actions → github pages (daily) |
 
 
 ---
 
-## v2.1.0-alpha Architecture Synchronized
-- **AST SSoT:** Successfully anchored into `.memory/context_anchor.json`.
-- **Density:** 400+ WU generated via recursive drill-down.
+## v2.1.0-alpha architecture synchronized
+- **ast ssot:** successfully anchored into `.memory/context_anchor.json`.
+- **density:** 400+ wu generated via recursive drill-down.
 
 ---
 
-## Finalized Metric Summary
-- **STATUS:** NO-GO
-- **PHASE:** Audit & Release Preparation
-- **TOTAL LOC:** ~2589 Lines
-- **PR DELTA:** +1
-- **TASKS DONE:** 55
-- **IMPLEMENTED IDs:** CHORE: C2-001 to CHORE: C2-055
-- **READY RATIO:** 55 / 916
-- **SAY/DO:** 100%
-- **VELOCITY:** N/A
-- **TECH DEBT:** Requires 95% coverage per DoD (Currently ~52%)
-- **COVERAGE:** ~52% (Requires 95% per DoD)
-- **BLOCKERS:** None
-- **LINT:** 0 errors
-- **GIT-AUDIT:** PASS (Zero-Git compliance for `.memory/` maintained)
-- **ETA:** N/A
-- **NEXT:** TEST: T7-001
-- **ACTION:** Complete test backlog tasks to reach 95% coverage requirement. Recommend PR `gh pr create --fill --label "zero-waste-release"`.
+## finalized metric summary
+- **status:** no-go
+- **phase:** audit & release preparation
+- **total loc:** ~2589 lines
+- **pr delta:** +1
+- **tasks done:** 55
+- **implemented ids:** chore: c2-001 to chore: c2-055
+- **ready ratio:** 55 / 916
+- **say/do:** 100%
+- **velocity:** n/a
+- **tech debt:** requires 95% coverage per dod (currently ~52%)
+- **coverage:** ~52% (requires 95% per dod)
+- **blockers:** none
+- **lint:** 0 errors
+- **git-audit:** pass (zero-git compliance for `.memory/` maintained)
+- **eta:** n/a
+- **next:** test: t7-001
+- **action:** complete test backlog tasks to reach 95% coverage requirement. recommend pr `gh pr create --fill --label "zero-waste-release"`.
