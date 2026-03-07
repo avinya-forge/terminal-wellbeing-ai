@@ -118,8 +118,8 @@ describe('handleProfileCommand', () => {
 
   it('should display None for current warnings when none are set and args are missing', async () => {
     // Mock getUserProfile for this specific test
-    const { getUserProfile } = require('../../utils/sessionManager');
-    getUserProfile.mockImplementationOnce(() => ({
+    const { getUserProfile } = await import('../../utils/sessionManager');
+    (getUserProfile as jest.Mock).mockImplementationOnce(() => ({
       userName: 'TestUser',
       triggerWarnings: []
     }));
