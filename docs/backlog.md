@@ -1,107 +1,40 @@
 # backlog
-> **priority order is absolute.** showstoppers must be done before anything else.
-> next demo: **monday 3 march 2026**.
 
 ## executive summary
 this backlog has been refined to follow the **breadth-then-depth** and **ai-ready context** standards. it is structured into epics containing granular tabular tasks.
 
+- **MILESTONE [M1]** | **PHASE [S3-EVOLVE-ALIGN]** | **GATEKEEPER** [0-Hygiene-Error | 95% Test | Build-Pass]
 
-## 🔴 p0 — critical fixes & stability gate
+- **TASK [C3-001]: Refactor .memory/context_anchor.json** | [Pending] | [Pillar-Refactor]
+- **SPEC:** Refactor .memory/context_anchor.json to ensure o(1) optimal paths where possible so that code quality is maintained. Target 1-2hrs atomicity.
 
-### epic 1: security & vulnerability fixes (10 tasks)
-| id | user story | technical scope | acceptance criteria | priority | effort | ai context |
-|---|---|---|---|---|---|---|
-| [done] fix: f1-001 | as a security admin, i want to resolve @babel/runtime vulnerability via npm audit fix so that the application is secure. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | must have | 1hr | index: 1 of 916<br>loc: ~10 loc<br>logic: implement changes fulfilling dod.<br>next: fix: f1-002 |
-| [done] fix: f1-002 | as a security admin, i want to resolve ajv vulnerability via npm audit fix so that the application is secure. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | must have | 1hr | index: 2 of 916<br>loc: ~10 loc<br>logic: implement changes fulfilling dod.<br>next: fix: f1-003 |
-| [done] fix: f1-003 | as a security admin, i want to resolve brace-expansion vulnerability via npm audit fix so that the application is secure. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | must have | 1hr | index: 3 of 916<br>loc: ~10 loc<br>logic: implement changes fulfilling dod.<br>next: fix: f1-004 |
-| [done] fix: f1-004 | as a security admin, i want to resolve cross-spawn vulnerability via npm audit fix so that the application is secure. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | must have | 1hr | index: 4 of 916<br>loc: ~10 loc<br>logic: implement changes fulfilling dod.<br>next: fix: f1-005 |
-| [done] fix: f1-005 | as a security admin, i want to resolve esbuild vulnerability via npm audit fix so that the application is secure. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | must have | 1hr | index: 5 of 916<br>loc: ~10 loc<br>logic: implement changes fulfilling dod.<br>next: fix: f1-006 |
-| [done] fix: f1-006 | as a security admin, i want to resolve minimatch vulnerability via npm audit fix so that the application is secure. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | must have | 1hr | index: 6 of 916<br>loc: ~10 loc<br>logic: implement changes fulfilling dod.<br>next: fix: f1-007 |
-| [done] fix: f1-007 | as a security admin, i want to resolve nanoid vulnerability via npm audit fix so that the application is secure. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | must have | 1hr | index: 7 of 916<br>loc: ~10 loc<br>logic: implement changes fulfilling dod.<br>next: fix: f1-008 |
-| [done] fix: f1-008 | as a security admin, i want to resolve rollup vulnerability via npm audit fix so that the application is secure. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | must have | 1hr | index: 8 of 916<br>loc: ~10 loc<br>logic: implement changes fulfilling dod.<br>next: fix: f1-009 |
-| [done] fix: f1-009 | as a security admin, i want to resolve serialize-javascript vulnerability via npm audit fix so that the application is secure. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | must have | 1hr | index: 9 of 916<br>loc: ~10 loc<br>logic: implement changes fulfilling dod.<br>next: fix: f1-010 |
-| [done] fix: f1-010 | as a security admin, i want to resolve tar vulnerability via npm audit fix so that the application is secure. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | must have | 1hr | index: 10 of 916<br>loc: ~10 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-001 |
+- **TASK [C3-002]: Refactor components.json** | [Pending] | [Pillar-Refactor]
+- **SPEC:** Refactor components.json to ensure o(1) optimal paths where possible so that code quality is maintained. Target 1-2hrs atomicity.
 
-## 🟠 p1 — high priority (chore & dependency audits)
+- **TASK [C3-003]: Refactor e2e/a11y.spec.ts** | [Pending] | [Pillar-Refactor]
+- **SPEC:** Refactor e2e/a11y.spec.ts to ensure o(1) optimal paths where possible so that code quality is maintained. Target 1-2hrs atomicity.
 
-### epic 2: dependency updates to latest stable (45 tasks)
-| id | user story | technical scope | acceptance criteria | priority | effort | ai context |
-|---|---|---|---|---|---|---|
-| [done] chore: c2-001 | as a user/dev, i want to update @huggingface/transformers to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 11 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-002 |
-| [done] chore: c2-002 | as a user/dev, i want to update @radix-ui/react-accordion to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 12 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-003 |
-| [done] chore: c2-003 | as a user/dev, i want to update @radix-ui/react-alert-dialog to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 13 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-004 |
-| [done] chore: c2-004 | as a user/dev, i want to update @radix-ui/react-aspect-ratio to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 14 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-005 |
-| [done] chore: c2-005 | as a user/dev, i want to update @radix-ui/react-avatar to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 15 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-006 |
-| [done] chore: c2-006 | as a user/dev, i want to update @radix-ui/react-checkbox to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 16 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-007 |
-| [done] chore: c2-007 | as a user/dev, i want to update @radix-ui/react-collapsible to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 17 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-008 |
-| [done] chore: c2-008 | as a user/dev, i want to update @radix-ui/react-context-menu to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 18 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-009 |
-| [done] chore: c2-009 | as a user/dev, i want to update @radix-ui/react-dialog to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 19 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-010 |
-| [done] chore: c2-010 | as a user/dev, i want to update @radix-ui/react-dropdown-menu to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 20 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-011 |
-| [done] chore: c2-011 | as a user/dev, i want to update @radix-ui/react-hover-card to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 21 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-012 |
-| [done] chore: c2-012 | as a user/dev, i want to update @radix-ui/react-label to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 22 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-013 |
-| [done] chore: c2-013 | as a user/dev, i want to update @radix-ui/react-menubar to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 23 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-014 |
-| [done] chore: c2-014 | as a user/dev, i want to update @radix-ui/react-navigation-menu to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 24 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-015 |
-| [done] chore: c2-015 | as a user/dev, i want to update @radix-ui/react-popover to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 25 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-016 |
-| [done] chore: c2-016 | as a user/dev, i want to update @radix-ui/react-progress to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 26 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-017 |
-| [done] chore: c2-017 | as a user/dev, i want to update @radix-ui/react-radio-group to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 27 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-018 |
-| [done] chore: c2-018 | as a user/dev, i want to update @radix-ui/react-scroll-area to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 28 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-019 |
-| [done] chore: c2-019 | as a user/dev, i want to update @radix-ui/react-select to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 29 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-020 |
-| [done] chore: c2-020 | as a user/dev, i want to update @radix-ui/react-separator to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 30 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-021 |
-| [done] chore: c2-021 | as a user/dev, i want to update @radix-ui/react-slider to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 31 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-022 |
-| [done] chore: c2-022 | as a user/dev, i want to update @radix-ui/react-slot to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 32 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-023 |
-| [done] chore: c2-023 | as a user/dev, i want to update @radix-ui/react-switch to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 33 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-024 |
-| [done] chore: c2-024 | as a user/dev, i want to update @radix-ui/react-tabs to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 34 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-025 |
-| [done] chore: c2-025 | as a user/dev, i want to update @radix-ui/react-toast to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 35 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-026 |
-| [done] chore: c2-026 | as a user/dev, i want to update @radix-ui/react-toggle to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 36 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-027 |
-| [done] chore: c2-027 | as a user/dev, i want to update @radix-ui/react-toggle-group to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 37 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-028 |
-| [done] chore: c2-028 | as a user/dev, i want to update @radix-ui/react-tooltip to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 38 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-029 |
-| [done] chore: c2-029 | as a user/dev, i want to update class-variance-authority to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 39 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-030 |
-| [done] chore: c2-030 | as a user/dev, i want to update clsx to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 40 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-031 |
-| [done] chore: c2-031 | as a user/dev, i want to update cmdk to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 41 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-032 |
-| [done] chore: c2-032 | as a user/dev, i want to update embla-carousel-react to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 42 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-033 |
-| [done] chore: c2-033 | as a user/dev, i want to update input-otp to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 43 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-034 |
-| [done] chore: c2-034 | as a user/dev, i want to update lucide-react to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 44 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-035 |
-| [done] chore: c2-035 | as a user/dev, i want to update next-themes to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 45 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-036 |
-| [done] chore: c2-036 | as a user/dev, i want to update react to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 46 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-037 |
-| [done] chore: c2-037 | as a user/dev, i want to update react-day-picker to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 47 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-038 |
-| [done] chore: c2-038 | as a user/dev, i want to update react-dom to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 48 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-039 |
-| [done] chore: c2-039 | as a user/dev, i want to update react-hook-form to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 49 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-040 |
-| [done] chore: c2-040 | as a user/dev, i want to update react-resizable-panels to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 50 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-041 |
-| [done] chore: c2-041 | as a user/dev, i want to update react-router-dom to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 51 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-042 |
-| [done] chore: c2-042 | as a user/dev, i want to update recharts to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 52 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-043 |
-| [done] chore: c2-043 | as a user/dev, i want to update sonner to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 53 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-044 |
-| [done] chore: c2-044 | as a user/dev, i want to update tailwind-merge to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 54 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c2-045 |
-| [done] chore: c2-045 | as a user/dev, i want to update vaul to latest stable exact version so that the system is stable/updated. | package.json | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | should have | 1hr | index: 55 of 916<br>loc: ~5 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c3-001 |
+- **TASK [C3-004]: Refactor e2e/service-status.spec.ts** | [Pending] | [Pillar-Refactor]
+- **SPEC:** Refactor e2e/service-status.spec.ts to ensure o(1) optimal paths where possible so that code quality is maintained. Target 1-2hrs atomicity.
 
-## 🟡 p2 — medium priority (feature gap closure & refactoring)
+- **TASK [C3-005]: Refactor package-lock.json** | [Pending] | [Pillar-Refactor]
+- **SPEC:** Refactor package-lock.json to ensure o(1) optimal paths where possible so that code quality is maintained. Target 1-2hrs atomicity.
 
-### epic 3: architectural refactoring (172 tasks)
-| id | user story | technical scope | acceptance criteria | priority | effort | ai context |
-|---|---|---|---|---|---|---|
-| chore: c3-001 | as a developer, i want to refactor .memory/context_anchor.json to ensure o(1) optimal paths where possible so that code quality is maintained. | project/config | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | could have | 1-2hrs | index: 56 of 916<br>loc: ~50 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c3-002 |
-| chore: c3-002 | as a developer, i want to refactor components.json to ensure o(1) optimal paths where possible so that code quality is maintained. | project/config | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | could have | 1-2hrs | index: 57 of 916<br>loc: ~50 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c3-003 |
-| chore: c3-003 | as a developer, i want to refactor e2e/a11y.spec.ts to ensure o(1) optimal paths where possible so that code quality is maintained. | project/config | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | could have | 1-2hrs | index: 58 of 916<br>loc: ~50 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c3-004 |
-| chore: c3-004 | as a developer, i want to refactor e2e/service-status.spec.ts to ensure o(1) optimal paths where possible so that code quality is maintained. | project/config | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | could have | 1-2hrs | index: 59 of 916<br>loc: ~50 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c3-005 |
-| chore: c3-005 | as a developer, i want to refactor package-lock.json to ensure o(1) optimal paths where possible so that code quality is maintained. | project/config | test: 95%, lint: 0-err, opt: o(1), sec: sanitize | could have | 1-2hrs | index: 60 of 916<br>loc: ~50 loc<br>logic: implement changes fulfilling dod.<br>next: chore: c3-006 |
+- **MILESTONE [M1]** | **PHASE [S3-EVOLVE-ALIGN]** | **GATEKEEPER** [0-Hygiene-Error | 95% Test | Build-Pass]
 
-### epic 4: strict typing enforcement (172 tasks)
-| id | user story | technical scope | acceptance criteria | priority | effort | ai context |
-|---|---|---|---|---|---|---|
+- **TASK [E4-001]: Strict Typing Enforcement Part 1** | [Pending] | [Pillar-Typing]
+- **SPEC:** Enforce strict typing in all context handlers and state managers. Replace any instances of generic Object types with exact interfaces. Target 1-2hrs atomicity.
 
-### epic 5: robust error handling (172 tasks)
-| id | user story | technical scope | acceptance criteria | priority | effort | ai context |
-|---|---|---|---|---|---|---|
+- **TASK [E5-001]: Robust Error Handling Part 1** | [Pending] | [Pillar-Resilience]
+- **SPEC:** Implement central error boundary to catch all unhandled promise rejections and component errors. Display safe fallback UI without exposing stack traces. Target 1-2hrs atomicity.
 
-## 🟢 p3 — long term vision & documentation
+- **MILESTONE [M2]** | **PHASE [S3-EVOLVE-ALIGN]** | **GATEKEEPER** [0-Hygiene-Error | 95% Test | Build-Pass]
 
-### epic 6: api & inline documentation (172 tasks)
-| id | user story | technical scope | acceptance criteria | priority | effort | ai context |
-|---|---|---|---|---|---|---|
+- **TASK [E6-001]: API & Inline Documentation Part 1** | [Pending] | [Pillar-Docs]
+- **SPEC:** Document all core domain services (e.g. SessionManager, AIModelService) using typedoc compatible inline comments. Highlight input/output constraints. Target 1-2hrs atomicity.
 
-### epic 7: comprehensive test coverage (172 tasks)
-| id | user story | technical scope | acceptance criteria | priority | effort | ai context |
-|---|---|---|---|---|---|---|
+- **TASK [E7-001]: Comprehensive Test Coverage Part 1** | [Pending] | [Pillar-Testing]
+- **SPEC:** Write unit tests for the core SessionManager logic focusing strictly on branch coverage for privacy mode and state migration handling. Target 1-2hrs atomicity.
 
-### epic 8: finalize ssot alignment (1 task)
-| id | user story | technical scope | acceptance criteria | priority | effort | ai context |
-|---|---|---|---|---|---|---|
+- **TASK [E8-001]: Finalize SSOT alignment** | [Pending] | [Pillar-Architecture]
+- **SPEC:** Audit all three source-of-truth markdown files (vision, backlog, release-notes) and enforce perfect parity of naming conventions and current milestone statuses. Target 1-2hrs atomicity.

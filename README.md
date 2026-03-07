@@ -6,9 +6,9 @@
 A mental health chatbot with a terminal-like interface, built using React and TypeScript. This application provides a supportive conversation experience for users seeking mental health support.
 
 ## the pulse
-| milestone | version | phase | status | tech debt | backlog density |
+| Milestone | Version | Phase | Status | Debt | Density |
 |---|---|---|---|---|---|
-| demo 2 | v2.1.0-alpha | audit & release preparation | no-go | 52% coverage (req >95%) | 55/60 |
+| demo 2 | v2.1.0-alpha | S3 [EVOLVE/ALIGN] | no-go | 52% coverage (req >95%) | 10/60 |
 
 ## documentation map
 - [vision](./docs/vision.md)
