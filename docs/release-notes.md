@@ -1,5 +1,13 @@
 # release notes
 
+## v2.1.2
+
+### ✅ completed tasks
+
+- **TASK [E9-009]: Test Coverage for profile.ts handler** | [DONE] | [Pillar-Testing]
+- **SPEC:** Add unit tests to bridge the coverage gap (currently 19 uncovered statements) in src/commands/handlers/profile.ts.
+
+
 ## v2.1.1
 
 > **internal milestone.** milestone M1 and M2 completed.
