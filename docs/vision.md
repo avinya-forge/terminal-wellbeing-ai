@@ -96,7 +96,7 @@ fix every broken ui element. the demo failed because basics didn't work. these m
 
 ---
 
-## v2.1.0-alpha architecture synchronized
+## v2.1.1 architecture synchronized
 - **ast ssot:** successfully anchored into `.memory/context-anchor.json`.
 - **density:** 400+ wu generated via recursive drill-down.
 
