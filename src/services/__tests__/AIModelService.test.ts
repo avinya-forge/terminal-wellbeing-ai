@@ -229,10 +229,10 @@ describe('AIModelService coverage tests', () => {
       (emergencyService.checkCriticalSymptoms as jest.Mock).mockReturnValue({ isCritical: false });
 
       // Mock Date to control timeOfDay
-      const mockDate = new Date('2023-01-01T09:00:00Z');
       const originalDate = global.Date;
       global.Date = class extends Date {
         constructor(date?: unknown) {
+          super();
           if (date) return new originalDate(date as string | number | Date);
           return new originalDate('2023-01-01T09:00:00Z'); // 9 AM
         }
