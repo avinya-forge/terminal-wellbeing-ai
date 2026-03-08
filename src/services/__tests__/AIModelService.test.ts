@@ -6,6 +6,7 @@ import { memoryService } from '../MemoryService';
 import { emergencyService } from '../EmergencyService';
 import { backendClient } from '../BackendClient';
 import { getEnv } from '../../utils/env';
+import { CircuitBreakerOpenError } from '../../utils/CircuitBreaker';
 
 // Mock dependencies
 jest.mock('@huggingface/transformers', () => ({
@@ -50,8 +51,10 @@ jest.mock('../../utils/CircuitBreaker', () => {
   }
   class CircuitBreaker {
     constructor() {}
-    async execute(fn: any) {
-      return await fn();
+    async execute(fn: unknown) {
+      if (typeof fn === 'function') {
+        return await fn();
+      }
     }
   }
   return { CircuitBreakerOpenError, CircuitBreaker };
@@ -70,8 +73,8 @@ describe('AIModelService coverage tests', () => {
   describe('Initialization and Model Management', () => {
     it('returns true immediately if already initialized', async () => {
       // Force initialization state
-      (service as any).initialized = true;
-      (service as any).textGenerators[AVAILABLE_MODELS[0].name] = {};
+      (service as unknown as { initialized: boolean }).initialized = true;
+      (service as unknown as { textGenerators: Record<string, unknown> }).textGenerators[AVAILABLE_MODELS[0].name] = {};
       const result = await service.initializeModel();
       expect(result).toBe(true);
     });
@@ -81,7 +84,7 @@ describe('AIModelService coverage tests', () => {
       const onProgress = jest.fn();
       const result = await service.initializeModel(onProgress);
       expect(result).toBe(true);
-      expect((service as any).initialized).toBe(true);
+      expect((service as unknown as { initialized: boolean }).initialized).toBe(true);
       expect(onProgress).toHaveBeenCalledWith("Service Status: Backend configured (Simplicity Mode)");
     });
 
@@ -112,8 +115,7 @@ describe('AIModelService coverage tests', () => {
     it('skips initialization if Circuit Breaker is open', async () => {
       mockGetEnv.mockReturnValue(null);
       // Mock circuit breaker to simulate open state
-      const { CircuitBreakerOpenError } = require('../../utils/CircuitBreaker');
-      (service as any).circuitBreaker.execute = jest.fn().mockRejectedValue(new CircuitBreakerOpenError('Open'));
+      (service as unknown as { circuitBreaker: { execute: jest.Mock } }).circuitBreaker.execute = jest.fn().mockRejectedValue(new CircuitBreakerOpenError('Open'));
 
       const result = await service.initializeModel();
       expect(result).toBe(false);
@@ -130,7 +132,7 @@ describe('AIModelService coverage tests', () => {
       jest.useRealTimers();
 
       // Should not throw and primary should be initialized
-      expect((service as any).initialized).toBe(true);
+      expect((service as unknown as { initialized: boolean }).initialized).toBe(true);
     });
 
     it('switches model successfully', () => {
@@ -158,14 +160,14 @@ describe('AIModelService coverage tests', () => {
         { content: 'User likes coffee' }
       ]);
       const messages = [{ sender: 'user', content: 'hello', id: '1', timestamp: new Date() }];
-      const context = await service.prepareContext(messages as any);
+      const context = await service.prepareContext(messages as unknown as Parameters<AIModelService['prepareContext']>[0]);
       expect(context).toContain('User likes coffee');
     });
 
     it('handles memory retrieval failure', async () => {
       (memoryService.retrieveRelevantContext as jest.Mock).mockRejectedValueOnce(new Error('Memory failure'));
       const messages = [{ sender: 'user', content: 'hello', id: '1', timestamp: new Date() }];
-      const context = await service.prepareContext(messages as any);
+      const context = await service.prepareContext(messages as unknown as Parameters<AIModelService['prepareContext']>[0]);
       expect(context).toContain('Human: hello');
     });
   });
@@ -191,7 +193,7 @@ describe('AIModelService coverage tests', () => {
     it('handles saveInteractionToMemory failure gracefully', async () => {
       // Direct call to the private method to ensure it's tested and we hit the catch block
       (memoryService.addMemory as jest.Mock).mockRejectedValueOnce(new Error('Save failed'));
-      await (service as any).saveInteractionToMemory('user input', 'assistant response');
+      await (service as unknown as { saveInteractionToMemory: (user: string, assistant: string) => Promise<void> }).saveInteractionToMemory('user input', 'assistant response');
       expect(memoryService.addMemory).toHaveBeenCalled();
     });
 
@@ -199,9 +201,9 @@ describe('AIModelService coverage tests', () => {
       const phrases = ['r1', 'r2', 'r3'];
       // Trigger getUniqueResponse enough times to hit max limit (which is 10)
       for (let i = 0; i < 15; i++) {
-        (service as any).getUniqueResponse(phrases);
+        (service as unknown as { getUniqueResponse: (p: string[]) => string }).getUniqueResponse(phrases);
       }
-      expect((service as any).recentResponses.size).toBeLessThanOrEqual(10);
+      expect((service as unknown as { recentResponses: Set<string> }).recentResponses.size).toBeLessThanOrEqual(10);
     });
   });
 
@@ -219,7 +221,7 @@ describe('AIModelService coverage tests', () => {
         { sender: 'assistant', content: 'hi' },
         { sender: 'user', content: 'hello there friend long message' }
       ];
-      const response = await service.generateResponse('hello there friend long message', messages as any);
+      const response = await service.generateResponse('hello there friend long message', messages as unknown as Parameters<AIModelService['generateResponse']>[1]);
       expect(response).toBeTruthy();
     });
 
@@ -230,11 +232,11 @@ describe('AIModelService coverage tests', () => {
       const mockDate = new Date('2023-01-01T09:00:00Z');
       const originalDate = global.Date;
       global.Date = class extends Date {
-        constructor(date?: any) {
-          if (date) return new originalDate(date);
+        constructor(date?: unknown) {
+          if (date) return new originalDate(date as string | number | Date);
           return new originalDate('2023-01-01T09:00:00Z'); // 9 AM
         }
-      } as any;
+      } as unknown as typeof Date;
 
       const response = await service.generateResponse('hello', []);
       expect(response).toBeTruthy();
@@ -255,7 +257,7 @@ describe('AIModelService coverage tests', () => {
       (backendClient.generateText as jest.Mock).mockRejectedValue(new Error('Backend offline'));
 
       const mockGenerator = jest.fn().mockResolvedValue([{ generated_text: 'System: hi\nHuman: hi\nAssistant: Local model response' }]);
-      (service as any).textGenerators[AVAILABLE_MODELS[0].name] = mockGenerator;
+      (service as unknown as { textGenerators: Record<string, unknown> }).textGenerators[AVAILABLE_MODELS[0].name] = mockGenerator;
 
       const response = await service.generateResponse('Testing local', []);
       expect(response).toContain('Local model response');
@@ -266,7 +268,7 @@ describe('AIModelService coverage tests', () => {
       (backendClient.generateText as jest.Mock).mockResolvedValue(null);
 
       // Ensure no local models are loaded
-      (service as any).textGenerators = {};
+      (service as unknown as { textGenerators: Record<string, unknown> }).textGenerators = {};
 
       const response = await service.generateResponse('Testing no models', []);
       expect(SYSTEM_RESPONSES.fallback).toContain(response);
@@ -277,7 +279,7 @@ describe('AIModelService coverage tests', () => {
       (backendClient.generateText as jest.Mock).mockResolvedValue(null);
 
       const mockGenerator = jest.fn().mockResolvedValue([{ generated_text: 'System: hi\nHuman: hi' }]); // No Assistant match
-      (service as any).textGenerators[AVAILABLE_MODELS[0].name] = mockGenerator;
+      (service as unknown as { textGenerators: Record<string, unknown> }).textGenerators[AVAILABLE_MODELS[0].name] = mockGenerator;
 
       const response = await service.generateResponse('Testing local empty', []);
       expect(SYSTEM_RESPONSES.fallback).toContain(response);
@@ -288,12 +290,12 @@ describe('AIModelService coverage tests', () => {
       (backendClient.generateText as jest.Mock).mockResolvedValue(null);
 
       const mockGenerator = jest.fn().mockResolvedValue([{ generated_text: 'System: hi\nHuman: hi\nAssistant: ok' }]); // Too short
-      (service as any).textGenerators[AVAILABLE_MODELS[0].name] = mockGenerator;
+      (service as unknown as { textGenerators: Record<string, unknown> }).textGenerators[AVAILABLE_MODELS[0].name] = mockGenerator;
 
       // To ensure it falls back instead of proceeding down happy path, we need to mock other generators out
       for (const model of AVAILABLE_MODELS) {
         if (model.name !== AVAILABLE_MODELS[0].name) {
-          (service as any).textGenerators[model.name] = null;
+          (service as unknown as { textGenerators: Record<string, unknown> }).textGenerators[model.name] = null;
         }
       }
 
@@ -308,9 +310,9 @@ describe('AIModelService coverage tests', () => {
           generated_text: 'System: hi\nHuman: hi\nAssistant: Secondary fallback response here.'
       }]);
 
-      (service as any).textGenerators[AVAILABLE_MODELS[1].name] = secondaryGenerator;
+      (service as unknown as { textGenerators: Record<string, unknown> }).textGenerators[AVAILABLE_MODELS[1].name] = secondaryGenerator;
 
-      const response = await (service as any).tryFallbackModels('test', [], AVAILABLE_MODELS[0].name);
+      const response = await (service as unknown as { tryFallbackModels: (input: string, messages: unknown[], exclude: string) => Promise<string> }).tryFallbackModels('test', [], AVAILABLE_MODELS[0].name);
       expect(response).toContain('Secondary fallback response here.');
     });
 
@@ -320,10 +322,10 @@ describe('AIModelService coverage tests', () => {
           generated_text: 'System: hi\nHuman: hi\nAssistant: Working third model response.'
       }]);
 
-      (service as any).textGenerators[AVAILABLE_MODELS[1].name] = failingGenerator;
-      (service as any).textGenerators[AVAILABLE_MODELS[2].name] = workingGenerator;
+      (service as unknown as { textGenerators: Record<string, unknown> }).textGenerators[AVAILABLE_MODELS[1].name] = failingGenerator;
+      (service as unknown as { textGenerators: Record<string, unknown> }).textGenerators[AVAILABLE_MODELS[2].name] = workingGenerator;
 
-      const response = await (service as any).tryFallbackModels('test', [], AVAILABLE_MODELS[0].name);
+      const response = await (service as unknown as { tryFallbackModels: (input: string, messages: unknown[], exclude: string) => Promise<string> }).tryFallbackModels('test', [], AVAILABLE_MODELS[0].name);
       expect(response).toContain('Working third model response.');
     });
   });
