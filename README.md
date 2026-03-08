@@ -8,7 +8,7 @@ A mental health chatbot with a terminal-like interface, built using React and Ty
 ## the pulse
 | Milestone | Version | Phase | Status | Debt | Density |
 |---|---|---|---|---|---|
-| demo 2 | v2.1.0-alpha | S3 [EVOLVE/ALIGN] | go | ~75% coverage (req >95%) | 22/60 |
+| demo 2 | v2.1.1 | S3 [EVOLVE/ALIGN] | go | ~75% coverage (req >95%) | 22/60 |
 
 ## documentation map
 - [vision](./docs/vision.md)
