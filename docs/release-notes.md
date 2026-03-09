@@ -240,3 +240,9 @@
 - multi-model ai (distilgpt-2, gpt-2, gpt-neo)
 - sensitive topic detection and crisis resource redirection
 - core command system (`/help`, `/clear`, `/resources`)
+# Release Notes
+
+## [Current Batch]
+- **TASK [E9-002]**: Added comprehensive unit tests for `use-toast.ts`, achieving 100% test coverage.
+- **TASK [E9-003]**: Added comprehensive unit tests for `MemoryService.ts`, achieving > 90% test coverage.
+- **TASK [E9-004]**: Added comprehensive unit tests for `notes.ts` handler, achieving 100% test coverage.

@@ -8,13 +8,13 @@ this backlog has been refined to follow the **breadth-then-depth** and **ai-read
 - **TASK [E9-001]: Test Coverage for AIModelService.ts** | [TODO] | [Pillar-Testing]
 - **SPEC:** Add unit tests to bridge the coverage gap (currently 84 uncovered statements) in src/services/AIModelService.ts.
 
-- **TASK [E9-002]: Test Coverage for use-toast.ts** | [TODO] | [Pillar-Testing]
+- **TASK [E9-002]: Test Coverage for use-toast.ts** | [DONE] | [Pillar-Testing]
 - **SPEC:** Add unit tests to bridge the coverage gap (currently 53 uncovered statements) in src/hooks/use-toast.ts.
 
-- **TASK [E9-003]: Test Coverage for MemoryService.ts** | [TODO] | [Pillar-Testing]
+- **TASK [E9-003]: Test Coverage for MemoryService.ts** | [DONE] | [Pillar-Testing]
 - **SPEC:** Add unit tests to bridge the coverage gap (currently 37 uncovered statements) in src/services/MemoryService.ts.
 
-- **TASK [E9-004]: Test Coverage for notes.ts handler** | [TODO] | [Pillar-Testing]
+- **TASK [E9-004]: Test Coverage for notes.ts handler** | [DONE] | [Pillar-Testing]
 - **SPEC:** Add unit tests to bridge the coverage gap (currently 33 uncovered statements) in src/commands/handlers/notes.ts.
 
 - **TASK [E9-005]: Test Coverage for index.ts command parser** | [TODO] | [Pillar-Testing]
