@@ -2,7 +2,7 @@ import { renderHook, act } from '@testing-library/react';
 import { useIsMobile } from './use-mobile';
 
 describe('useIsMobile', () => {
-  let originalMatchMedia: any;
+  let originalMatchMedia: typeof window.matchMedia;
   let originalInnerWidth: number;
   let addEventListenerMock: jest.Mock;
   let removeEventListenerMock: jest.Mock;

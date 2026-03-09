@@ -1,6 +1,5 @@
-import { render, screen, waitFor, fireEvent, act } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import Terminal from './Terminal';
-import * as aiModel from '../services/ai';
 import * as commands from '../commands';
 import { setPrivacyMode } from '../utils/sessionManager';
 
@@ -33,12 +32,12 @@ jest.mock('../utils/sessionManager', () => ({
 jest.mock('./TerminalOutput', () => {
   return {
     __esModule: true,
-    default: ({ messages, onScrollToBottom }: any) => {
+    default: ({ messages, onScrollToBottom }: { messages: Array<{ id: string; content: React.ReactNode }>; onScrollToBottom: () => void }) => {
       // call scroll on render to simulate effect trigger
       setTimeout(onScrollToBottom, 0);
       return (
         <div data-testid="terminal-output">
-          {messages.map((m: any) => (
+          {messages.map((m) => (
             <div key={m.id}>{m.content}</div>
           ))}
         </div>

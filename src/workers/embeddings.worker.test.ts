@@ -20,14 +20,15 @@ describe('embeddings.worker', () => {
     });
   });
 
-  const getWorker = () => {
-    require('./embeddings.worker');
+  const getWorker = async () => {
+    await import('./embeddings.worker');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (global as any).self.onmessage;
   };
 
   it('should initialize pipeline on init message', async () => {
     pipelineMock.mockResolvedValue(jest.fn());
-    const onmessage = getWorker();
+    const onmessage = await getWorker();
 
     await onmessage({ data: { type: 'init' } });
 
@@ -37,7 +38,7 @@ describe('embeddings.worker', () => {
 
   it('should handle initialization error', async () => {
     pipelineMock.mockRejectedValue(new Error('Init failed'));
-    const onmessage = getWorker();
+    const onmessage = await getWorker();
 
     await onmessage({ data: { type: 'init' } });
 
@@ -50,7 +51,7 @@ describe('embeddings.worker', () => {
       data: arr
     });
     pipelineMock.mockResolvedValue(mockPipe);
-    const onmessage = getWorker();
+    const onmessage = await getWorker();
 
     await onmessage({ data: { type: 'embed', id: '123', text: 'hello' } });
 
@@ -61,7 +62,7 @@ describe('embeddings.worker', () => {
   it('should handle embedding error', async () => {
     const mockPipe = jest.fn().mockRejectedValue(new Error('Embed failed'));
     pipelineMock.mockResolvedValue(mockPipe);
-    const onmessage = getWorker();
+    const onmessage = await getWorker();
 
     await onmessage({ data: { type: 'embed', id: '456', text: 'fail' } });
 
@@ -71,7 +72,7 @@ describe('embeddings.worker', () => {
   it('should handle non-Error throw', async () => {
     const mockPipe = jest.fn().mockRejectedValue('String Error');
     pipelineMock.mockResolvedValue(mockPipe);
-    const onmessage = getWorker();
+    const onmessage = await getWorker();
 
     await onmessage({ data: { type: 'embed', id: '789', text: 'fail string' } });
 
@@ -80,7 +81,7 @@ describe('embeddings.worker', () => {
 
   it('should handle init failure via non-Error throw', async () => {
     pipelineMock.mockRejectedValue('Init String Error');
-    const onmessage = getWorker();
+    const onmessage = await getWorker();
 
     await onmessage({ data: { type: 'init' } });
 
@@ -88,7 +89,7 @@ describe('embeddings.worker', () => {
   });
 
   it('should ignore unknown message types', async () => {
-    const onmessage = getWorker();
+    const onmessage = await getWorker();
     await onmessage({ data: { type: 'unknown' } });
 
     expect(postMessageMock).not.toHaveBeenCalled();

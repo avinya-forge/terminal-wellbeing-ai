@@ -14,9 +14,7 @@ import {
   exportSessionMarkdown
 } from './sessionManager';
 import { journalService } from '../services/JournalService';
-import { memoryService } from '../services/MemoryService';
 import { analyzeText } from './analysis';
-import { logger } from '../services/LoggerService';
 import { MOODS } from '../constants/moods';
 
 jest.mock('../services/JournalService');
@@ -44,32 +42,33 @@ describe('sessionManager', () => {
   });
 
   describe('profile loading and saving', () => {
-    it('should handle JSON parse error during loadProfile gracefully', () => {
+    it('should handle JSON parse error during loadProfile gracefully', async () => {
       localStorage.setItem('wellbeing_user_profile', 'invalid-json');
 
-      jest.isolateModules(() => {
-        const { getUserProfile } = require('./sessionManager');
-        const profile = getUserProfile();
-        expect(profile.messageCount).toBe(0);
-        expect(logger.error).toHaveBeenCalledWith('Failed to load user profile', expect.any(Error));
-      });
+      // Force a reload by resetting the module
+      jest.resetModules();
+      const loggerMock = jest.requireMock('../services/LoggerService');
+      const sm = await import('./sessionManager');
+
+      const profile = sm.getUserProfile();
+      expect(profile.messageCount).toBe(0);
+      expect(loggerMock.logger.error).toHaveBeenCalledWith('Failed to load user profile', expect.any(Error));
     });
 
-    it('should handle localStorage.setItem error during saveProfile gracefully', () => {
+    it('should handle localStorage.setItem error during saveProfile gracefully', async () => {
       const setItemMock = jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
         throw new Error('Quota exceeded');
       });
 
-      // Pass force=true to bypass setTimeout
-      const { updateUserProfile } = require('./sessionManager');
-      updateUserProfile({ userName: 'Test' });
+      jest.resetModules();
+      const loggerMock = jest.requireMock('../services/LoggerService');
+      const sm = await import('./sessionManager');
 
-      // We can directly call the save function by calling setPrivacyMode with force behavior mapped inside it or just mock setTimeout
-      // Wait, updateUserProfile uses saveProfile which uses setTimeout unless forced.
-      // To test error on persist, let's use force directly by calling clearProfile
-      clearProfile();
+      sm.updateUserProfile({ userName: 'Test' });
 
-      expect(logger.error).toHaveBeenCalledWith('Failed to save user profile', expect.any(Error));
+      sm.clearProfile();
+
+      expect(loggerMock.logger.error).toHaveBeenCalledWith('Failed to save user profile', expect.any(Error));
       setItemMock.mockRestore();
     });
   });
@@ -93,7 +92,7 @@ describe('sessionManager', () => {
 
     it('should ignore non-user messages', () => {
       startSession();
-      updateSession({ id: 'msg_1', content: 'test', sender: 'ai', timestamp: new Date().toISOString() });
+      updateSession({ id: 'msg_1', content: 'test', sender: 'bot', timestamp: new Date().toISOString() });
       const profile = getUserProfile();
       expect(profile.messageCount).toBe(0);
     });
@@ -111,7 +110,7 @@ describe('sessionManager', () => {
       for (let i = 0; i < 5; i++) {
         (analyzeText as jest.Mock).mockReturnValueOnce({
           sentiment: -0.8,
-          mood: MOODS.SAD,
+          mood: MOODS.DEPRESSED,
           topics: ['stress']
         });
         updateSession({ id: `msg_${i}`, content: 'bad', sender: 'user', timestamp: new Date().toISOString() });
@@ -127,7 +126,7 @@ describe('sessionManager', () => {
       for (let i = 0; i < 5; i++) {
         (analyzeText as jest.Mock).mockReturnValueOnce({
           sentiment: 0.8,
-          mood: MOODS.HAPPY,
+          mood: MOODS.POSITIVE,
           topics: ['joy']
         });
         updateSession({ id: `msg_${i}`, content: 'good', sender: 'user', timestamp: new Date().toISOString() });

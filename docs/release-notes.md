@@ -242,7 +242,10 @@
 - core command system (`/help`, `/clear`, `/resources`)
 # Release Notes
 
-## [Current Batch]
+## v2.1.3
+
+### ✅ completed tasks
+
 - **TASK [E9-002]**: Added comprehensive unit tests for `use-toast.ts`, achieving 100% test coverage.
 - **TASK [E9-003]**: Added comprehensive unit tests for `MemoryService.ts`, achieving > 90% test coverage.
 - **TASK [E9-004]**: Added comprehensive unit tests for `notes.ts` handler, achieving 100% test coverage.

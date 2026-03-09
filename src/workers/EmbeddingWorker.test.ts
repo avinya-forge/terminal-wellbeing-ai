@@ -6,6 +6,7 @@ jest.mock('./workerFactory', () => ({
 }));
 
 describe('EmbeddingWorker', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let mockWorker: any;
   let workerInstance: EmbeddingWorker;
   let consoleErrorSpy: jest.SpyInstance;
@@ -24,6 +25,7 @@ describe('EmbeddingWorker', () => {
     (createEmbeddingWorker as jest.Mock).mockReturnValue(mockWorker);
 
     // Clear static instance
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (EmbeddingWorker as any).instance = undefined;
     workerInstance = EmbeddingWorker.getInstance();
   });
@@ -35,7 +37,9 @@ describe('EmbeddingWorker', () => {
   });
 
   it('should initialize successfully and handle initialization once', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const initPromise = (workerInstance as any).initialize();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const initPromise2 = (workerInstance as any).initialize();
 
     expect(initPromise).toBe(initPromise2); // Cache check
@@ -69,7 +73,7 @@ describe('EmbeddingWorker', () => {
   });
 
   it('should handle embedding error', async () => {
-    let errorCaught: any;
+    let errorCaught: Error | undefined;
     const embedPromise = workerInstance.embed('test text').catch(e => { errorCaught = e; });
 
     await new Promise(resolve => setTimeout(resolve, 0));
@@ -80,20 +84,21 @@ describe('EmbeddingWorker', () => {
     mockWorker.onmessage({ data: { id, error: 'Failed' } });
 
     await embedPromise;
-    expect(errorCaught.message).toBe('Failed');
+    expect(errorCaught?.message).toBe('Failed');
   });
 
   it('should handle worker error event', async () => {
-    let errorCaught: any;
+    let errorCaught: Error | undefined;
     const embedPromise = workerInstance.embed('test text').catch(e => { errorCaught = e; });
 
     await new Promise(resolve => setTimeout(resolve, 0));
 
     // Simulate worker crashing
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mockWorker.onerror({ message: 'Worker crashed' } as any);
 
     await embedPromise;
-    expect(errorCaught.message).toBe('Worker crashed');
+    expect(errorCaught?.message).toBe('Worker crashed');
     expect(console.error).toHaveBeenCalledWith('Worker error:', 'Worker crashed');
   });
 
@@ -123,21 +128,21 @@ describe('EmbeddingWorker', () => {
       throw new Error('Create failed');
     });
 
-    let errorCaught: any;
+    let errorCaught: Error | undefined;
     try {
         await workerInstance.embed('test');
     } catch(e) {
-        errorCaught = e;
+        errorCaught = e as Error;
     }
 
-    expect(errorCaught.message).toBe('Create failed');
+    expect(errorCaught?.message).toBe('Create failed');
   });
 
   it('should generate ID with random fallback if crypto is not available', async () => {
     const originalCrypto = global.crypto;
     Object.defineProperty(global, 'crypto', { value: undefined, configurable: true });
 
-    const embedPromise = workerInstance.embed('test').catch(() => {});
+    workerInstance.embed('test').catch(() => {});
 
     await new Promise(resolve => setTimeout(resolve, 0));
     const lastCall = mockWorker.postMessage.mock.calls[1][0];
@@ -148,7 +153,7 @@ describe('EmbeddingWorker', () => {
   });
 
   it('should reject pending requests on terminate', async () => {
-    let errorCaught: any;
+    let errorCaught: Error | undefined;
     const embedPromise = workerInstance.embed('test text').catch(e => { errorCaught = e; });
 
     await new Promise(resolve => setTimeout(resolve, 0));
@@ -156,7 +161,7 @@ describe('EmbeddingWorker', () => {
     workerInstance.terminate();
 
     await embedPromise;
-    expect(errorCaught.message).toBe('Worker terminated');
+    expect(errorCaught?.message).toBe('Worker terminated');
   });
 
   it('should throw if embed is called after terminate without re-init (worker is null)', async () => {
@@ -165,7 +170,7 @@ describe('EmbeddingWorker', () => {
     workerInstance.terminate();
 
     // now embed
-    const embedPromise = workerInstance.embed('test2').catch(() => {});
+    workerInstance.embed('test2').catch(() => {});
     await new Promise(resolve => setTimeout(resolve, 0));
 
     expect(createEmbeddingWorker).toHaveBeenCalled(); // re-inits

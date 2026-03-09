@@ -1,5 +1,5 @@
 import { handleThemeCommand, handleListThemesCommand } from './theme';
-import { applyTheme, listThemes, THEMES } from '../../utils/themes';
+import { applyTheme, listThemes } from '../../utils/themes';
 import { logger } from '../../services/LoggerService';
 
 jest.mock('../../utils/themes', () => ({
@@ -25,7 +25,7 @@ describe('theme handlers', () => {
 
   describe('handleThemeCommand', () => {
     it('should list themes if no theme name is provided', async () => {
-      const parsed = { command: 'theme', args: [], original: '/theme' };
+      const parsed = { command: 'theme', args: [], original: '/theme', originalInput: '/theme' };
       const response = await handleThemeCommand(parsed);
       expect(response).toContain('Current themes:');
       expect(response).toContain('default, dark');
@@ -33,7 +33,7 @@ describe('theme handlers', () => {
     });
 
     it('should return error if theme is not found', async () => {
-      const parsed = { command: 'theme', args: ['unknown'], original: '/theme unknown' };
+      const parsed = { command: 'theme', args: ['unknown'], original: '/theme unknown', originalInput: '/theme unknown' };
       const response = await handleThemeCommand(parsed);
       expect(response).toContain('Theme "unknown" not found');
       expect(response).toContain('default, dark');
@@ -44,7 +44,7 @@ describe('theme handlers', () => {
       const dispatchEventSpy = jest.spyOn(window, 'dispatchEvent');
       const setItemSpy = jest.spyOn(Storage.prototype, 'setItem');
 
-      const parsed = { command: 'theme', args: ['dark'], original: '/theme dark' };
+      const parsed = { command: 'theme', args: ['dark'], original: '/theme dark', originalInput: '/theme dark' };
       const response = await handleThemeCommand(parsed);
 
       expect(applyTheme).toHaveBeenCalledWith('dark');
@@ -61,7 +61,7 @@ describe('theme handlers', () => {
         throw new Error('Quota exceeded');
       });
 
-      const parsed = { command: 'theme', args: ['dark'], original: '/theme dark' };
+      const parsed = { command: 'theme', args: ['dark'], original: '/theme dark', originalInput: '/theme dark' };
       await handleThemeCommand(parsed);
 
       expect(logger.error).toHaveBeenCalledWith('Failed to save theme preference', expect.any(Error));
