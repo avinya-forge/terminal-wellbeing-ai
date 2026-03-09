@@ -84,7 +84,7 @@ describe('EmbeddingWorker', () => {
     mockWorker.onmessage({ data: { id, error: 'Failed' } });
 
     await embedPromise;
-    expect(errorCaught.message).toBe('Failed');
+    expect(errorCaught?.message).toBe('Failed');
   });
 
   it('should handle worker error event', async () => {
@@ -98,7 +98,7 @@ describe('EmbeddingWorker', () => {
     mockWorker.onerror({ message: 'Worker crashed' } as any);
 
     await embedPromise;
-    expect(errorCaught.message).toBe('Worker crashed');
+    expect(errorCaught?.message).toBe('Worker crashed');
     expect(console.error).toHaveBeenCalledWith('Worker error:', 'Worker crashed');
   });
 
@@ -142,7 +142,7 @@ describe('EmbeddingWorker', () => {
     const originalCrypto = global.crypto;
     Object.defineProperty(global, 'crypto', { value: undefined, configurable: true });
 
-    const embedPromise = workerInstance.embed('test').catch(() => {});
+    workerInstance.embed('test').catch(() => {});
 
     await new Promise(resolve => setTimeout(resolve, 0));
     const lastCall = mockWorker.postMessage.mock.calls[1][0];
@@ -161,7 +161,7 @@ describe('EmbeddingWorker', () => {
     workerInstance.terminate();
 
     await embedPromise;
-    expect(errorCaught.message).toBe('Worker terminated');
+    expect(errorCaught?.message).toBe('Worker terminated');
   });
 
   it('should throw if embed is called after terminate without re-init (worker is null)', async () => {
@@ -170,7 +170,7 @@ describe('EmbeddingWorker', () => {
     workerInstance.terminate();
 
     // now embed
-    const embedPromise = workerInstance.embed('test2').catch(() => {});
+    workerInstance.embed('test2').catch(() => {});
     await new Promise(resolve => setTimeout(resolve, 0));
 
     expect(createEmbeddingWorker).toHaveBeenCalled(); // re-inits

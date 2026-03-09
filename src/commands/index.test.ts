@@ -1,10 +1,6 @@
 import { processCommand, COMMANDS } from './index';
 import { getResponseForMessage } from '../data/responses';
 import { logger } from '../services/LoggerService';
-import { handleThemeCommand, handleListThemesCommand } from './handlers/theme';
-import { handleModelCommand, listAvailableModels } from './handlers/ai';
-import { handleListNotesCommand, handleDeleteNoteCommand, handleClearNotesCommand } from './handlers/notes';
-import * as commandParser from '../utils/commandParser';
 import { parseCommand } from '../utils/commandParser';
 
 jest.mock('../data/responses');
@@ -125,7 +121,7 @@ describe('processCommand aliases and logic', () => {
       // e.g. "export" is not in simpleCommands array, but is in COMMANDS
       COMMANDS['export'] = jest.fn();
       (parseCommand as jest.Mock).mockReturnValue({ command: 'export', args: [], original: 'export data' });
-      const response = await processCommand('export data', []);
+      await processCommand('export data', []);
       expect(COMMANDS['export']).not.toHaveBeenCalled();
       expect(getResponseForMessage).toHaveBeenCalledWith('export data', []);
     });

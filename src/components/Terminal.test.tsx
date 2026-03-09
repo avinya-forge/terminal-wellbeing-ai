@@ -1,6 +1,5 @@
-import { render, screen, waitFor, fireEvent, act } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import Terminal from './Terminal';
-import * as aiModel from '../services/ai';
 import * as commands from '../commands';
 import { setPrivacyMode } from '../utils/sessionManager';
 

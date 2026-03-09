@@ -23,25 +23,25 @@ describe("ai.ts handlers", () => {
 
   describe("handleModelCommand", () => {
     it("should show current model when no arguments are provided", async () => {
-      const parsed = { command: "model", args: [], original: "/model" };
+      const parsed = { command: "model", args: [], original: "/model", originalInput: "/model" };
       const response = await handleModelCommand(parsed);
       expect(response).toContain("Current AI model: Model 1");
       expect(response).toContain("First model");
     });
 
     it("should return error for invalid model number", async () => {
-      const parsed = { command: "model", args: ["abc"], original: "/model abc" };
+      const parsed = { command: "model", args: ["invalid-model"], original: "/model invalid-model", originalInput: "/model invalid-model" };
       const response = await handleModelCommand(parsed);
       expect(response).toContain("Invalid model number");
       expect(response).toContain("Please use a number");
     });
 
     it("should return error for out of bounds model number", async () => {
-      const parsed = { command: "model", args: ["5"], original: "/model 5" };
+      const parsed = { command: "model", args: ["5"], original: "/model 5", originalInput: "/model 5" };
       const response = await handleModelCommand(parsed);
       expect(response).toContain("Invalid model number. Please choose a number between 0 and 1.");
 
-      const parsedNegative = { command: "model", args: ["-1"], original: "/model -1" };
+      const parsedNegative = { command: "model", args: ["-1"], original: "/model -1", originalInput: "/model -1" };
       const responseNegative = await handleModelCommand(parsedNegative);
       expect(responseNegative).toContain("Invalid model number");
     });
@@ -54,7 +54,7 @@ describe("ai.ts handlers", () => {
         description: "Second model",
       });
 
-      const parsed = { command: "model", args: ["1"], original: "/model 1" };
+      const parsed = { command: "model", args: ["1"], original: "/model 1", originalInput: "/model 1" };
       const response = await handleModelCommand(parsed);
       expect(switchModel).toHaveBeenCalledWith(1);
       expect(response).toContain("Switched to model: Model 2");
@@ -64,7 +64,7 @@ describe("ai.ts handlers", () => {
     it("should return error if model switch fails", async () => {
       (switchModel as jest.Mock).mockReturnValue(false);
 
-      const parsed = { command: "model", args: ["1"], original: "/model 1" };
+      const parsed = { command: "model", args: ["1"], original: "/model 1", originalInput: "/model 1" };
       const response = await handleModelCommand(parsed);
       expect(switchModel).toHaveBeenCalledWith(1);
       expect(response).toContain("Failed to switch models. Please try again.");

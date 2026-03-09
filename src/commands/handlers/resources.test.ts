@@ -11,7 +11,7 @@ describe('resources handler', () => {
   });
 
   it('should list all resources when no query is provided', async () => {
-    const parsed = { command: 'resources', args: [], original: '/resources' };
+    const parsed = { command: 'resources', args: [], original: '/resources', originalInput: '/resources' };
     (searchResources as jest.Mock).mockReturnValue([
       { name: 'Resource 1', category: 'General', contact: '123-456', description: 'Desc 1' },
       { name: 'Resource 2', category: 'Crisis', contact: '911', description: 'Desc 2' },
@@ -31,7 +31,7 @@ describe('resources handler', () => {
   });
 
   it('should return error when no resources found for query', async () => {
-    const parsed = { command: 'resources', args: ['unknown', 'topic'], original: '/resources unknown topic' };
+    const parsed = { command: 'resources', args: ['unknown', 'topic'], original: '/resources unknown topic', originalInput: '/resources unknown topic' };
     (searchResources as jest.Mock).mockReturnValue([]);
 
     const response = await handleResourcesCommand(parsed);
@@ -41,7 +41,7 @@ describe('resources handler', () => {
   });
 
   it('should list matching resources with sign of strength message if <= 5 resources', async () => {
-    const parsed = { command: 'resources', args: ['crisis'], original: '/resources crisis' };
+    const parsed = { command: 'resources', args: ['crisis'], original: '/resources crisis', originalInput: '/resources crisis' };
     (searchResources as jest.Mock).mockReturnValue([
       { name: 'Resource 1', category: 'Crisis', contact: '911', description: 'Emergency' }
     ]);
@@ -56,7 +56,7 @@ describe('resources handler', () => {
   });
 
   it('should list matching resources with sign of strength message if > 5 resources but has matching title', async () => {
-    const parsed = { command: 'resources', args: ['general'], original: '/resources general' };
+    const parsed = { command: 'resources', args: ['general'], original: '/resources general', originalInput: '/resources general' };
     (searchResources as jest.Mock).mockReturnValue([
       { name: 'Resource 1', category: 'General', contact: '1', description: '1' },
       { name: 'Resource 2', category: 'General', contact: '2', description: '2' },

@@ -14,9 +14,7 @@ import {
   exportSessionMarkdown
 } from './sessionManager';
 import { journalService } from '../services/JournalService';
-import { memoryService } from '../services/MemoryService';
 import { analyzeText } from './analysis';
-import { logger } from '../services/LoggerService';
 import { MOODS } from '../constants/moods';
 
 jest.mock('../services/JournalService');
@@ -94,7 +92,7 @@ describe('sessionManager', () => {
 
     it('should ignore non-user messages', () => {
       startSession();
-      updateSession({ id: 'msg_1', content: 'test', sender: 'ai', timestamp: new Date().toISOString() });
+      updateSession({ id: 'msg_1', content: 'test', sender: 'bot', timestamp: new Date().toISOString() });
       const profile = getUserProfile();
       expect(profile.messageCount).toBe(0);
     });
@@ -112,7 +110,7 @@ describe('sessionManager', () => {
       for (let i = 0; i < 5; i++) {
         (analyzeText as jest.Mock).mockReturnValueOnce({
           sentiment: -0.8,
-          mood: MOODS.SAD,
+          mood: MOODS.DEPRESSED,
           topics: ['stress']
         });
         updateSession({ id: `msg_${i}`, content: 'bad', sender: 'user', timestamp: new Date().toISOString() });
@@ -128,7 +126,7 @@ describe('sessionManager', () => {
       for (let i = 0; i < 5; i++) {
         (analyzeText as jest.Mock).mockReturnValueOnce({
           sentiment: 0.8,
-          mood: MOODS.HAPPY,
+          mood: MOODS.POSITIVE,
           topics: ['joy']
         });
         updateSession({ id: `msg_${i}`, content: 'good', sender: 'user', timestamp: new Date().toISOString() });
