@@ -6,6 +6,7 @@ jest.mock('./workerFactory', () => ({
 }));
 
 describe('EmbeddingWorker', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let mockWorker: any;
   let workerInstance: EmbeddingWorker;
   let consoleErrorSpy: jest.SpyInstance;
@@ -24,6 +25,7 @@ describe('EmbeddingWorker', () => {
     (createEmbeddingWorker as jest.Mock).mockReturnValue(mockWorker);
 
     // Clear static instance
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (EmbeddingWorker as any).instance = undefined;
     workerInstance = EmbeddingWorker.getInstance();
   });
@@ -35,7 +37,9 @@ describe('EmbeddingWorker', () => {
   });
 
   it('should initialize successfully and handle initialization once', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const initPromise = (workerInstance as any).initialize();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const initPromise2 = (workerInstance as any).initialize();
 
     expect(initPromise).toBe(initPromise2); // Cache check
@@ -69,7 +73,7 @@ describe('EmbeddingWorker', () => {
   });
 
   it('should handle embedding error', async () => {
-    let errorCaught: any;
+    let errorCaught: Error | undefined;
     const embedPromise = workerInstance.embed('test text').catch(e => { errorCaught = e; });
 
     await new Promise(resolve => setTimeout(resolve, 0));
@@ -84,12 +88,13 @@ describe('EmbeddingWorker', () => {
   });
 
   it('should handle worker error event', async () => {
-    let errorCaught: any;
+    let errorCaught: Error | undefined;
     const embedPromise = workerInstance.embed('test text').catch(e => { errorCaught = e; });
 
     await new Promise(resolve => setTimeout(resolve, 0));
 
     // Simulate worker crashing
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     mockWorker.onerror({ message: 'Worker crashed' } as any);
 
     await embedPromise;
@@ -123,14 +128,14 @@ describe('EmbeddingWorker', () => {
       throw new Error('Create failed');
     });
 
-    let errorCaught: any;
+    let errorCaught: Error | undefined;
     try {
         await workerInstance.embed('test');
     } catch(e) {
-        errorCaught = e;
+        errorCaught = e as Error;
     }
 
-    expect(errorCaught.message).toBe('Create failed');
+    expect(errorCaught?.message).toBe('Create failed');
   });
 
   it('should generate ID with random fallback if crypto is not available', async () => {
@@ -148,7 +153,7 @@ describe('EmbeddingWorker', () => {
   });
 
   it('should reject pending requests on terminate', async () => {
-    let errorCaught: any;
+    let errorCaught: Error | undefined;
     const embedPromise = workerInstance.embed('test text').catch(e => { errorCaught = e; });
 
     await new Promise(resolve => setTimeout(resolve, 0));

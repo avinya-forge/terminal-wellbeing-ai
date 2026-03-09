@@ -44,32 +44,33 @@ describe('sessionManager', () => {
   });
 
   describe('profile loading and saving', () => {
-    it('should handle JSON parse error during loadProfile gracefully', () => {
+    it('should handle JSON parse error during loadProfile gracefully', async () => {
       localStorage.setItem('wellbeing_user_profile', 'invalid-json');
 
-      jest.isolateModules(() => {
-        const { getUserProfile } = require('./sessionManager');
-        const profile = getUserProfile();
-        expect(profile.messageCount).toBe(0);
-        expect(logger.error).toHaveBeenCalledWith('Failed to load user profile', expect.any(Error));
-      });
+      // Force a reload by resetting the module
+      jest.resetModules();
+      const loggerMock = jest.requireMock('../services/LoggerService');
+      const sm = await import('./sessionManager');
+
+      const profile = sm.getUserProfile();
+      expect(profile.messageCount).toBe(0);
+      expect(loggerMock.logger.error).toHaveBeenCalledWith('Failed to load user profile', expect.any(Error));
     });
 
-    it('should handle localStorage.setItem error during saveProfile gracefully', () => {
+    it('should handle localStorage.setItem error during saveProfile gracefully', async () => {
       const setItemMock = jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
         throw new Error('Quota exceeded');
       });
 
-      // Pass force=true to bypass setTimeout
-      const { updateUserProfile } = require('./sessionManager');
-      updateUserProfile({ userName: 'Test' });
+      jest.resetModules();
+      const loggerMock = jest.requireMock('../services/LoggerService');
+      const sm = await import('./sessionManager');
 
-      // We can directly call the save function by calling setPrivacyMode with force behavior mapped inside it or just mock setTimeout
-      // Wait, updateUserProfile uses saveProfile which uses setTimeout unless forced.
-      // To test error on persist, let's use force directly by calling clearProfile
-      clearProfile();
+      sm.updateUserProfile({ userName: 'Test' });
 
-      expect(logger.error).toHaveBeenCalledWith('Failed to save user profile', expect.any(Error));
+      sm.clearProfile();
+
+      expect(loggerMock.logger.error).toHaveBeenCalledWith('Failed to save user profile', expect.any(Error));
       setItemMock.mockRestore();
     });
   });

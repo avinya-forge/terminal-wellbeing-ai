@@ -21,7 +21,7 @@ jest.mock('../utils/commandParser', () => ({
 }));
 
 describe('processCommand aliases and logic', () => {
-  let originalCommands: any;
+  let originalCommands: Record<string, unknown>;
 
   beforeEach(() => {
     jest.clearAllMocks();
