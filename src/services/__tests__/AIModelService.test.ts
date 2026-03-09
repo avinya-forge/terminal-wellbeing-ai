@@ -214,6 +214,31 @@ describe('AIModelService coverage tests', () => {
       expect(response).toBe('EMERGENCY');
     });
 
+
+
+    it('handles repetitive exact matches logic coverage', async () => {
+      // Create a scenario where the last message matches part of input
+      (emergencyService.checkCriticalSymptoms as jest.Mock).mockReturnValue({ isCritical: false });
+      const messages = [
+        { sender: 'user', content: 'this is a long sentence' },
+        { sender: 'user', content: 'this is a long sentence' } // 2 user messages to trigger the check length >= 2
+      ];
+      // "input" is "this is a long sentence" -> will trigger the repetitive logic block
+      const response = await service.generateResponse('this is a long sentence', messages as unknown as Parameters<AIModelService['generateResponse']>[1]);
+      expect(SYSTEM_RESPONSES.repetitive).toContain(response);
+    });
+
+    it('handles repetitive exact matches', async () => {
+      (emergencyService.checkCriticalSymptoms as jest.Mock).mockReturnValue({ isCritical: false });
+      const messages = [
+        { sender: 'user', content: 'short' },
+        { sender: 'assistant', content: 'hi' },
+        { sender: 'user', content: 'short' }
+      ];
+      const response = await service.generateResponse('short', messages as unknown as Parameters<AIModelService['generateResponse']>[1]);
+      expect(SYSTEM_RESPONSES.repetitive).toContain(response);
+    });
+
     it('handles repetitive messages', async () => {
       (emergencyService.checkCriticalSymptoms as jest.Mock).mockReturnValue({ isCritical: false });
       const messages = [
@@ -223,6 +248,44 @@ describe('AIModelService coverage tests', () => {
       ];
       const response = await service.generateResponse('hello there friend long message', messages as unknown as Parameters<AIModelService['generateResponse']>[1]);
       expect(response).toBeTruthy();
+    });
+
+
+    it('handles greetings properly based on time (evening)', async () => {
+      (emergencyService.checkCriticalSymptoms as jest.Mock).mockReturnValue({ isCritical: false });
+
+      // Mock Date to control timeOfDay
+      const originalDate = global.Date;
+      global.Date = class extends Date {
+        constructor(date?: unknown) {
+          super();
+          if (date) return new originalDate(date as string | number | Date);
+          return new originalDate('2023-01-01T20:00:00Z'); // 8 PM
+        }
+        getHours() { return 20; }
+      } as unknown as typeof Date;
+
+      const response = await service.generateResponse('hello', []);
+      expect(response).toBeTruthy();
+
+      global.Date = originalDate;
+    });
+
+    it('handles greetings for first interaction vs returning user', async () => {
+      (emergencyService.checkCriticalSymptoms as jest.Mock).mockReturnValue({ isCritical: false });
+
+      // First interaction
+      const firstResponse = await service.generateResponse('hello', []);
+      expect(firstResponse).toBeTruthy();
+
+      // Returning interaction
+      const messages = [
+        { sender: 'user', content: 'hello' },
+        { sender: 'assistant', content: 'hi' },
+        { sender: 'user', content: 'hi again' }
+      ];
+      const returningResponse = await service.generateResponse('hello again', messages as unknown as Parameters<AIModelService['generateResponse']>[1]);
+      expect(returningResponse).toBeTruthy();
     });
 
     it('handles greetings properly based on time', async () => {
@@ -272,6 +335,60 @@ describe('AIModelService coverage tests', () => {
 
       const response = await service.generateResponse('Testing no models', []);
       expect(SYSTEM_RESPONSES.fallback).toContain(response);
+    });
+
+
+    it('handles generated text empty or undefined (line 314 fallback branch)', async () => {
+      (emergencyService.checkCriticalSymptoms as jest.Mock).mockReturnValue({ isCritical: false });
+      (backendClient.generateText as jest.Mock).mockResolvedValue(null);
+
+      const mockGenerator = jest.fn().mockResolvedValue([{}]); // result[0].generated_text is undefined
+      (service as unknown as { textGenerators: Record<string, unknown> }).textGenerators[AVAILABLE_MODELS[0].name] = mockGenerator;
+
+      // To ensure it falls back instead of proceeding down happy path, we need to mock other generators out
+      for (const model of AVAILABLE_MODELS) {
+        if (model.name !== AVAILABLE_MODELS[0].name) {
+          (service as unknown as { textGenerators: Record<string, unknown> }).textGenerators[model.name] = null;
+        }
+      }
+
+      const response = await service.generateResponse('Testing local undefined generated_text', []);
+      expect(response).toBeTruthy();
+    });
+
+    it('returns error predefined fallback when all fallbacks fail (line 395/490)', async () => {
+      // Setup everything to fail
+      (emergencyService.checkCriticalSymptoms as jest.Mock).mockReturnValue({ isCritical: false });
+      (backendClient.generateText as jest.Mock).mockResolvedValue(null);
+
+      const failingGenerator = jest.fn().mockRejectedValue(new Error('Local Failed'));
+      for (const model of AVAILABLE_MODELS) {
+          (service as unknown as { textGenerators: Record<string, unknown> }).textGenerators[model.name] = failingGenerator;
+      }
+
+      const response = await service.generateResponse('Test complete failure', []);
+      expect(SYSTEM_RESPONSES.fallback).toContain(response);
+    });
+
+    it('handles tryFallbackModels where a fallback succeeds (coverage for line 390/392)', async () => {
+        (emergencyService.checkCriticalSymptoms as jest.Mock).mockReturnValue({ isCritical: false });
+        (backendClient.generateText as jest.Mock).mockResolvedValue(null);
+
+        // Model 0 fails
+        const failingGenerator = jest.fn().mockRejectedValue(new Error('Local Failed'));
+        (service as unknown as { textGenerators: Record<string, unknown> }).textGenerators[AVAILABLE_MODELS[0].name] = failingGenerator;
+
+        // Model 1 has no generator
+        (service as unknown as { textGenerators: Record<string, unknown> }).textGenerators[AVAILABLE_MODELS[1].name] = null;
+
+        // Model 2 works
+        const workingGenerator = jest.fn().mockResolvedValue([{
+            generated_text: 'System: hi\nHuman: hi\nAssistant: Working third model response here that is long enough.'
+        }]);
+        (service as unknown as { textGenerators: Record<string, unknown> }).textGenerators[AVAILABLE_MODELS[2].name] = workingGenerator;
+
+        const response = await service.generateResponse('Test fallback path', []);
+        expect(response).toContain('Working third model response here that is long enough.');
     });
 
     it('handles local model returning empty assistant match', async () => {
