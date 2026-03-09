@@ -28,14 +28,14 @@ describe('notes handlers', () => {
 
   describe('handleNoteCommand', () => {
     it('should return error message if no content provided', async () => {
-      const parsed = { command: 'note', args: [], original: '/note' };
+      const parsed = { command: 'note', args: [], originalInput: '/note' };
       const response = await handleNoteCommand(parsed);
       expect(response).toContain('Please provide content');
       expect(journalService.addNote).not.toHaveBeenCalled();
     });
 
     it('should save note and return success message', async () => {
-      const parsed = { command: 'note', args: ['hello', 'world'], original: '/note hello world' };
+      const parsed = { command: 'note', args: ['hello', 'world'], originalInput: '/note hello world' };
       (analyzeSentiment as jest.Mock).mockReturnValue({ score: 0.5 });
       (journalService.addNote as jest.Mock).mockReturnValue({ id: '1234567890', content: 'hello world', timestamp: Date.now() });
 
@@ -74,14 +74,14 @@ describe('notes handlers', () => {
 
   describe('handleDeleteNoteCommand', () => {
     it('should return error message if no ID provided', async () => {
-      const parsed = { command: 'delete-note', args: [], original: '/delete-note' };
+      const parsed = { command: 'delete-note', args: [], originalInput: '/delete-note' };
       const response = await handleDeleteNoteCommand(parsed);
       expect(response).toContain('Please provide the ID');
       expect(journalService.deleteNote).not.toHaveBeenCalled();
     });
 
     it('should return error message if note not found', async () => {
-      const parsed = { command: 'delete-note', args: ['123'], original: '/delete-note 123' };
+      const parsed = { command: 'delete-note', args: ['123'], originalInput: '/delete-note 123' };
       (journalService.getNotes as jest.Mock).mockReturnValue([
         { id: '4567890', content: 'note 1', timestamp: Date.now() }
       ]);
@@ -92,7 +92,7 @@ describe('notes handlers', () => {
     });
 
     it('should return success message if note deleted', async () => {
-      const parsed = { command: 'delete-note', args: ['123'], original: '/delete-note 123' };
+      const parsed = { command: 'delete-note', args: ['123'], originalInput: '/delete-note 123' };
       (journalService.getNotes as jest.Mock).mockReturnValue([
         { id: '1234567890', content: 'note 1', timestamp: Date.now() }
       ]);
@@ -104,7 +104,7 @@ describe('notes handlers', () => {
     });
 
     it('should return failure message if delete fails', async () => {
-      const parsed = { command: 'delete-note', args: ['123'], original: '/delete-note 123' };
+      const parsed = { command: 'delete-note', args: ['123'], originalInput: '/delete-note 123' };
       (journalService.getNotes as jest.Mock).mockReturnValue([
         { id: '1234567890', content: 'note 1', timestamp: Date.now() }
       ]);

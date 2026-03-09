@@ -16,62 +16,78 @@ describe('use-toast', () => {
 
   describe('reducer', () => {
     it('should add a toast', () => {
-      const state = { toasts: [] };
-      const action: unknown = { type: 'ADD_TOAST', toast: { id: '1', title: 'Test' } };
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      const state: any = { toasts: [] };
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      const action: any = { type: 'ADD_TOAST', toast: { id: '1', title: 'Test' } };
       const newState = reducer(state, action);
       expect(newState.toasts).toHaveLength(1);
       expect(newState.toasts[0].title).toBe('Test');
     });
 
     it('should limit the number of toasts', () => {
-      const state = { toasts: [{ id: '1', title: 'Test 1' }] as unknown };
-      const action: unknown = { type: 'ADD_TOAST', toast: { id: '2', title: 'Test 2' } };
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      const state: any = { toasts: [{ id: '1', title: 'Test 1' }] as unknown };
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      const action: any = { type: 'ADD_TOAST', toast: { id: '2', title: 'Test 2' } };
       const newState = reducer(state, action);
       expect(newState.toasts).toHaveLength(1);
       expect(newState.toasts[0].title).toBe('Test 2');
     });
 
     it('should update a toast', () => {
-      const state = { toasts: [{ id: '1', title: 'Old' }] as unknown };
-      const action: unknown = { type: 'UPDATE_TOAST', toast: { id: '1', title: 'New' } };
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      const state: any = { toasts: [{ id: '1', title: 'Old' }] as unknown };
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      const action: any = { type: 'UPDATE_TOAST', toast: { id: '1', title: 'New' } };
       const newState = reducer(state, action);
       expect(newState.toasts[0].title).toBe('New');
     });
 
     it('should ignore update for a non-existent toast', () => {
-      const state = { toasts: [{ id: '1', title: 'Old' }] as unknown };
-      const action: unknown = { type: 'UPDATE_TOAST', toast: { id: '2', title: 'New' } };
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      const state: any = { toasts: [{ id: '1', title: 'Old' }] as unknown };
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      const action: any = { type: 'UPDATE_TOAST', toast: { id: '2', title: 'New' } };
       const newState = reducer(state, action);
       expect(newState.toasts[0].title).toBe('Old');
     });
 
     it('should dismiss a specific toast', () => {
-      const state = { toasts: [{ id: '1', open: true }, { id: '2', open: true }] as unknown };
-      const action: unknown = { type: 'DISMISS_TOAST', toastId: '1' };
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      const state: any = { toasts: [{ id: '1', open: true }, { id: '2', open: true }] as unknown };
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      const action: any = { type: 'DISMISS_TOAST', toastId: '1' };
       const newState = reducer(state, action);
       expect(newState.toasts[0].open).toBe(false);
       expect(newState.toasts[1].open).toBe(true);
     });
 
     it('should dismiss all toasts if no id provided', () => {
-      const state = { toasts: [{ id: '1', open: true }, { id: '2', open: true }] as unknown };
-      const action: unknown = { type: 'DISMISS_TOAST' };
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      const state: any = { toasts: [{ id: '1', open: true }, { id: '2', open: true }] as unknown };
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      const action: any = { type: 'DISMISS_TOAST' };
       const newState = reducer(state, action);
       expect(newState.toasts[0].open).toBe(false);
       expect(newState.toasts[1].open).toBe(false);
     });
 
     it('should remove a specific toast', () => {
-      const state = { toasts: [{ id: '1' }, { id: '2' }] as unknown };
-      const action: unknown = { type: 'REMOVE_TOAST', toastId: '1' };
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      const state: any = { toasts: [{ id: '1' }, { id: '2' }] as unknown };
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      const action: any = { type: 'REMOVE_TOAST', toastId: '1' };
       const newState = reducer(state, action);
       expect(newState.toasts).toHaveLength(1);
       expect(newState.toasts[0].id).toBe('2');
     });
 
     it('should remove all toasts if no id provided', () => {
-      const state = { toasts: [{ id: '1' }, { id: '2' }] as unknown };
-      const action: unknown = { type: 'REMOVE_TOAST' };
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      const state: any = { toasts: [{ id: '1' }, { id: '2' }] as unknown };
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      const action: any = { type: 'REMOVE_TOAST' };
       const newState = reducer(state, action);
       expect(newState.toasts).toHaveLength(0);
     });
@@ -102,7 +118,8 @@ describe('use-toast', () => {
     });
 
     it('should update a toast via returned function', () => {
-      let toastInstance: { id: string, update: (props: unknown) => void, dismiss: () => void };
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      let toastInstance: any;
       const { result } = renderHook(() => useToast());
 
       act(() => {
@@ -160,7 +177,7 @@ describe('use-toast', () => {
       const { result } = renderHook(() => useToast());
 
       act(() => {
-        result.current.toast({ id: '1', title: 'Hello' });
+        result.current.toast({ title: 'Hello' } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
       });
 
       act(() => {

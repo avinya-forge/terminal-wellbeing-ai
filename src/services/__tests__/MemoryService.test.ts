@@ -1,5 +1,5 @@
 import { MemoryService } from '../MemoryService';
-import { calculateEmbedding } from '../../utils/embeddings';
+import { calculateEmbedding, cosineSimilarity } from '../../utils/embeddings';
 import { generateKey, exportKey, importKey, encryptData, decryptData } from '../../utils/encryption';
 import { logger } from '../LoggerService';
 
@@ -35,7 +35,8 @@ describe('MemoryService', () => {
     // Since it's a singleton, we use getInstance but we might need to reset its state
     // Let's create a new instance via casting to any to access private constructor if needed,
     // but getInstance is public. However, to clear state between tests, we can call clearMemories
-    memoryService = (MemoryService as unknown).instance = undefined;
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+    (MemoryService as any).instance = undefined;
     memoryService = MemoryService.getInstance();
   });
 
@@ -69,9 +70,10 @@ describe('MemoryService', () => {
 
     it('should handle missing window gracefully during init', async () => {
       const originalWindow = global.window;
-      delete (global as unknown).window;
+      delete (global as any).window; // eslint-disable-line @typescript-eslint/no-explicit-any
 
-      const newInstance = new (MemoryService as unknown)();
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      const newInstance = new (MemoryService as any)();
       await newInstance.initialize();
       expect(newInstance['initialized']).toBe(true);
 
@@ -114,7 +116,8 @@ describe('MemoryService', () => {
          const memories = [{ id: '1', content: 'test', type: 'user', timestamp: '2023' }];
          // Force key to be null after init start but before loadMemories
          // Let's just mock loadMemories behavior directly or simulate it
-         const newInstance = new (MemoryService as unknown)();
+         /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      const newInstance = new (MemoryService as any)();
          localStorage.setItem('wellbeing_long_term_memory', JSON.stringify(memories));
          // Need to call private loadMemories without key
          await newInstance['loadMemories']();
@@ -168,7 +171,8 @@ describe('MemoryService', () => {
 
     it('should enforce max entries limit', async () => {
       // Configure with maxEntries = 2
-      memoryService = new (MemoryService as unknown)({ maxEntries: 2 });
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      memoryService = new (MemoryService as any)({ maxEntries: 2 });
       await memoryService.initialize();
 
       jest.useFakeTimers();
@@ -199,7 +203,7 @@ describe('MemoryService', () => {
 
     it('should handle generateId without crypto', async () => {
         const originalCrypto = global.crypto;
-        delete (global as unknown).crypto;
+        delete (global as any).crypto; // eslint-disable-line @typescript-eslint/no-explicit-any
 
         const result = await memoryService.addMemory('test', 'user');
         expect(result?.id).toBeDefined();
@@ -231,13 +235,14 @@ describe('MemoryService', () => {
       // Mock cosineSimilarity indirectly by returning embeddings that will score high/low
       // Actually, cosineSimilarity is imported, we might need to mock it or let it run
       // It's defined in embeddings.ts which we mocked. Let's mock the implementation
-      const embeddingsMock = require('../../utils/embeddings') as any;
-      embeddingsMock.cosineSimilarity = jest.fn()
+
+      (cosineSimilarity as jest.Mock).mockReset()
          .mockReturnValueOnce(0.9) // matches
          .mockReturnValueOnce(0.2) // below threshold (default 0.5)
          .mockReturnValueOnce(0.8); // matches
 
-      memoryService = new (MemoryService as unknown)({ similarityThreshold: 0.5, contextWindowSize: 2 });
+      /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+      memoryService = new (MemoryService as any)({ similarityThreshold: 0.5, contextWindowSize: 2 });
       await memoryService.initialize();
 
       // Inject some memories manually to avoid calling addMemory which also uses calculateEmbedding
@@ -254,8 +259,8 @@ describe('MemoryService', () => {
     });
 
     it('should handle memory with no embedding during retrieval', async () => {
-      const embeddingsMock = require('../../utils/embeddings') as any;
-      embeddingsMock.cosineSimilarity = jest.fn().mockReturnValue(0.9);
+
+      (cosineSimilarity as jest.Mock).mockReset().mockReturnValue(0.9);
 
       memoryService['memories'] = [
           { id: '1', content: 'match 1', embedding: [], timestamp: '1', type: 'user', tags: [] },
