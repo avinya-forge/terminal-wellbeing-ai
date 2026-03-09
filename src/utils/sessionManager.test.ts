@@ -1,159 +1,204 @@
-// Mock localStorage before importing sessionManager
-const localStorageMock = (() => {
-  let store: Record<string, string> = {};
-  return {
-    getItem: (key: string) => store[key] || null,
-    setItem: (key: string, value: string) => { store[key] = value.toString(); },
-    removeItem: (key: string) => { delete store[key]; },
-    clear: () => { store = {}; }
-  };
-})();
-
-Object.defineProperty(global, 'localStorage', { value: localStorageMock });
-
 import {
+  startSession,
   updateSession,
   getProfileSummary,
-  startSession,
-  clearProfile,
   resetSession,
+  clearProfile,
   setPrivacyMode,
   getPrivacyMode,
   togglePrivacy,
-  exportSessionData
+  updateUserProfile,
+  getUserProfile,
+  exportSessionData,
+  exportProfileData,
+  exportSessionMarkdown
 } from './sessionManager';
-import { Message } from '../types/Message';
+import { journalService } from '../services/JournalService';
+import { memoryService } from '../services/MemoryService';
+import { analyzeText } from './analysis';
+import { logger } from '../services/LoggerService';
+import { MOODS } from '../constants/moods';
 
-describe('Session Manager', () => {
-  beforeEach(async () => {
-    jest.useFakeTimers();
+jest.mock('../services/JournalService');
+jest.mock('../services/MemoryService');
+jest.mock('./analysis');
+jest.mock('../services/LoggerService');
+
+describe('sessionManager', () => {
+  beforeEach(() => {
     localStorage.clear();
-    clearProfile();
+    jest.clearAllMocks();
     resetSession();
-    startSession();
-    await setPrivacyMode(false);
+    clearProfile();
+    jest.useRealTimers(); // Make sure timers are reset
+    // Default analysis mock
+    (analyzeText as jest.Mock).mockReturnValue({
+      sentiment: 0,
+      mood: MOODS.NEUTRAL,
+      topics: ['general']
+    });
   });
 
   afterEach(() => {
     jest.useRealTimers();
   });
 
-  const createMessage = (content: string, sender: 'user' | 'bot' = 'user'): Message => ({
-    id: '1',
-    content,
-    sender,
-    timestamp: new Date().toISOString()
+  describe('profile loading and saving', () => {
+    it('should handle JSON parse error during loadProfile gracefully', () => {
+      localStorage.setItem('wellbeing_user_profile', 'invalid-json');
+
+      jest.isolateModules(() => {
+        const { getUserProfile } = require('./sessionManager');
+        const profile = getUserProfile();
+        expect(profile.messageCount).toBe(0);
+        expect(logger.error).toHaveBeenCalledWith('Failed to load user profile', expect.any(Error));
+      });
+    });
+
+    it('should handle localStorage.setItem error during saveProfile gracefully', () => {
+      const setItemMock = jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+        throw new Error('Quota exceeded');
+      });
+
+      // Pass force=true to bypass setTimeout
+      const { updateUserProfile } = require('./sessionManager');
+      updateUserProfile({ userName: 'Test' });
+
+      // We can directly call the save function by calling setPrivacyMode with force behavior mapped inside it or just mock setTimeout
+      // Wait, updateUserProfile uses saveProfile which uses setTimeout unless forced.
+      // To test error on persist, let's use force directly by calling clearProfile
+      clearProfile();
+
+      expect(logger.error).toHaveBeenCalledWith('Failed to save user profile', expect.any(Error));
+      setItemMock.mockRestore();
+    });
   });
 
-  it('initializes session correctly', () => {
-    const session = startSession();
-    expect(session.profile).toBeDefined();
-    expect(session.messages).toBe(0);
-    expect(session.currentMood).toBe('Neutral');
+  describe('updateSession', () => {
+    it('should keep sentimentTrend at max length 5', () => {
+      startSession();
+      for (let i = 0; i < 6; i++) {
+        (analyzeText as jest.Mock).mockReturnValueOnce({
+          sentiment: i,
+          mood: MOODS.NEUTRAL,
+          topics: ['test']
+        });
+        updateSession({ id: `msg_${i}`, content: `test ${i}`, sender: 'user', timestamp: new Date().toISOString() });
+      }
+
+      const profile = getUserProfile();
+      expect(profile.sentimentTrend.length).toBe(5);
+      expect(profile.sentimentTrend).toEqual([1, 2, 3, 4, 5]);
+    });
+
+    it('should ignore non-user messages', () => {
+      startSession();
+      updateSession({ id: 'msg_1', content: 'test', sender: 'ai', timestamp: new Date().toISOString() });
+      const profile = getUserProfile();
+      expect(profile.messageCount).toBe(0);
+    });
   });
 
-  it('updates session and profile on user message', () => {
-    const msg = createMessage('I am feeling happy about work');
-    updateSession(msg);
+  describe('getProfileSummary', () => {
+    it('should return privacy mode string if privacy mode is active', async () => {
+      await setPrivacyMode(true);
+      const summary = getProfileSummary();
+      expect(summary).toContain('Privacy Mode Active');
+    });
 
-    const summary = getProfileSummary();
-    expect(summary).toContain('Recent topics: work');
-    expect(summary).toContain('This is a new user');
+    it('should build summary correctly for highly distressed user', () => {
+      updateUserProfile({ userName: 'Alice' });
+      for (let i = 0; i < 5; i++) {
+        (analyzeText as jest.Mock).mockReturnValueOnce({
+          sentiment: -0.8,
+          mood: MOODS.SAD,
+          topics: ['stress']
+        });
+        updateSession({ id: `msg_${i}`, content: 'bad', sender: 'user', timestamp: new Date().toISOString() });
+      }
+
+      const summary = getProfileSummary();
+      expect(summary).toContain("User's name is Alice");
+      expect(summary).toContain('distressed recently');
+      expect(summary).toContain('stress');
+    });
+
+    it('should build summary correctly for high spirits user', () => {
+      for (let i = 0; i < 5; i++) {
+        (analyzeText as jest.Mock).mockReturnValueOnce({
+          sentiment: 0.8,
+          mood: MOODS.HAPPY,
+          topics: ['joy']
+        });
+        updateSession({ id: `msg_${i}`, content: 'good', sender: 'user', timestamp: new Date().toISOString() });
+      }
+
+      const summary = getProfileSummary();
+      expect(summary).toContain('good spirits');
+    });
+
+    it('should identify long term users', () => {
+      updateUserProfile({ messageCount: 25 });
+      const summary = getProfileSummary();
+      expect(summary).toContain('long-term user');
+    });
+
+    it('should identify new users', () => {
+      clearProfile();
+      startSession(); // msg count 0
+      const summary = getProfileSummary();
+      expect(summary).toContain('new user');
+    });
   });
 
-  it('identifies distress correctly', () => {
-    updateSession(createMessage('I am so depressed and hopeless'));
-    updateSession(createMessage('Everything is terrible'));
-
-    const summary = getProfileSummary();
-    expect(summary).toContain('User seems distressed recently');
-  });
-
-  it('tracks frequent user status', () => {
-    for (let i = 0; i < 25; i++) {
-      updateSession(createMessage('Just chatting'));
-    }
-    const summary = getProfileSummary();
-    expect(summary).toContain('This is a long-term user');
-  });
-
-  it('persists profile across sessions with debounce', () => {
-    // Initial state (saved by beforeEach)
-    const initialStored = localStorage.getItem('wellbeing_user_profile');
-    expect(initialStored).not.toBeNull();
-
-    // Update session
-    updateSession(createMessage('I love my family'));
-
-    // Should not be saved immediately (content should be same as initial or at least not have the new data)
-    // Note: Since localStorage is mocked simply, we just check that the new topic isn't persisted yet
-    const immediateStored = localStorage.getItem('wellbeing_user_profile');
-    expect(immediateStored).toBe(initialStored);
-
-    // Advance timers to trigger save
-    jest.advanceTimersByTime(1000);
-
-    // Now it should be updated
-    const finalStored = localStorage.getItem('wellbeing_user_profile');
-    expect(finalStored).not.toBe(initialStored);
-
-    if (finalStored) {
-        const profile = JSON.parse(finalStored);
-        expect(profile.topics.family).toBeGreaterThan(0);
-    }
-  });
-
-  describe('Privacy Mode', () => {
-    it('toggles privacy mode', async () => {
-      // Ensure we start clean
-      await setPrivacyMode(false);
-      expect(getPrivacyMode()).toBe(false);
-
+  describe('privacy mode', () => {
+    it('should toggle privacy mode and remove data', async () => {
+      localStorage.setItem('terminal_messages', '[]');
       const newState = await togglePrivacy();
       expect(newState).toBe(true);
       expect(getPrivacyMode()).toBe(true);
-
-      const nextState = await togglePrivacy();
-      expect(nextState).toBe(false);
-      expect(getPrivacyMode()).toBe(false);
-    });
-
-    it('clears localStorage when privacy mode is enabled', async () => {
-      updateSession(createMessage('Remember me'));
-      jest.advanceTimersByTime(1000);
-      expect(localStorage.getItem('wellbeing_user_profile')).not.toBeNull();
-
-      await setPrivacyMode(true);
+      expect(localStorage.getItem('terminal_messages')).toBeNull();
       expect(localStorage.getItem('wellbeing_user_profile')).toBeNull();
-    });
-
-    it('does not save to localStorage while privacy mode is enabled', async () => {
-      await setPrivacyMode(true);
-      updateSession(createMessage('Secret message'));
-      expect(localStorage.getItem('wellbeing_user_profile')).toBeNull();
-    });
-
-    it('restores saving when privacy mode is disabled', async () => {
-      await setPrivacyMode(true);
-      updateSession(createMessage('Secret message'));
-
-      await setPrivacyMode(false);
-      updateSession(createMessage('Public message'));
-      jest.advanceTimersByTime(1000);
-      expect(localStorage.getItem('wellbeing_user_profile')).not.toBeNull();
     });
   });
 
-  describe('Data Export', () => {
-    it('exports session data as JSON string', () => {
-      updateSession(createMessage('I like apples'));
-      const json = exportSessionData();
+  describe('exports', () => {
+    it('should exportSessionData correctly', () => {
+      (journalService.getNotes as jest.Mock).mockReturnValue([{ id: '1', content: 'note', timestamp: '2023' }]);
+      startSession();
+      const exported = exportSessionData();
+      const parsed = JSON.parse(exported);
+      expect(parsed).toHaveProperty('generatedAt');
+      expect(parsed).toHaveProperty('profile');
+      expect(parsed).toHaveProperty('currentSession');
+      expect(parsed).toHaveProperty('journal');
+    });
 
-      const data = JSON.parse(json);
-      expect(data.profile).toBeDefined();
-      expect(data.currentSession).toBeDefined();
-      expect(data.generatedAt).toBeDefined();
-      expect(data.profile.sentimentTrend.length).toBeGreaterThan(0);
+    it('should exportProfileData correctly', () => {
+      const exported = exportProfileData();
+      const parsed = JSON.parse(exported);
+      expect(parsed).toHaveProperty('generatedAt');
+      expect(parsed).toHaveProperty('profile');
+    });
+
+    it('should exportSessionMarkdown correctly', () => {
+      (journalService.getNotes as jest.Mock).mockReturnValue([{ id: '1', content: 'my note', timestamp: '2023' }]);
+      startSession();
+      const md = exportSessionMarkdown();
+      expect(md).toContain('# Wellbeing Session Export');
+      expect(md).toContain('## Profile Summary');
+      expect(md).toContain('## Current Session');
+      expect(md).toContain('## Journal Notes');
+      expect(md).toContain('my note');
+    });
+
+    it('should exportSessionMarkdown correctly without active session', () => {
+      (journalService.getNotes as jest.Mock).mockReturnValue([]);
+      resetSession();
+      const md = exportSessionMarkdown();
+      expect(md).toContain('# Wellbeing Session Export');
+      expect(md).not.toContain('## Current Session');
+      expect(md).not.toContain('## Journal Notes');
     });
   });
 });

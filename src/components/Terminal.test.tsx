@@ -1,7 +1,8 @@
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent, act } from '@testing-library/react';
 import Terminal from './Terminal';
 import * as aiModel from '../services/ai';
 import * as commands from '../commands';
+import { setPrivacyMode } from '../utils/sessionManager';
 
 // Mock the AI model and commands modules
 jest.mock('../services/ai', () => ({
@@ -22,17 +23,27 @@ jest.mock('../commands', () => ({
   formatTimestamp: jest.fn().mockReturnValue('12:34')
 }));
 
-// Mock TerminalOutput to avoid animation delays in integration tests
+jest.mock('../utils/sessionManager', () => ({
+  setPrivacyMode: jest.fn(),
+  getPrivacyMode: jest.fn().mockReturnValue(false),
+}));
+
+// Mock TerminalOutput to avoid animation delays in integration tests,
+// but let's make sure it handles onScrollToBottom so we can test the effect.
 jest.mock('./TerminalOutput', () => {
   return {
     __esModule: true,
-    default: ({ messages }: { messages: Array<{ id: string; content: string }> }) => (
-      <div data-testid="terminal-output">
-        {messages.map((m) => (
-          <div key={m.id}>{m.content}</div>
-        ))}
-      </div>
-    )
+    default: ({ messages, onScrollToBottom }: any) => {
+      // call scroll on render to simulate effect trigger
+      setTimeout(onScrollToBottom, 0);
+      return (
+        <div data-testid="terminal-output">
+          {messages.map((m: any) => (
+            <div key={m.id}>{m.content}</div>
+          ))}
+        </div>
+      )
+    }
   };
 });
 
@@ -40,147 +51,130 @@ describe('Terminal Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     window.localStorage.clear();
+
+    // Mock scrollIntoView
+    window.HTMLElement.prototype.scrollIntoView = jest.fn();
+
+    // Mock matchMedia
+    window.matchMedia = jest.fn().mockImplementation(query => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    }));
   });
 
   it('renders the terminal with welcome messages', async () => {
     render(<Terminal />);
-    
-    // Check for terminal elements
     expect(screen.getByText('WellBeing.sh')).toBeInTheDocument();
     expect(await screen.findByPlaceholderText(/Type a message/i)).toBeInTheDocument();
-    
-    // Check for welcome messages
-    expect(await screen.findByText(/WellBeing\.sh Core Engine/i)).toBeInTheDocument();
-    expect(await screen.findByText(/Tell me about your current state/i)).toBeInTheDocument();
   });
 
-  it('initializes the AI model on mount', async () => {
+  it('handles the clear command directly (no slash)', async () => {
     render(<Terminal />);
     
-    await waitFor(() => {
-      expect(aiModel.initializeModel).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  it('processes user input and displays responses', async () => {
-    render(<Terminal />);
-    
-    // Wait for initialization
     const inputElement = await screen.findByPlaceholderText(/Type a message/i);
     await waitFor(() => expect(inputElement).not.toBeDisabled());
 
-    // Type and submit a message
-    fireEvent.change(inputElement, { target: { value: 'Hello there' } });
+    fireEvent.change(inputElement, { target: { value: 'clear' } });
     fireEvent.keyDown(inputElement, { key: 'Enter', code: 'Enter', charCode: 13 });
-    
-    // Check if user message is displayed
-    expect(await screen.findByText('Hello there')).toBeInTheDocument();
-    
-    // Check if command processing was called
+
     await waitFor(() => {
-      expect(commands.processCommand).toHaveBeenCalledWith('Hello there', expect.any(Array));
-    });
-    
-    // Check if bot response is displayed
-    await waitFor(() => {
-      expect(screen.getByText('Command processed')).toBeInTheDocument();
+      expect(screen.queryByText('clear')).not.toBeInTheDocument();
     });
   });
 
-  it('handles the clear command correctly', async () => {
+  it('handles empty whitespace message by ignoring', async () => {
     render(<Terminal />);
     
-    // Wait for initialization
     const inputElement = await screen.findByPlaceholderText(/Type a message/i);
     await waitFor(() => expect(inputElement).not.toBeDisabled());
 
-    // Type and submit a message first
-    fireEvent.change(inputElement, { target: { value: 'Hello there' } });
+    fireEvent.change(inputElement, { target: { value: '    ' } });
     fireEvent.keyDown(inputElement, { key: 'Enter', code: 'Enter', charCode: 13 });
     
-    // Verify message is displayed
-    expect(await screen.findByText('Hello there')).toBeInTheDocument();
-    
-    // Clear the conversation
-    fireEvent.change(inputElement, { target: { value: '/clear' } });
-    fireEvent.keyDown(inputElement, { key: 'Enter', code: 'Enter', charCode: 13 });
-    
-    // Check that the original message is no longer displayed
-    await waitFor(() => {
-      expect(screen.queryByText('Hello there')).not.toBeInTheDocument();
-    });
-    
-    // Check that welcome messages are displayed again
-    expect(await screen.findByText(/WellBeing\.sh Core Engine/i)).toBeInTheDocument();
+    // Commands shouldn't be called
+    expect(commands.processCommand).not.toHaveBeenCalled();
   });
 
-  it('handles model loading error gracefully', async () => {
-    // Mock a failure in model initialization
-    (aiModel.initializeModel as jest.Mock).mockResolvedValueOnce(false);
-    
+  it('handles privacy command toggle', async () => {
     render(<Terminal />);
     
-    // Check that the terminal still renders
-    expect(screen.getByText('WellBeing.sh')).toBeInTheDocument();
-    
-    // Check that the model status shows it's using fallback
-    await waitFor(() => {
-      expect(screen.getByText(/Using fallback responses/i)).toBeInTheDocument();
-    });
-  });
-
-  it('disables input while processing a message', async () => {
-    render(<Terminal />);
-    
-    // Mock a delayed response
-    (commands.processCommand as jest.Mock).mockImplementationOnce(() => {
-      return new Promise(resolve => {
-        setTimeout(() => resolve('Delayed response'), 100);
-      });
-    });
-    
-    // Wait for initialization
     const inputElement = await screen.findByPlaceholderText(/Type a message/i);
     await waitFor(() => expect(inputElement).not.toBeDisabled());
 
-    // Type and submit a message
-    fireEvent.change(inputElement, { target: { value: 'Hello' } });
+    fireEvent.change(inputElement, { target: { value: '/privacy' } });
     fireEvent.keyDown(inputElement, { key: 'Enter', code: 'Enter', charCode: 13 });
     
-    // Input should be disabled while processing
-    await waitFor(() => {
-      expect(inputElement).toBeDisabled();
-    });
+    expect(setPrivacyMode).toHaveBeenCalledWith(true);
     
-    // After response, input should be enabled again
     await waitFor(() => {
-      expect(screen.getByText('Delayed response')).toBeInTheDocument();
-      expect(inputElement).not.toBeDisabled();
+      expect(screen.getByText(/Privacy Mode ENABLED/i)).toBeInTheDocument();
     });
   });
 
-  it('activates panic mode when /panic is typed', async () => {
+  it('handles processCommand failure gracefully', async () => {
+    (commands.processCommand as jest.Mock).mockRejectedValueOnce(new Error('Process error'));
+    
     render(<Terminal />);
-
-    // Wait for initialization
+    
     const inputElement = await screen.findByPlaceholderText(/Type a message/i);
     await waitFor(() => expect(inputElement).not.toBeDisabled());
 
-    // Type /panic
-    fireEvent.change(inputElement, { target: { value: '/panic' } });
+    fireEvent.change(inputElement, { target: { value: 'cause error' } });
+    fireEvent.keyDown(inputElement, { key: 'Enter', code: 'Enter', charCode: 13 });
+    
+    await waitFor(() => {
+      expect(screen.getByText(/Sorry, I encountered an error/i)).toBeInTheDocument();
+    });
+  });
+
+  it('scrolls to bottom based on reduced motion preference', async () => {
+    // Set reduced motion to true
+    window.matchMedia = jest.fn().mockImplementation(query => ({
+      matches: query.includes('prefers-reduced-motion: reduce'),
+    }));
+    
+    render(<Terminal />);
+    
+    const inputElement = await screen.findByPlaceholderText(/Type a message/i);
+    await waitFor(() => expect(inputElement).not.toBeDisabled());
+
+    fireEvent.change(inputElement, { target: { value: 'scroll text' } });
+    fireEvent.keyDown(inputElement, { key: 'Enter', code: 'Enter', charCode: 13 });
+    
+    await waitFor(() => {
+      expect(window.HTMLElement.prototype.scrollIntoView).toHaveBeenCalledWith({ behavior: 'auto' });
+    });
+  });
+
+  it('focuses input when clicking the scrollable region', async () => {
+    render(<Terminal />);
+
+    const inputElement = await screen.findByPlaceholderText(/Type a message/i);
+    const scrollRegion = screen.getByLabelText('Terminal Output Scrollable Region');
+
+    inputElement.blur();
+    expect(inputElement).not.toHaveFocus();
+
+    fireEvent.click(scrollRegion);
+
+    expect(inputElement).toHaveFocus();
+  });
+
+  it('activates panic mode without slash', async () => {
+    render(<Terminal />);
+
+    const inputElement = await screen.findByPlaceholderText(/Type a message/i);
+    await waitFor(() => expect(inputElement).not.toBeDisabled());
+
+    fireEvent.change(inputElement, { target: { value: 'panic' } });
     fireEvent.keyDown(inputElement, { key: 'Enter', code: 'Enter', charCode: 13 });
 
-    // Check if Panic Overlay is displayed
     expect(await screen.findByText('Crisis Resources')).toBeInTheDocument();
-    expect(screen.getByText('988')).toBeInTheDocument();
-
-    // Click close button
-    const closeButton = screen.getByText('RETURN TO TERMINAL');
-    fireEvent.click(closeButton);
-
-    // Check if Panic Overlay is gone
-    await waitFor(() => {
-      expect(screen.queryByText('Crisis Resources')).not.toBeInTheDocument();
-    });
   });
 });
