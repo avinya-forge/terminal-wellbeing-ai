@@ -1,5 +1,40 @@
 # release notes
 
+## v2.1.4
+
+### ✅ completed tasks
+
+- **TASK [E9-001]: Test Coverage for AIModelService.ts** | [DONE] | [Pillar-Testing]
+- **SPEC:** Add unit tests to bridge the coverage gap (currently 84 uncovered statements) in src/services/AIModelService.ts.
+
+- **TASK [E9-005]: Test Coverage for index.ts command parser** | [DONE] | [Pillar-Testing]
+- **SPEC:** Add unit tests to bridge the coverage gap (currently 29 uncovered statements) in src/commands/index.ts.
+
+- **TASK [E9-006]: Test Coverage for sessionManager.ts** | [DONE] | [Pillar-Testing]
+- **SPEC:** Add unit tests to bridge the coverage gap (currently 28 uncovered statements) in src/utils/sessionManager.ts.
+
+- **TASK [E9-007]: Test Coverage for ai.ts handler** | [DONE] | [Pillar-Testing]
+- **SPEC:** Add unit tests to bridge the coverage gap (currently 22 uncovered statements) in src/commands/handlers/ai.ts.
+
+- **TASK [E9-008]: Test Coverage for toast.tsx component** | [DONE] | [Pillar-Testing]
+- **SPEC:** Add unit tests to bridge the coverage gap (currently 20 uncovered statements) in src/components/ui/toast.tsx.
+
+- **TASK [E9-010]: Test Coverage for embeddings.worker.ts** | [DONE] | [Pillar-Testing]
+- **SPEC:** Add unit tests to bridge the coverage gap (currently 19 uncovered statements) in src/workers/embeddings.worker.ts.
+
+- **TASK [E9-011]: Test Coverage for remaining UI and handlers** | [DONE] | [Pillar-Testing]
+- **SPEC:** Add unit tests for resources.ts, Terminal.tsx, theme.ts, use-mobile.tsx, EmbeddingWorker.ts to get remaining coverage to >95% overall.
+
+
+## v2.1.3
+
+### ✅ completed tasks
+
+- **TASK [E9-002]**: Added comprehensive unit tests for `use-toast.ts`, achieving 100% test coverage.
+- **TASK [E9-003]**: Added comprehensive unit tests for `MemoryService.ts`, achieving > 90% test coverage.
+- **TASK [E9-004]**: Added comprehensive unit tests for `notes.ts` handler, achieving 100% test coverage.
+
+
 ## v2.1.2
 
 ### ✅ completed tasks
@@ -240,12 +275,3 @@
 - multi-model ai (distilgpt-2, gpt-2, gpt-neo)
 - sensitive topic detection and crisis resource redirection
 - core command system (`/help`, `/clear`, `/resources`)
-# Release Notes
-
-## v2.1.3
-
-### ✅ completed tasks
-
-- **TASK [E9-002]**: Added comprehensive unit tests for `use-toast.ts`, achieving 100% test coverage.
-- **TASK [E9-003]**: Added comprehensive unit tests for `MemoryService.ts`, achieving > 90% test coverage.
-- **TASK [E9-004]**: Added comprehensive unit tests for `notes.ts` handler, achieving 100% test coverage.
