@@ -18,8 +18,9 @@ this backlog has been refined to follow the **breadth-then-depth** and **ai-read
   - [DEBT] Token expiry handling
   - [TASK] Audit login flow
 - [EPIC] Integrate third-party API for emergency NHS routing fallback [HIGH-RISK]
-  - [TASK] Handle API rate limiting
-  - [TASK] Implement fallback caching mechanism
+  - [ ] TASK: nhs-api-client-setup | Loc: src/services/nhs-client.ts | Spec: Fetch from NHS endpoint, handle auth headers | Deps: fetch | Hygiene: [P1] [HIGH-RISK] secure API keys
+  - [ ] TASK: handle-api-rate-limiting | Loc: src/utils/rate-limiter.ts | Spec: Implement token bucket algorithm | Deps: none | Hygiene: 0 err, >95% cov
+  - [NEEDS-SPLIT] TASK: implement-fallback-caching-mechanism | Loc: src/services/fallback-cache.ts | Spec: Redis or LRU cache for offline/failover | Deps: RedisClient? | Hygiene: Cache invalidation debt
   - [DEBT] API failover mechanism
-  - [TASK] End-to-end integration tests
+  - [ ] TASK: end-to-end-integration-tests | Loc: e2e/nhs-routing.spec.ts | Spec: Playwright tests covering API failure cases | Deps: playwright | Hygiene: Flaky tests risk
 - [RESOLVE] Reorganized repo documentation structure according to IO_SSOT mapping requirements.
