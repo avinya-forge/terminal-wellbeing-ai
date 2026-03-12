@@ -5,6 +5,16 @@
 
 A mental health chatbot with a terminal-like interface, built using React and TypeScript. This application provides a supportive conversation experience for users seeking mental health support.
 
+## quick start
+**active milestone: demo 2 blockers & ui re-engineering**
+we are actively fixing visual bugs and test coverage to unblock demo 2. key priorities include fixing text visibility, proper terminal layout, and reaching 95% test coverage.
+
+**to run locally:**
+```bash
+npm install
+npm run build
+```
+
 ## the pulse
 | Milestone | Version | Phase | Status | Debt% | Density |
 |---|---|---|---|---|---|
@@ -24,16 +34,6 @@ A mental health chatbot with a terminal-like interface, built using React and Ty
 - [habits](./docs/rules/habits.md)
 - [hygiene](./docs/rules/hygiene.md)
 - [standards](./docs/rules/standards.md)
-
-## quick start
-**active milestone: demo 2 blockers & ui re-engineering**
-we are actively fixing visual bugs and test coverage to unblock demo 2. key priorities include fixing text visibility, proper terminal layout, and reaching 95% test coverage.
-
-**to run locally:**
-```bash
-npm install
-npm run build
-```
 
 ## tech stack
 - **React** (v18.3.1): Modern UI library
