@@ -1,4 +1,4 @@
 # hygiene
 
 - 0 style violations
-- strict adherence to standards/ultra_lean.md
+- strict adherence to rules/standards.md
