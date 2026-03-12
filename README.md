@@ -15,20 +15,24 @@ npm install
 npm run build
 ```
 
-## the pulse
+## Pulse-Table
 | Milestone | Version | Phase | Status | Debt% | Density |
 |---|---|---|---|---|---|
 | demo 2 | v2.1.1 | S3 [EVOLVE/ALIGN] | go | ~75% coverage (req >95%) | 22/60 |
 
-## documentation map
+## Visual-Index
 - [vision](./docs/architecture/vision.md)
 - [arch](./docs/architecture/arch.md)
 - [decisions](./docs/architecture/decisions.md)
+- [system-design](./docs/architecture/system-design.md)
 - [backlog](./docs/planning/backlog.md)
 - [map](./docs/planning/map.md)
+- [roadmap](./docs/planning/roadmap.md)
 - [doubts](./docs/planning/doubts.md)
 - [test-cases](./docs/testing/test-cases.md)
 - [coverage](./docs/testing/coverage.md)
+- [conventions](./docs/engineering/conventions.md)
+- [overview](./docs/engineering/overview.md)
 - [release-notes](./docs/release/release-notes.md)
 - [metrics](./docs/release/metrics.md)
 - [habits](./docs/rules/habits.md)
