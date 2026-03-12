@@ -24,7 +24,16 @@ case "${1:-}" in
         ;;
     --skills)
         echo "EVOLVE: Self-update logic using skills.sh patterns..."
-        curl -s https://skills.sh/ | grep -o '"skillId":"[^"]*"' | head -n 5 || true
+        # Extract skills and format them appropriately
+        skills_output=$(curl -s https://skills.sh/ | grep -o '"skillId":"[^"]*"' | cut -d'"' -f4 | head -n 5)
+        if [ -n "$skills_output" ]; then
+            echo "Latest skills extracted:"
+            echo "$skills_output"
+            # Optional: Here you could append logic to update this file or another configuration
+            # based on the extracted skills. For now, we simply list them.
+        else
+             echo "Failed to fetch skills."
+        fi
         ;;
 
     --sync)
