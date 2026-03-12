@@ -20,13 +20,19 @@ case "${1:-}" in
         ;;
     --backlog)
         echo "AUDIT: Grep TASK/DEBT + recursive expansion..."
-        grep -rE "\[TASK\]|\[DEBT\]|\[RESOLVE\]|\[HIGH-RISK\]" docs/ || true
+        grep -rE "\[EPIC\]|\[DEBT\]" docs/ || true
         ;;
     --skills)
         echo "EVOLVE: Self-update logic using skills.sh patterns..."
         curl -s https://skills.sh/ | grep -o '"skillId":"[^"]*"' | head -n 5 || true
         ;;
+
+    --sync)
+        echo "SYNC: Idempotent file-tree alignment..."
+        mkdir -p docs/planning docs/architecture docs/engineering
+        [ ! -f docs/planning/roadmap.md ] && echo "# roadmap" > docs/planning/roadmap.md; [ ! -f docs/architecture/system-design.md ] && echo "# system-design" > docs/architecture/system-design.md; [ ! -f docs/engineering/conventions.md ] && echo "# conventions" > docs/engineering/conventions.md
+        ;;
     *)
-        echo "Usage: ./run.sh [--start|--test|--backlog|--skills]"
+        echo "Usage: ./run.sh [--start|--test|--backlog|--skills|--sync]"
         ;;
 esac
