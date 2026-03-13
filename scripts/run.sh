@@ -4,6 +4,18 @@
 set -e
 
 case "${1:-}" in
+    audit)
+        echo "Running audit..."
+        grep -rnE 'TASK|DEBT|HIGH-RISK' docs/ src/
+        ;;
+    expand)
+        step=$2
+        if [ -z "$step" ]; then
+            echo "Usage: expand [step]"
+            exit 1
+        fi
+        echo "Expanding step $step..."
+        ;;
     --start)
         echo "LAUNCH: Environment init..."
         npm install
@@ -13,7 +25,7 @@ case "${1:-}" in
         pkill -f "vite" 2>/dev/null || true
         npm run dev > vite_output.log 2>&1 &
         ;;
-    --test)
+    --test|verify)
         echo "VERIFY: Running lint, coverage, and unit tests..."
         npm run lint || true
         npm run test:coverage || true
@@ -49,6 +61,6 @@ case "${1:-}" in
         done
         ;;
     *)
-        echo "Usage: ./run.sh [--start|--test|--backlog|--skills|--sync]"
+        echo "Usage: scripts/run.sh [audit|expand <step>|--start|--test|verify|--backlog|--skills|--sync]"
         ;;
 esac
