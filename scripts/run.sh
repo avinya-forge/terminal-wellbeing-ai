@@ -4,6 +4,18 @@
 set -e
 
 case "${1:-}" in
+    audit)
+        echo "Running audit..."
+        grep -rnE 'TASK|DEBT|HIGH-RISK' docs/ src/
+        ;;
+    expand)
+        step=$2
+        if [ -z "$step" ]; then
+            echo "Usage: expand [step]"
+            exit 1
+        fi
+        echo "Expanding step $step..."
+        ;;
     --start)
         echo "LAUNCH: Environment init..."
         npm install
@@ -13,7 +25,7 @@ case "${1:-}" in
         pkill -f "vite" 2>/dev/null || true
         npm run dev > vite_output.log 2>&1 &
         ;;
-    --test)
+    --test|verify)
         echo "VERIFY: Running lint, coverage, and unit tests..."
         npm run lint || true
         npm run test:coverage || true
@@ -29,8 +41,10 @@ case "${1:-}" in
         if [ -n "$skills_output" ]; then
             echo "Latest skills extracted:"
             echo "$skills_output"
-            # Optional: Here you could append logic to update this file or another configuration
-            # based on the extracted skills. For now, we simply list them.
+            # Idempotent injection of skills
+            if ! grep -q "## Skills Patterns" docs/engineering/conventions.md; then
+                echo -e "\n## Skills Patterns\n$skills_output" >> docs/engineering/conventions.md
+            fi
         else
              echo "Failed to fetch skills."
         fi
@@ -39,9 +53,14 @@ case "${1:-}" in
     --sync)
         echo "SYNC: Idempotent file-tree alignment..."
         mkdir -p docs/planning docs/architecture docs/engineering
-        [ ! -f docs/planning/roadmap.md ] && echo "# roadmap" > docs/planning/roadmap.md; [ ! -f docs/architecture/system-design.md ] && echo "# system-design" > docs/architecture/system-design.md; [ ! -f docs/engineering/conventions.md ] && echo "# conventions" > docs/engineering/conventions.md
+        for file in docs/planning/roadmap.md docs/architecture/system-design.md docs/engineering/conventions.md; do
+            if [ ! -f "$file" ] || [ ! -s "$file" ] || [ "$(wc -l < "$file")" -le 1 ]; then
+                title=$(basename "$file" .md)
+                echo -e "# ${title}\n\n## Overview\n\n## Details\n" > "$file"
+            fi
+        done
         ;;
     *)
-        echo "Usage: ./run.sh [--start|--test|--backlog|--skills|--sync]"
+        echo "Usage: scripts/run.sh [audit|expand <step>|--start|--test|verify|--backlog|--skills|--sync]"
         ;;
 esac
