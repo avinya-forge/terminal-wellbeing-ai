@@ -5,7 +5,7 @@
 
 import { getEnv } from '@/utils/env';
 
-export async function fetchNHSEndpoint(endpoint: string, options?: RequestInit): Promise<any> {
+export async function fetchNHSEndpoint<T = unknown>(endpoint: string, options?: RequestInit): Promise<T> {
   const apiKey = getEnv('VITE_NHS_API_KEY');
 
   if (!apiKey) {
