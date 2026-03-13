@@ -29,8 +29,10 @@ case "${1:-}" in
         if [ -n "$skills_output" ]; then
             echo "Latest skills extracted:"
             echo "$skills_output"
-            # Optional: Here you could append logic to update this file or another configuration
-            # based on the extracted skills. For now, we simply list them.
+            # Idempotent injection of skills
+            if ! grep -q "## Skills Patterns" docs/engineering/conventions.md; then
+                echo -e "\n## Skills Patterns\n$skills_output" >> docs/engineering/conventions.md
+            fi
         else
              echo "Failed to fetch skills."
         fi
@@ -39,7 +41,12 @@ case "${1:-}" in
     --sync)
         echo "SYNC: Idempotent file-tree alignment..."
         mkdir -p docs/planning docs/architecture docs/engineering
-        [ ! -f docs/planning/roadmap.md ] && echo "# roadmap" > docs/planning/roadmap.md; [ ! -f docs/architecture/system-design.md ] && echo "# system-design" > docs/architecture/system-design.md; [ ! -f docs/engineering/conventions.md ] && echo "# conventions" > docs/engineering/conventions.md
+        for file in docs/planning/roadmap.md docs/architecture/system-design.md docs/engineering/conventions.md; do
+            if [ ! -f "$file" ] || [ ! -s "$file" ] || [ "$(wc -l < "$file")" -le 1 ]; then
+                title=$(basename "$file" .md)
+                echo -e "# ${title}\n\n## Overview\n\n## Details\n" > "$file"
+            fi
+        done
         ;;
     *)
         echo "Usage: ./run.sh [--start|--test|--backlog|--skills|--sync]"

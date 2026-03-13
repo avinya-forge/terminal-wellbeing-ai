@@ -24,3 +24,8 @@ this backlog has been refined to follow the **breadth-then-depth** and **ai-read
   - [DEBT] API failover mechanism
   - [ ] TASK: end-to-end-integration-tests | Loc: e2e/nhs-routing.spec.ts | Spec: Playwright tests covering API failure cases | Deps: playwright | Hygiene: Flaky tests risk
 - [RESOLVE] Reorganized repo documentation structure according to IO_SSOT mapping requirements.
+- [HIGH-RISK] [EPIC] Document 3-tier safety engine architecture
+  - [TASK] Draft safety tier specifications in docs/architecture/system-design.md
+  - [RESOLVE] Missing architecture diagrams for safety routing
+- [HIGH-RISK] [EPIC] Document adaptive model routing (specialized local/remote models)
+  - [TASK] Update docs/architecture/system-design.md with model fallback logic
