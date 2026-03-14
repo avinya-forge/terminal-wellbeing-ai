@@ -27,6 +27,13 @@ jest.mock('../utils/sessionManager', () => ({
   getPrivacyMode: jest.fn().mockReturnValue(false),
 }));
 
+let mockCapturedKeyboardCallbacks: any = {};
+jest.mock('../hooks/useKeyboardShortcuts', () => ({
+  useKeyboardShortcuts: jest.fn((cb) => {
+    mockCapturedKeyboardCallbacks = cb;
+  }),
+}));
+
 // Mock TerminalOutput to avoid animation delays in integration tests,
 // but let's make sure it handles onScrollToBottom so we can test the effect.
 jest.mock('./TerminalOutput', () => {
@@ -50,6 +57,7 @@ describe('Terminal Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     window.localStorage.clear();
+    mockCapturedKeyboardCallbacks = {};
 
     // Mock scrollIntoView
     window.HTMLElement.prototype.scrollIntoView = jest.fn();
@@ -98,6 +106,30 @@ describe('Terminal Component', () => {
     
     // Commands shouldn't be called
     expect(commands.processCommand).not.toHaveBeenCalled();
+  });
+
+  it('triggers commands via keyboard shortcuts', async () => {
+    render(<Terminal />);
+
+    const inputElement = await screen.findByPlaceholderText(/Type a message/i);
+    await waitFor(() => expect(inputElement).not.toBeDisabled());
+
+    // trigger clear
+    mockCapturedKeyboardCallbacks.onClear();
+
+    // trigger focus
+    mockCapturedKeyboardCallbacks.onFocus();
+    expect(inputElement).toHaveFocus();
+
+    // trigger panic
+    mockCapturedKeyboardCallbacks.onPanic();
+    expect(await screen.findByText('Crisis Resources')).toBeInTheDocument();
+
+    // trigger profile
+    mockCapturedKeyboardCallbacks.onProfile();
+    await waitFor(() => {
+      expect(commands.processCommand).toHaveBeenCalledWith('/profile view', expect.any(Array));
+    });
   });
 
   it('handles privacy command toggle', async () => {
@@ -175,5 +207,27 @@ describe('Terminal Component', () => {
     fireEvent.keyDown(inputElement, { key: 'Enter', code: 'Enter', charCode: 13 });
 
     expect(await screen.findByText('Crisis Resources')).toBeInTheDocument();
+  });
+
+  it('handles initialization failure gracefully', async () => {
+    const { initializeModel } = require('../services/ai');
+    initializeModel.mockRejectedValueOnce(new Error('Init failed'));
+
+    render(<Terminal />);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Service Status: Error/i)).toBeInTheDocument();
+    });
+  });
+
+  it('sets loading status when initialization is not successful', async () => {
+    const { initializeModel } = require('../services/ai');
+    initializeModel.mockResolvedValueOnce(false);
+
+    render(<Terminal />);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Service Status: Using fallback responses/i)).toBeInTheDocument();
+    });
   });
 });

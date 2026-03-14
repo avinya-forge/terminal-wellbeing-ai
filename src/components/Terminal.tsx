@@ -161,18 +161,15 @@ const Terminal = () => {
   });
 
   return (
-    /* ── Full-screen terminal — fills the entire flex column from #root → App ── */
+    /* ── Terminal Container with border and padding ── */
     <main
       aria-label="Terminal"
+      className="flex flex-col bg-card relative overflow-hidden border-2 rounded-lg shadow-[0_0_15px_rgba(0,0,0,0.5)]"
       style={{
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        width: '100%',
-        minHeight: 0,
-        background: 'hsl(var(--card))',
-        position: 'relative',
-        overflow: 'hidden',
+        borderColor: 'hsl(var(--primary))',
+        margin: '1rem',
+        height: 'calc(100vh - 2rem)',
+        boxSizing: 'border-box'
       }}
     >
       {isPanicMode && <PanicOverlay onClose={() => setIsPanicMode(false)} />}
