@@ -2,6 +2,7 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import Terminal from './Terminal';
 import * as commands from '../commands';
 import { setPrivacyMode } from '../utils/sessionManager';
+import { initializeModel } from '../services/ai';
 
 // Mock the AI model and commands modules
 jest.mock('../services/ai', () => ({
@@ -27,7 +28,7 @@ jest.mock('../utils/sessionManager', () => ({
   getPrivacyMode: jest.fn().mockReturnValue(false),
 }));
 
-let mockCapturedKeyboardCallbacks: any = {};
+let mockCapturedKeyboardCallbacks: Record<string, () => void> = {};
 jest.mock('../hooks/useKeyboardShortcuts', () => ({
   useKeyboardShortcuts: jest.fn((cb) => {
     mockCapturedKeyboardCallbacks = cb;
@@ -210,8 +211,7 @@ describe('Terminal Component', () => {
   });
 
   it('handles initialization failure gracefully', async () => {
-    const { initializeModel } = require('../services/ai');
-    initializeModel.mockRejectedValueOnce(new Error('Init failed'));
+    (initializeModel as jest.Mock).mockRejectedValueOnce(new Error('Init failed'));
 
     render(<Terminal />);
 
@@ -221,8 +221,7 @@ describe('Terminal Component', () => {
   });
 
   it('sets loading status when initialization is not successful', async () => {
-    const { initializeModel } = require('../services/ai');
-    initializeModel.mockResolvedValueOnce(false);
+    (initializeModel as jest.Mock).mockResolvedValueOnce(false);
 
     render(<Terminal />);
 
