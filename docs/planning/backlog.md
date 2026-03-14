@@ -23,6 +23,12 @@ this backlog has been refined to follow the **breadth-then-depth** and **ai-read
   - [NEEDS-SPLIT] TASK: implement-fallback-caching-mechanism | Loc: src/services/fallback-cache.ts | Spec: Redis or LRU cache for offline/failover | Deps: RedisClient? | Hygiene: Cache invalidation debt
   - [DEBT] API failover mechanism
   - [ ] TASK: end-to-end-integration-tests | Loc: e2e/nhs-routing.spec.ts | Spec: Playwright tests covering API failure cases | Deps: playwright | Hygiene: Flaky tests risk
+- [EPIC] UI Re-engineering for Terminal Layout
+  - [TASK] Fix text visibility issues
+  - [TASK] Implement proper terminal layout
+- [EPIC] Reach 95% Test Coverage
+  - [TASK] Write missing unit tests to reach coverage gatekeeper
+  - [TASK] Fix visual bugs blocking demo 2
 - [RESOLVE] Reorganized repo documentation structure according to IO_SSOT mapping requirements.
 - [HIGH-RISK] [EPIC] Document 3-tier safety engine architecture
   - [TASK] Draft safety tier specifications in docs/architecture/system-design.md
