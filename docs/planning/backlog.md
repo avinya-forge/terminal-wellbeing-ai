@@ -24,8 +24,8 @@ this backlog has been refined to follow the **breadth-then-depth** and **ai-read
   - [DEBT] API failover mechanism
   - [ ] TASK: end-to-end-integration-tests | Loc: e2e/nhs-routing.spec.ts | Spec: Playwright tests covering API failure cases | Deps: playwright | Hygiene: Flaky tests risk
 - [EPIC] UI Re-engineering for Terminal Layout
-  - [TASK] Fix text visibility issues
-  - [TASK] Implement proper terminal layout
+  - [ ] TASK: fix-text-visibility-issues | Loc: src/components/TerminalMessage.tsx | Spec: Update text styling classes for better contrast | Deps: none | Hygiene: 0 err, >95% cov
+  - [ ] TASK: implement-terminal-layout | Loc: src/components/Terminal.tsx | Spec: Adjust flex layouts and add terminal-like borders | Deps: none | Hygiene: 0 err, >95% cov
 - [EPIC] Reach 95% Test Coverage
   - [TASK] Write missing unit tests to reach coverage gatekeeper
   - [TASK] Fix visual bugs blocking demo 2
