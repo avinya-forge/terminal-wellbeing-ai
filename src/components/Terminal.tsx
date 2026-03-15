@@ -164,7 +164,7 @@ const Terminal = () => {
     /* ── Terminal Container with border and padding ── */
     <main
       aria-label="Terminal"
-      className="flex flex-col bg-card relative overflow-hidden border-2 rounded-lg shadow-[0_0_15px_rgba(0,0,0,0.5)]"
+      className="flex flex-col bg-card relative overflow-hidden border-4 rounded shadow-[0_0_15px_rgba(0,0,0,0.5)]"
       style={{
         borderColor: 'hsl(var(--primary))',
         margin: '1rem',

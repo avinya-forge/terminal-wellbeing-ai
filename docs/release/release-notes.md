@@ -96,6 +96,22 @@
 
 ---
 
+## v2.1.0-alpha — Epic Implementations
+
+> **internal milestone.** Added NHS routing fallbacks, rate limiting, terminal re-engineering, documentation, and achieved 95% test coverage.
+
+### ✅ What's Working
+- **NHS API Fallback**: Implemented an in-memory `FallbackCache` to gracefully serve previous responses if the NHS API fails.
+- **API Rate Limiting**: Added `TokenBucket` rate limiter to the NHS API client to prevent excessive requests (limit 10 per minute).
+- **Terminal UI Re-engineering**:
+  - Fixed text visibility issues by removing heavy blurs (`textShadow`) and improving contrast.
+  - Updated the terminal layout with stronger `border-4` styling.
+- **End-to-End Testing**: Added Playwright tests (`e2e/nhs-routing.spec.ts`) asserting fallback behaviors and rate limiting UX.
+- **95% Test Coverage**: Reached the test coverage gatekeeper >95% globally. Added missing coverage for UI components (`Button`), `ReloadPrompt`, and `breathe.ts` commands.
+- **Architecture Documentation**: Documented the IO_SSOT 3-tier safety engine and adaptive model routing logic in `docs/architecture/system-design.md`.
+
+---
+
 ## v2.0.0-beta — demo 2 ready (mar 2026)
 
 > **internal milestone.** demo 2 is unblocked. showstoppers and critical accessibility issues addressed.

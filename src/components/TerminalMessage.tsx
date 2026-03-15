@@ -57,7 +57,7 @@ const TerminalMessage = memo(({ message, animate = true, onComplete }: TerminalM
         className="flex-shrink-0 font-bold select-none"
         style={{
           color: isBot ? 'hsl(var(--primary))' : 'hsl(var(--foreground))',
-          textShadow: '0 0 6px hsl(var(--primary)/0.5)',
+          textShadow: isBot ? '0 0 2px hsl(var(--primary)/0.4)' : 'none',
           width: '1ch',
           lineHeight: 'inherit',
         }}
@@ -82,7 +82,7 @@ const TerminalMessage = memo(({ message, animate = true, onComplete }: TerminalM
           whiteSpace: 'pre-wrap',
           overflowWrap: 'anywhere',
           color: isBot ? 'hsl(var(--primary))' : 'hsl(var(--foreground))',
-          textShadow: isBot ? '0 0 4px hsl(var(--primary)/0.3)' : 'none',
+          textShadow: isBot ? '0 0 2px hsl(var(--primary)/0.4)' : 'none',
           letterSpacing: '0.03em',
           lineHeight: '1.6',
         }}

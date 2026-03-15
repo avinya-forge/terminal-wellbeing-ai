@@ -1,5 +1,6 @@
 import { fetchNHSEndpoint } from './nhs-client';
 import { getEnv } from '@/utils/env';
+import { nhsFallbackCache } from './fallback-cache';
 
 jest.mock('@/utils/env', () => ({
   getEnv: jest.fn()
@@ -14,6 +15,7 @@ describe('fetchNHSEndpoint', () => {
 
   afterEach(() => {
     jest.restoreAllMocks();
+    nhsFallbackCache.clear();
   });
 
   it('throws an error if VITE_NHS_API_KEY is missing', async () => {
@@ -42,7 +44,7 @@ describe('fetchNHSEndpoint', () => {
     expect(result).toEqual({ status: 'success' });
   });
 
-  it('throws an error if the NHS API responds with an error', async () => {
+  it('throws an error if the NHS API responds with an error and no cache exists', async () => {
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: false,
       status: 404,
@@ -50,5 +52,30 @@ describe('fetchNHSEndpoint', () => {
     });
 
     await expect(fetchNHSEndpoint('invalid')).rejects.toThrow('NHS API error: 404 Not Found');
+  });
+
+  it('uses fallback cache if NHS API responds with an error', async () => {
+    // Set a mock cache value
+    nhsFallbackCache.set('services', { status: 'cached' });
+
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: false,
+      status: 500,
+      statusText: 'Internal Server Error'
+    });
+
+    const result = await fetchNHSEndpoint('services');
+    expect(result).toEqual({ status: 'cached' });
+  });
+
+  it('caches the successful response', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: async () => ({ status: 'success' })
+    });
+
+    await fetchNHSEndpoint('services');
+
+    expect(nhsFallbackCache.get('services')).toEqual({ status: 'success' });
   });
 });
