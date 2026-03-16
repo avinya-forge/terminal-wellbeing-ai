@@ -7,16 +7,16 @@ this backlog has been refined to follow the **breadth-then-depth** and **ai-read
 
 ## PDLC/SDLC Unified Backlog
 
-- [EPIC] Analyze DB schema integration for persistent chat history [HIGH-RISK]
-  - [TASK] Drill down into schema definition
-  - [TASK] Implement db migration script
-  - [DEBT] DB scaling and latency concerns
-  - [TASK] Review security rules
-- [EPIC] Implement OAuth for user session storage [HIGH-RISK]
-  - [TASK] Configure callback URLs and tokens
-  - [TASK] Secure token endpoints
-  - [DEBT] Token expiry handling
-  - [TASK] Audit login flow
+- [BLOCKER] [EPIC] Analyze DB schema integration for persistent chat history [HIGH-RISK]
+  - [BLOCKER] [TASK] Drill down into schema definition
+  - [BLOCKER] [TASK] Implement db migration script
+  - [BLOCKER] [DEBT] DB scaling and latency concerns
+  - [BLOCKER] [TASK] Review security rules
+- [BLOCKER] [EPIC] Implement OAuth for user session storage [HIGH-RISK]
+  - [BLOCKER] [TASK] Configure callback URLs and tokens
+  - [BLOCKER] [TASK] Secure token endpoints
+  - [BLOCKER] [DEBT] Token expiry handling
+  - [BLOCKER] [TASK] Audit login flow
 - [x] [EPIC] Integrate third-party API for emergency NHS routing fallback [HIGH-RISK]
   - [x] TASK: nhs-api-client-setup | Loc: src/services/nhs-client.ts | Spec: Fetch from NHS endpoint, handle auth headers | Deps: fetch | Hygiene: [P1] [HIGH-RISK] secure API keys
   - [x] TASK: handle-api-rate-limiting | Loc: src/utils/rate-limiter.ts | Spec: Implement token bucket algorithm | Deps: none | Hygiene: 0 err, >95% cov
