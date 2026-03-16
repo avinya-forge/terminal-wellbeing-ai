@@ -48,27 +48,30 @@ export class MemoryService {
   }
 
   private async _init(): Promise<void> {
-    if (typeof window === 'undefined') {
+    if (typeof window === 'undefined' || !window.localStorage) {
         this.initialized = true;
         return;
     }
 
     try {
       // Load or generate key
-      const keyString = localStorage.getItem(KEY_STORAGE_KEY);
+      let keyString = null;
+      if (typeof window !== 'undefined' && window.localStorage) {
+        keyString = localStorage.getItem(KEY_STORAGE_KEY);
+      }
       if (keyString) {
         try {
             this.encryptionKey = await importKey(keyString);
         } catch (e) {
             logger.error('Failed to import existing key, generating new one:', e);
             this.encryptionKey = await generateKey();
-            if (typeof window !== 'undefined') {
+            if (typeof window !== 'undefined' && window.localStorage) {
               localStorage.setItem(KEY_STORAGE_KEY, await exportKey(this.encryptionKey));
             }
         }
       } else {
         this.encryptionKey = await generateKey();
-        if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined' && window.localStorage) {
           localStorage.setItem(KEY_STORAGE_KEY, await exportKey(this.encryptionKey));
         }
       }
@@ -83,7 +86,7 @@ export class MemoryService {
   }
 
   private async loadMemories(): Promise<void> {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || !window.localStorage) return;
 
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
@@ -115,7 +118,7 @@ export class MemoryService {
     this.privacyMode = enabled;
     if (enabled) {
       this.memories = [];
-      if (typeof window !== 'undefined') {
+      if (typeof window !== 'undefined' && window.localStorage) {
         localStorage.removeItem(STORAGE_KEY);
       }
       logger.info('Privacy mode enabled for MemoryService. Memories cleared.');
@@ -137,7 +140,9 @@ export class MemoryService {
 
       const json = JSON.stringify(this.memories);
       const encrypted = await encryptData(json, this.encryptionKey);
-      localStorage.setItem(STORAGE_KEY, encrypted);
+      if (typeof window !== 'undefined' && window.localStorage) {
+        localStorage.setItem(STORAGE_KEY, encrypted);
+      }
     } catch (error) {
       logger.error('Failed to save memories:', error);
     }
