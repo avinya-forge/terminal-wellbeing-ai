@@ -48,7 +48,7 @@ export class MemoryService {
   }
 
   private async _init(): Promise<void> {
-    if (typeof window === 'undefined') {
+    if (typeof window === 'undefined' || !window.localStorage) {
         this.initialized = true;
         return;
     }
