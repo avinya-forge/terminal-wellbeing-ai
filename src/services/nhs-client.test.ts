@@ -6,16 +6,46 @@ jest.mock('@/utils/env', () => ({
   getEnv: jest.fn()
 }));
 
+jest.mock('@/utils/rate-limiter', () => {
+  const mockConsume = jest.fn().mockReturnValue(true);
+  return {
+    TokenBucket: jest.fn().mockImplementation(() => {
+      return {
+        consume: mockConsume
+      };
+    }),
+    __mockConsume: mockConsume
+  };
+});
+
+// Import the mocked module
+import * as rateLimiterModule from '@/utils/rate-limiter';
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mockConsume = (rateLimiterModule as any).__mockConsume as jest.Mock;
+
 describe('fetchNHSEndpoint', () => {
   beforeEach(() => {
-    jest.resetModules();
     global.fetch = jest.fn();
     (getEnv as jest.Mock).mockReturnValue('fake-nhs-key');
+    mockConsume.mockReturnValue(true);
   });
 
   afterEach(() => {
     jest.restoreAllMocks();
     nhsFallbackCache.clear();
+  });
+
+  it('throws an error if rate limit is exceeded and no cache exists', async () => {
+    mockConsume.mockReturnValue(false);
+    await expect(fetchNHSEndpoint('test')).rejects.toThrow('Rate limit exceeded');
+  });
+
+  it('uses fallback cache if rate limit is exceeded', async () => {
+    nhsFallbackCache.set('services', { status: 'cached' });
+    mockConsume.mockReturnValue(false);
+
+    const result = await fetchNHSEndpoint('services');
+    expect(result).toEqual({ status: 'cached' });
   });
 
   it('throws an error if VITE_NHS_API_KEY is missing', async () => {

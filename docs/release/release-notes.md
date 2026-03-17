@@ -1,5 +1,12 @@
 # release notes
 
+## v2.1.5
+
+### ✅ completed tasks
+
+- **TASK [API-001]: API failover mechanism test coverage** | [DONE] | [Pillar-Testing]
+- **SPEC:** Add unit tests to simulate rate limit exceeded error in `src/services/nhs-client.ts`.
+
 ## v2.1.4
 
 ### ✅ completed tasks

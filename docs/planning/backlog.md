@@ -21,7 +21,7 @@ this backlog has been refined to follow the **breadth-then-depth** and **ai-read
   - [x] TASK: nhs-api-client-setup | Loc: src/services/nhs-client.ts | Spec: Fetch from NHS endpoint, handle auth headers | Deps: fetch | Hygiene: [P1] [HIGH-RISK] secure API keys
   - [x] TASK: handle-api-rate-limiting | Loc: src/utils/rate-limiter.ts | Spec: Implement token bucket algorithm | Deps: none | Hygiene: 0 err, >95% cov
   - [x] TASK: implement-fallback-caching-mechanism | Loc: src/services/fallback-cache.ts | Spec: Redis or LRU cache for offline/failover | Deps: RedisClient? | Hygiene: Cache invalidation debt
-  - [DEBT] API failover mechanism
+  - [x] [DEBT] API failover mechanism
   - [x] TASK: end-to-end-integration-tests | Loc: e2e/nhs-routing.spec.ts | Spec: Playwright tests covering API failure cases | Deps: playwright | Hygiene: Flaky tests risk
 - [x] [EPIC] UI Re-engineering for Terminal Layout
   - [x] TASK: fix-text-visibility-issues | Loc: src/components/TerminalMessage.tsx | Spec: Update text styling classes for better contrast | Deps: none | Hygiene: 0 err, >95% cov
