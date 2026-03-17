@@ -18,14 +18,18 @@ export async function fetchNHSEndpoint<T = unknown>(endpoint: string, options?: 
     throw new Error('Missing NHS API key');
   }
 
-  if (!nhsApiRateLimiter.consume(1)) {
+  const isRateLimited = !nhsApiRateLimiter.consume(1);
+  if (isRateLimited) {
     logger.warn('NHS API rate limit exceeded');
-    throw new Error('Rate limit exceeded');
   }
 
   const url = `https://api.nhs.uk/mental-health/${endpoint}`;
 
   try {
+    if (isRateLimited) {
+      throw new Error('Rate limit exceeded');
+    }
+
     const response = await fetch(url, {
       ...options,
       headers: {
