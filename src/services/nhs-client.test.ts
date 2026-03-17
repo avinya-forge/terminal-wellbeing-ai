@@ -18,8 +18,9 @@ jest.mock('@/utils/rate-limiter', () => {
   };
 });
 
-import { __mockConsume } from '@/utils/rate-limiter';
-const mockConsume = __mockConsume as unknown as jest.Mock;
+// Import the mocked module
+import * as rateLimiterModule from '@/utils/rate-limiter';
+const mockConsume = (rateLimiterModule as any).__mockConsume as jest.Mock;
 
 describe('fetchNHSEndpoint', () => {
   beforeEach(() => {
