@@ -13,7 +13,7 @@ describe('AIModelService Fallback Logic', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    global.fetch = jest.fn();
+    global.fetch = jest.fn().mockRejectedValue(new Error('Fetch failed'));
     service = new AIModelService();
   });
 
