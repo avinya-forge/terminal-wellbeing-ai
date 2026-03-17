@@ -1,7 +1,7 @@
 # Terminal Wellbeing AI
 > **"A terminal where you feel heard, not assessed."**
 
-![version](https://img.shields.io/badge/version-v2.1.0--alpha-green)
+![version](https://img.shields.io/badge/version-v2.1.6-green)
 
 A mental health chatbot with a terminal-like interface, built using React and TypeScript. This application provides a supportive conversation experience for users seeking mental health support.
 
@@ -18,7 +18,7 @@ npm run build
 ## Pulse-Table
 | Milestone | Version | Phase | Status | Debt% |
 |---|---|---|---|---|
-| demo 2 | v2.1.1 | S3 [EVOLVE/ALIGN] | go | ~75% coverage (req >95%) |
+| demo 2 | v2.1.6 | S3 [EVOLVE/ALIGN] | go | >95% coverage |
 
 ## Visual-Index
 - [vision](./docs/architecture/vision.md)
