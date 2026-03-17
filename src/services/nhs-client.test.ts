@@ -20,6 +20,7 @@ jest.mock('@/utils/rate-limiter', () => {
 
 // Import the mocked module
 import * as rateLimiterModule from '@/utils/rate-limiter';
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockConsume = (rateLimiterModule as any).__mockConsume as jest.Mock;
 
 describe('fetchNHSEndpoint', () => {
@@ -49,6 +50,7 @@ describe('fetchNHSEndpoint', () => {
 
   it('throws an error if VITE_NHS_API_KEY is missing', async () => {
     (getEnv as jest.Mock).mockReturnValue(undefined);
+
     await expect(fetchNHSEndpoint('test')).rejects.toThrow('Missing NHS API key');
   });
 
