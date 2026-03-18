@@ -168,7 +168,8 @@ const Terminal = () => {
       style={{
         borderColor: 'hsl(var(--primary))',
         margin: '1rem',
-        height: 'calc(100vh - 2rem)',
+        flex: 1,
+        minHeight: 0,
         boxSizing: 'border-box'
       }}
     >
