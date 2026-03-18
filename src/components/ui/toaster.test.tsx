@@ -10,7 +10,7 @@ jest.mock('@/hooks/use-toast', () => ({
 describe('App Toaster', () => {
   it('renders toasts', () => {
     jest.spyOn(useToastModule, 'useToast').mockReturnValue({
-      toasts: [{ id: '1', title: 'Test Toast', description: 'Desc' } as unknown as useToastModule.ToasterToast],
+      toasts: [{ id: '1', title: 'Test Toast', description: 'Desc' } as Parameters<typeof useToastModule.toast>[0] & { id: string }],
       toast: jest.fn(),
       dismiss: jest.fn(),
     });
