@@ -115,7 +115,7 @@ describe('JournalService', () => {
 
   test('should not delete note if id is not found', () => {
     journalService.clearNotes();
-    const note = journalService.addNote('Note 1');
+    journalService.addNote('Note 1');
     const result = journalService.deleteNote('invalid-id');
     expect(result).toBe(false);
     expect(journalService.getNotes()).toHaveLength(1);
