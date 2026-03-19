@@ -88,7 +88,7 @@ export class MemoryService {
 
       await this.loadMemories();
       this.initialized = true;
-      logger.info('MemoryService initialized with encryption.');
+      if(process.env.NODE_ENV !== 'test') logger.info('MemoryService initialized with encryption.');
     } catch (error) {
       logger.error('Failed to initialize MemoryService:', error);
       this.initialized = true; // Mark as initialized so we don't retry forever
