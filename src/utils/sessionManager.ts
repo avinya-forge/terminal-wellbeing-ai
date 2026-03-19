@@ -26,7 +26,15 @@ let saveTimeout: ReturnType<typeof setTimeout> | null = null;
 let currentProfile: UserProfile = loadProfile();
 // Initialize services privacy mode based on loaded profile
 journalService.setPrivacyMode(!!currentProfile.privacyMode);
-memoryService.setPrivacyMode(!!currentProfile.privacyMode);
+// Suppress unhandled promise rejection and async log bleed in tests
+const privacyPromise = memoryService.setPrivacyMode(!!currentProfile.privacyMode);
+if (privacyPromise && typeof privacyPromise.catch === 'function') {
+  privacyPromise.catch(e => {
+    if (process.env.NODE_ENV !== 'test') {
+      logger.error('Failed to set privacy mode on load', e);
+    }
+  });
+}
 
 let currentSession: SessionData | null = null;
 
