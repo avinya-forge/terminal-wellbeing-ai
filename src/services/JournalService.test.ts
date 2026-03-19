@@ -62,7 +62,7 @@ describe('JournalService', () => {
     expect(localStorage.getItem('wellbeing_journal')).toBeNull(); // Still not stored
   });
 
-  test('should not load or save entries when localStorage is missing', () => {
+  test('should not load or save entries when localStorage is missing', async () => {
     // Hide localStorage
     const originalLocalStorage = global.localStorage;
     Object.defineProperty(global, 'localStorage', {
@@ -72,8 +72,8 @@ describe('JournalService', () => {
 
     // Create a new instance so it checks getStorage()
     // It should load empty notes
-    const testService = require('./JournalService').JournalService;
-    const instance = new testService();
+    const { JournalService } = await import('./JournalService');
+    const instance = new JournalService();
 
     expect(instance.getNotes()).toHaveLength(0);
 
@@ -89,22 +89,22 @@ describe('JournalService', () => {
     });
   });
 
-  test('should handle JSON parse errors gracefully when loading', () => {
+  test('should handle JSON parse errors gracefully when loading', async () => {
     localStorage.setItem('wellbeing_journal', 'invalid-json');
 
-    const testService = require('./JournalService').JournalService;
-    const instance = new testService();
+    const { JournalService } = await import('./JournalService');
+    const instance = new JournalService();
 
     expect(instance.getNotes()).toHaveLength(0);
   });
 
-  test('should handle save error', () => {
+  test('should handle save error', async () => {
     // Mock setItem to throw error
     const originalSetItem = localStorage.setItem;
     localStorage.setItem = jest.fn(() => { throw new Error('Quota Exceeded'); });
 
-    const testService = require('./JournalService').JournalService;
-    const instance = new testService();
+    const { JournalService } = await import('./JournalService');
+    const instance = new JournalService();
 
     // This shouldn't throw an unhandled error
     instance.addNote('Test note');
