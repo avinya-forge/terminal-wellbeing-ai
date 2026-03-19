@@ -321,6 +321,9 @@
 - multi-model ai (distilgpt-2, gpt-2, gpt-neo)
 - sensitive topic detection and crisis resource redirection
 - core command system (`/help`, `/clear`, `/resources`)
+## v2.1.8
+- Fix text visibility in terminal input
+
 ## v2.1.7
 - Fix terminal layout issues
 - Increase UI test coverage (>95%)

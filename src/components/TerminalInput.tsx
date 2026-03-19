@@ -106,7 +106,6 @@ const TerminalInput = forwardRef<HTMLInputElement, TerminalInputProps>(
             onPaste={handlePaste}
             className="w-full bg-transparent border-none outline-none"
             style={{
-              color: 'hsl(var(--foreground))',
               caretColor: 'hsl(var(--primary))',
               fontFamily: 'inherit',
               fontSize: 'inherit',
