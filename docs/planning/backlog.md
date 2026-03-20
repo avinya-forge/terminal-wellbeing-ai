@@ -14,11 +14,11 @@ this backlog has been refined to follow the **breadth-then-depth** and **ai-read
 
 - [EPIC] Demo 2 Finalization [M3]
   - [ ] [TASK] Verify Demo 2 visual bugs are resolved
-  - [ ] [TASK] Ensure test coverage is >95%
+  - [x] [TASK] Ensure test coverage is >95%
 
 - [EPIC] System Audit & Tech Debt Remediation [M3]
-  - [ ] [TASK] Fix missing test coverage in src/hooks/useKeyboardShortcuts.ts (currently 60%)
-  - [ ] [TASK] Fix missing test coverage in src/services/BackendClient.ts and src/services/JournalService.ts
+  - [x] [TASK] Fix missing test coverage in src/hooks/useKeyboardShortcuts.ts
+  - [x] [TASK] Fix missing test coverage in src/services/BackendClient.ts and src/services/JournalService.ts
 
 - [BLOCKER] [EPIC] Analyze DB schema integration for persistent chat history [HIGH-RISK]
   - [BLOCKER] [TASK] Drill down into schema definition

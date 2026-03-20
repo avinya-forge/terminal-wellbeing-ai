@@ -327,3 +327,7 @@
 ## v2.1.7
 - Fix terminal layout issues
 - Increase UI test coverage (>95%)
+## v2.1.9
+- Fix missing test coverage in `src/hooks/useKeyboardShortcuts.ts`
+- Fix missing test coverage in `src/services/BackendClient.ts`
+- Fix missing test coverage in `src/services/JournalService.ts`

@@ -120,4 +120,43 @@ describe('JournalService', () => {
     expect(result).toBe(false);
     expect(journalService.getNotes()).toHaveLength(1);
   });
+
+  test('should not load entries when privacy mode is enabled', async () => {
+    jest.resetModules();
+
+    const { JournalService } = await import('./JournalService');
+    class TestJournalService extends JournalService {
+      constructor() {
+        super();
+        this.setPrivacyMode(true);
+        // Force a reload
+        this['entries'] = this['loadEntries']();
+      }
+    }
+
+    const instance = new TestJournalService();
+    expect(instance.getNotes()).toHaveLength(0);
+  });
+
+  test('should fallback to Date.now() for id if crypto is not available', async () => {
+    // Hide crypto
+    const originalCrypto = global.crypto;
+    Object.defineProperty(global, 'crypto', {
+      value: undefined,
+      configurable: true
+    });
+
+    const { JournalService } = await import('./JournalService');
+    const instance = new JournalService();
+
+    const note = instance.addNote('Test note');
+    expect(note.id).toBeDefined();
+    expect(typeof note.id).toBe('string');
+
+    // Restore crypto
+    Object.defineProperty(global, 'crypto', {
+      value: originalCrypto,
+      configurable: true
+    });
+  });
 });
