@@ -13,7 +13,7 @@ this backlog has been refined to follow the **breadth-then-depth** and **ai-read
   - [x] [TASK] Fix text visibility in terminal input
 
 - [EPIC] Demo 2 Finalization [M3]
-  - [ ] [TASK] Verify Demo 2 visual bugs are resolved
+  - [x] [TASK] Verify Demo 2 visual bugs are resolved
   - [x] [TASK] Ensure test coverage is >95%
 
 - [EPIC] System Audit & Tech Debt Remediation [M3]

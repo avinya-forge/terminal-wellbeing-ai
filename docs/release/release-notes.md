@@ -331,3 +331,6 @@
 - Fix missing test coverage in `src/hooks/useKeyboardShortcuts.ts`
 - Fix missing test coverage in `src/services/BackendClient.ts`
 - Fix missing test coverage in `src/services/JournalService.ts`
+
+## v2.1.12
+- Verify Demo 2 visual bugs are resolved
