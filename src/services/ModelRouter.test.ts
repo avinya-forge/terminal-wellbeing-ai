@@ -70,5 +70,12 @@ describe('ModelRouter', () => {
             const result = selectModel("I'm so depressed. Can you explain my medication treatment options?");
             expect(result.modelId).toBe(MODEL_REGISTRY.ZEPHYR.id);
         });
+
+        it('forces Zephyr when safetyTier is HIGH_SENSITIVITY', () => {
+            // Even if the message is neutral, it should use Zephyr
+            const result = selectModel('Tell me about mindfulness techniques for general wellbeing.', 'HIGH_SENSITIVITY');
+            expect(result.modelId).toBe(MODEL_REGISTRY.ZEPHYR.id);
+            expect(result.reason).toContain('HIGH_SENSITIVITY');
+        });
     });
 });

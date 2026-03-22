@@ -20,6 +20,10 @@ this backlog has been refined to follow the **breadth-then-depth** and **ai-read
   - [x] [TASK] Fix missing test coverage in src/hooks/useKeyboardShortcuts.ts
   - [x] [TASK] Fix missing test coverage in src/services/BackendClient.ts and src/services/JournalService.ts
 
+- [EPIC] Improve MemoryService Test Coverage
+  - [x] [TASK] Increase coverage for MemoryService
+- [EPIC] Adaptive Model Routing Overrides
+  - [x] [TASK] Handle safety tier overrides in ModelRouter
 - [BLOCKER] [EPIC] Analyze DB schema integration for persistent chat history [HIGH-RISK]
   - [BLOCKER] [TASK] Drill down into schema definition
   - [BLOCKER] [TASK] Implement db migration script

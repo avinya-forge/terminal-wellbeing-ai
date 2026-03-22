@@ -118,4 +118,58 @@ describe('MemoryService', () => {
     expect(entry2).not.toBeNull();
     expect(service.getMemoryCount()).toBe(1);
   });
+
+  it('should ignore empty content', async () => {
+    const entry1 = await service.addMemory('', 'user');
+    expect(entry1).toBeNull();
+
+    const entry2 = await service.addMemory('   ', 'user');
+    expect(entry2).toBeNull();
+  });
+
+  it('should return empty context for empty query', async () => {
+    const results = await service.retrieveRelevantContext('');
+    expect(results).toEqual([]);
+  });
+
+  it('should return empty context if memories are empty', async () => {
+    await service.clearMemories();
+    const results = await service.retrieveRelevantContext('test');
+    expect(results).toEqual([]);
+  });
+
+  it('should return empty context if query embedding is empty', async () => {
+    await service.addMemory('test', 'user');
+    mockCalculateEmbedding.mockResolvedValueOnce([]);
+    const results = await service.retrieveRelevantContext('query');
+    expect(results).toEqual([]);
+  });
+
+  it('should handle memories with no embedding', async () => {
+    mockCalculateEmbedding.mockResolvedValueOnce([]); // Memory has empty embedding
+    await service.addMemory('no embedding', 'user');
+
+    mockCalculateEmbedding.mockResolvedValueOnce([1, 0, 0]); // Query embedding
+    const results = await service.retrieveRelevantContext('query');
+    expect(results).toEqual([]);
+  });
+
+  it('should not re-initialize if already initialized', async () => {
+    await service.initialize();
+    // Setting a fake initialization promise to verify it does not call _init again
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (service as any).initializationPromise = Promise.resolve();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const initSpy = jest.spyOn(service as any, '_init');
+    await service.initialize();
+    expect(initSpy).not.toHaveBeenCalled();
+    initSpy.mockRestore();
+  });
+
+  it('should catch encryption error when adding memory', async () => {
+    mockCalculateEmbedding.mockRejectedValueOnce(new Error('Calculate embedding failed'));
+    const entry = await service.addMemory('test error', 'user');
+    expect(entry).toBeNull();
+  });
+
 });
