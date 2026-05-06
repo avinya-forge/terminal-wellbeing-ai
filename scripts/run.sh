@@ -42,8 +42,8 @@ case "${1:-}" in
             echo "Latest skills extracted:"
             echo "$skills_output"
             # Idempotent injection of skills
-            if ! grep -q "## Skills Patterns" docs/engineering/conventions.md; then
-                echo -e "\n## Skills Patterns\n$skills_output" >> docs/engineering/conventions.md
+            if ! grep -q "## Skills Patterns" docs/conventions.md; then
+                echo -e "\n## Skills Patterns\n$skills_output" >> docs/conventions.md
             fi
         else
              echo "Failed to fetch skills."
@@ -52,8 +52,8 @@ case "${1:-}" in
 
     --sync)
         echo "SYNC: Idempotent file-tree alignment..."
-        mkdir -p docs/planning docs/architecture docs/engineering
-        for file in docs/planning/roadmap.md docs/architecture/system-design.md docs/engineering/conventions.md; do
+        mkdir -p docs
+        for file in docs/roadmap.md docs/system-design.md docs/conventions.md; do
             if [ ! -f "$file" ] || [ ! -s "$file" ] || [ "$(wc -l < "$file")" -le 1 ]; then
                 title=$(basename "$file" .md)
                 echo -e "# ${title}\n\n## Overview\n\n## Details\n" > "$file"
