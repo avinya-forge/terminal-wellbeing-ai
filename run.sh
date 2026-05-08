@@ -4,7 +4,7 @@
 
 if [ "$1" == "--backlog" ]; then
     echo "Running backlog expansion and formatting..."
-    grep -E "\[EPIC\]|\[DEBT\]" docs/planning/backlog.md
+    grep -E "\[EPIC\]|\[DEBT\]" docs/backlog.md
 elif [ "$1" == "--test" ]; then
     echo "Running tests and coverage..."
     npm run lint && npm run test:coverage

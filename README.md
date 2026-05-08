@@ -1,7 +1,7 @@
 # Terminal Wellbeing AI
 > **"A terminal where you feel heard, not assessed."**
 
-![version](https://img.shields.io/badge/version-v2.1.6-green)
+![version](https://img.shields.io/badge/version-v2.1.12-green)
 
 A mental health chatbot with a terminal-like interface, built using React and TypeScript. This application provides a supportive conversation experience for users seeking mental health support.
 
@@ -21,23 +21,24 @@ npm run build
 | demo 2 | v2.1.6 | S3 [EVOLVE/ALIGN] | go | >95% coverage |
 
 ## Visual-Index
-- [vision](./docs/architecture/vision.md)
-- [arch](./docs/architecture/arch.md)
-- [decisions](./docs/architecture/decisions.md)
-- [system-design](./docs/architecture/system-design.md)
-- [backlog](./docs/planning/backlog.md)
-- [map](./docs/planning/map.md)
-- [roadmap](./docs/planning/roadmap.md)
-- [doubts](./docs/planning/doubts.md)
-- [test-cases](./docs/testing/test-cases.md)
-- [coverage](./docs/testing/coverage.md)
-- [conventions](./docs/engineering/conventions.md)
-- [overview](./docs/engineering/overview.md)
-- [release-notes](./docs/release/release-notes.md)
-- [metrics](./docs/release/metrics.md)
-- [habits](./docs/rules/habits.md)
-- [hygiene](./docs/rules/hygiene.md)
-- [standards](./docs/rules/standards.md)
+- [vision](./docs/vision.md)
+- [arch](./docs/arch.md)
+- [decisions](./docs/decisions.md)
+- [system-design](./docs/system-design.md)
+- [backlog](./docs/backlog.md)
+- [map](./docs/map.md)
+- [roadmap](./docs/roadmap.md)
+- [doubts](./docs/doubts.md)
+- [test-cases](./docs/test-cases.md)
+- [coverage](./docs/coverage.md)
+- [conventions](./docs/conventions.md)
+- [overview](./docs/overview.md)
+- [release-notes](./docs/release-notes.md)
+- [metrics](./docs/metrics.md)
+- [habits](./docs/habits.md)
+- [hygiene](./docs/hygiene.md)
+- [standards](./docs/standards.md)
+- [agent-standards](./docs/agent-standards.md)
 
 ## Tech Stack
 - **React** (v18.3.1): Modern UI library
