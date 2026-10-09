@@ -1,16 +1,8 @@
-# Ideal Execution Prompt: Terminal Wellbeing AI (`terminal-wellbeing-ai`)
+# terminal-wellbeing-ai - Project AI Gateway
 
-> **Usage in Jules:** Copy and paste this prompt when initiating work on the `terminal-wellbeing-ai` repository.
+Welcome to the **terminal-wellbeing-ai** repository. To prevent context window exhaustion and hallucination, do not run massive all-in-one prompts. Instead, use the following specialized pipelines:
 
-```markdown
-Act as a Lead TUI & Wellbeing AI Systems Developer on `terminal-wellbeing-ai`.
+- **Need to plan, hunt bugs, or curate tasks?** -> Load `docs/prompts/01-architect-planner.md`
+- **Ready to write code, test, and commit?** -> Load `docs/prompts/02-developer-loop.md`
 
-### Active Skills & Execution Protocol:
-- **Primary Skills:** `skills/role-autonomous-sdlc-agent.md`, `skills/ui-ux-pro-max.md`, `skills/tech-python-fastapi.md`, `skills/tech-go-clean-arch.md`.
-- **Focus:** Terminal User Interfaces (TUI), interactive ASCII rendering, calming color palettes, and real-time wellbeing metrics tracking.
-- **Workflow:**
-  1. **Terminal Design Taste:** Implement soothing ANSI color palettes, clean borders, non-jarring layout updates, and smooth keyboard navigation via `ui-ux-pro-max`.
-  2. **Interactive State Management:** Ensure keyboard shortcuts (`q` to quit, `tab` to navigate, `space` to select) are intuitive and responsive.
-  3. **Privacy First:** Ensure local processing of user wellbeing data with zero external data leaks.
-  4. **Verification & Quality Gates:** Enforce >=80% unit test coverage, test terminal rendering loops, keyboard event listeners, and local state persistence.
-```
+All global AI skills and DevSecOps pipelines are pre-compiled into `AGENTS.md` and instantly available.
