@@ -1,5 +1,32 @@
 # release notes
 
+## v2.1.12
+- [EPIC] Demo 2 Finalization [M3]
+  - Verify Demo 2 visual bugs are resolved
+  - Ensure test coverage is >95%
+- [EPIC] Improve MemoryService Test Coverage
+  - Increase coverage for MemoryService
+- [EPIC] Adaptive Model Routing Overrides
+  - Handle safety tier overrides in ModelRouter
+- [EPIC] Documentation SSOT pass [M3]
+  - Empty / debris docs from prior nested layout: Populate vision.md, arch.md, decisions.md, conventions.md, overview.md, coverage.md, test-cases.md, roadmap.md, map.md, habits.md, hygiene.md, metrics.md, agent-standards.md.
+  - Flatten `docs/` into a single directory.
+  - Update README's Visual-Index to flat doc paths.
+
+## v2.1.9
+- [EPIC] System Audit & Tech Debt Remediation [M3]
+  - Fix missing test coverage in `src/hooks/useKeyboardShortcuts.ts`
+  - Fix missing test coverage in `src/services/BackendClient.ts` and `src/services/JournalService.ts`
+
+## v2.1.8
+- [EPIC] UI Re-engineering & Test Coverage Unblocker [M3]
+  - Fix text visibility in terminal input
+
+## v2.1.7
+- [EPIC] UI Re-engineering & Test Coverage Unblocker [M3]
+  - Fix terminal layout issues in src/components/Terminal.tsx
+  - Increase UI test coverage (>95%) by adding tests for input, label, separator, skeleton, sonner, toaster
+
 ## v2.1.6
 
 ### ✅ completed tasks
@@ -321,16 +348,3 @@
 - multi-model ai (distilgpt-2, gpt-2, gpt-neo)
 - sensitive topic detection and crisis resource redirection
 - core command system (`/help`, `/clear`, `/resources`)
-## v2.1.8
-- Fix text visibility in terminal input
-
-## v2.1.7
-- Fix terminal layout issues
-- Increase UI test coverage (>95%)
-## v2.1.9
-- Fix missing test coverage in `src/hooks/useKeyboardShortcuts.ts`
-- Fix missing test coverage in `src/services/BackendClient.ts`
-- Fix missing test coverage in `src/services/JournalService.ts`
-
-## v2.1.12
-- Verify Demo 2 visual bugs are resolved
