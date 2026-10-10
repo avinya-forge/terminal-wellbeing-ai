@@ -72,9 +72,9 @@ export class SafetyTriageService {
 
     private constructor() {
         const t = guidelines.safety_tiers;
-        this.tier1Keywords = t.tier1_immediate_emergency.keywords;
-        this.tier2Keywords = t.tier2_unsafe_territory.keywords;
-        this.tier3Keywords = t.tier3_high_sensitivity.keywords;
+        this.tier1Keywords = t.tier1_immediate_emergency.keywords.map(kw => kw.toLowerCase());
+        this.tier2Keywords = t.tier2_unsafe_territory.keywords.map(kw => kw.toLowerCase());
+        this.tier3Keywords = t.tier3_high_sensitivity.keywords.map(kw => kw.toLowerCase());
         this.tier2SafeHandoff = t.tier2_unsafe_territory.safe_handoff_message;
     }
 

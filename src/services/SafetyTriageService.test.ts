@@ -11,7 +11,7 @@ jest.mock('../data/clinical_guidelines.json', () => ({
     _meta: { version: '2.1.0-alpha' },
     safety_tiers: {
         tier1_immediate_emergency: {
-            keywords: ['i want to kill myself', 'ending my life tonight', 'overdose', 'taken too many pills'],
+            keywords: ['I want to kill myself', 'ending my life tonight', 'overdose', 'taken too many pills'],
             response_template: 'IMMEDIATE_EMERGENCY_CONTACT',
         },
         tier2_unsafe_territory: {
@@ -68,6 +68,13 @@ describe('SafetyTriageService', () => {
         it('is case-insensitive', () => {
             const result = service.triage("I WANT TO KILL MYSELF", emptyHistory);
             expect(result.tier).toBe('IMMEDIATE_EMERGENCY');
+        });
+
+        it('is case-insensitive matching mixed-case inputs with uppercase keyword in configuration', () => {
+            const result = service.triage("I want to kill myself", emptyHistory);
+            expect(result.tier).toBe('IMMEDIATE_EMERGENCY');
+            const result2 = service.triage("i want to kill myself", emptyHistory);
+            expect(result2.tier).toBe('IMMEDIATE_EMERGENCY');
         });
 
         it('archives the conversation on tier-1 match', () => {

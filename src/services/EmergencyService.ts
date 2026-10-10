@@ -27,7 +27,7 @@ export class EmergencyService {
     public checkCriticalSymptoms(input: string): EmergencyStatus {
         const normalizedInput = input.toLowerCase();
         // Use Tier 1 keywords from the updated schema
-        const keywords = clinicalGuidelines.safety_tiers.tier1_immediate_emergency.keywords;
+        const keywords = clinicalGuidelines.safety_tiers.tier1_immediate_emergency.keywords.map(kw => kw.toLowerCase());
 
         const matchedKeyword = keywords.find(keyword => normalizedInput.includes(keyword));
 
