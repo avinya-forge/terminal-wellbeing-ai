@@ -5,6 +5,17 @@ This backlog follows the **breadth-then-depth** and **ai-ready context** standar
 
 - **MILESTONE [M3]** | **PHASE [S3-EVOLVE-ALIGN]** | **GATEKEEPER** [0-Hygiene-Error | 95% Test | Build-Pass]
 
+## 🌌 6–8 Month Strategic Roadmap & Horizon Plan
+
+| Horizon | Core Strategic Milestone | Lead Focus | Key Deliverables |
+|:---:|:---|:---|:---|
+| **Month 1–2** | **Safety Triage Normalization & Clean Persistence** | Clinical Guidelines & Privacy | Case-insensitive emergency keyword matching, automated keyword linting, memory restoration fixes |
+| **Month 3–4** | **Adaptive Model Routing & Circuit Breakers** | Model Reliability & Failover | Zephyr 7B routing fallbacks, exponential backoff for AI initialization, UI circuit breaker notifications |
+| **Month 5–6** | **NHS Client Robustness & Offline Conversation Archive** | Healthcare Integration | Structured logging without PII leakage, offline conversation review portal, local encryption migrations |
+| **Month 7–8** | **PWA Mobile Terminal & Voice-to-Text Input** | Retro UX & Mobile Access | Mobile touch-friendly retro terminal layout, local Whisper offline transcription, zero-cloud data destruction |
+
+---
+
 ## priority legend
 - **[P0][BUG]** — safety / correctness / data-loss; ship-stoppers.
 - **[P1][BUG]** — functional regressions, broken docs, dev-experience pain.
