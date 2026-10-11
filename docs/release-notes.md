@@ -1,31 +1,31 @@
 # release notes
 
 ## v2.1.12
-- [EPIC] Demo 2 Finalization [M3]
-  - Verify Demo 2 visual bugs are resolved
-  - Ensure test coverage is >95%
-- [EPIC] Improve MemoryService Test Coverage
-  - Increase coverage for MemoryService
-- [EPIC] Adaptive Model Routing Overrides
-  - Handle safety tier overrides in ModelRouter
-- [EPIC] Documentation SSOT pass [M3]
-  - Empty / debris docs from prior nested layout: Populate vision.md, arch.md, decisions.md, conventions.md, overview.md, coverage.md, test-cases.md, roadmap.md, map.md, habits.md, hygiene.md, metrics.md, agent-standards.md.
-  - Flatten `docs/` into a single directory.
-  - Update README's Visual-Index to flat doc paths.
+- [x] [EPIC] Demo 2 Finalization [M3]
+  - [x] Verify Demo 2 visual bugs are resolved
+  - [x] Ensure test coverage is >95%
+- [x] [EPIC] Improve MemoryService Test Coverage
+  - [x] Increase coverage for MemoryService
+- [x] [EPIC] Adaptive Model Routing Overrides
+  - [x] Handle safety tier overrides in ModelRouter
+- [x] [EPIC] Documentation SSOT pass [M3]
+  - [x] Empty / debris docs from prior nested layout: Populate vision.md, arch.md, decisions.md, conventions.md, overview.md, coverage.md, test-cases.md, roadmap.md, map.md, habits.md, hygiene.md, metrics.md, agent-standards.md.
+  - [x] Flatten `docs/` into a single directory.
+  - [x] Update README's Visual-Index to flat doc paths.
 
 ## v2.1.9
-- [EPIC] System Audit & Tech Debt Remediation [M3]
-  - Fix missing test coverage in `src/hooks/useKeyboardShortcuts.ts`
-  - Fix missing test coverage in `src/services/BackendClient.ts` and `src/services/JournalService.ts`
+- [x] [EPIC] System Audit & Tech Debt Remediation [M3]
+  - [x] Fix missing test coverage in `src/hooks/useKeyboardShortcuts.ts`
+  - [x] Fix missing test coverage in `src/services/BackendClient.ts` and `src/services/JournalService.ts`
 
 ## v2.1.8
-- [EPIC] UI Re-engineering & Test Coverage Unblocker [M3]
-  - Fix text visibility in terminal input
+- [x] [EPIC] UI Re-engineering & Test Coverage Unblocker [M3]
+  - [x] Fix text visibility in terminal input
 
 ## v2.1.7
-- [EPIC] UI Re-engineering & Test Coverage Unblocker [M3]
-  - Fix terminal layout issues in src/components/Terminal.tsx
-  - Increase UI test coverage (>95%) by adding tests for input, label, separator, skeleton, sonner, toaster
+- [x] [EPIC] UI Re-engineering & Test Coverage Unblocker [M3]
+  - [x] Fix terminal layout issues in src/components/Terminal.tsx
+  - [x] Increase UI test coverage (>95%) by adding tests for input, label, separator, skeleton, sonner, toaster
 
 ## v2.1.6
 
