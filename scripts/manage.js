@@ -22,6 +22,7 @@ const __dirname = path.dirname(__filename);
 // Get command line arguments
 const args = process.argv.slice(2);
 const command = args[0];
+const isDryRun = args.includes('--dry-run');
 
 /**
  * Helper functions
@@ -42,8 +43,12 @@ function removeFiles(pattern) {
   const files = findFiles(pattern);
   files.forEach(file => {
     try {
-      fs.unlinkSync(file);
-      console.log(`Removed: ${file}`);
+      if (isDryRun) {
+        console.log(`[DRY-RUN] Would remove: ${file}`);
+      } else {
+        fs.unlinkSync(file);
+        console.log(`Removed: ${file}`);
+      }
     } catch (error) {
       console.error(`Error removing ${file}: ${error.message}`);
     }
@@ -74,8 +79,12 @@ function renameFiles(fromPattern, transform) {
   files.forEach(file => {
     const newName = transform(file);
     try {
-      fs.renameSync(file, newName);
-      console.log(`Renamed: ${file} → ${newName}`);
+      if (isDryRun) {
+        console.log(`[DRY-RUN] Would rename: ${file} → ${newName}`);
+      } else {
+        fs.renameSync(file, newName);
+        console.log(`Renamed: ${file} → ${newName}`);
+      }
     } catch (error) {
       console.error(`Error renaming ${file}: ${error.message}`);
     }
@@ -88,13 +97,28 @@ function renameFiles(fromPattern, transform) {
 function cleanup() {
   console.log('Cleaning up project files...');
   
+  if (isDryRun) {
+    console.log('Running in DRY-RUN mode. No files will be modified.');
+  }
+
   // Remove all .bak files
   removeFiles(/\.bak$/);
   
-  // Remove all script files except this one
-  findFiles(/\.(ps1|sh)$/).forEach(file => {
-    fs.unlinkSync(file);
-    console.log(`Removed script: ${file}`);
+  // Explicitly remove only known legacy scripts
+  const legacyScripts = [
+    path.join(__dirname, 'cleanup.sh'),
+    path.join(__dirname, 'setup-ai-settings.sh')
+  ];
+
+  legacyScripts.forEach(scriptPath => {
+    if (fs.existsSync(scriptPath)) {
+      if (isDryRun) {
+        console.log(`[DRY-RUN] Would remove script: ${scriptPath}`);
+      } else {
+        fs.unlinkSync(scriptPath);
+        console.log(`Removed script: ${scriptPath}`);
+      }
+    }
   });
   
   // Rename all .new files to remove the extension
@@ -104,23 +128,30 @@ function cleanup() {
   const unnecessaryConfigs = [
     'postcss.config.js',
     'tailwind.config.js',
-    '.eslintrc.cjs',
-    'tsconfig.node.json'
+    '.eslintrc.cjs'
   ];
   
   unnecessaryConfigs.forEach(configFile => {
     const filePath = path.join(process.cwd(), configFile);
     if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-      console.log(`Removed unnecessary config: ${configFile}`);
+      if (isDryRun) {
+        console.log(`[DRY-RUN] Would remove unnecessary config: ${configFile}`);
+      } else {
+        fs.unlinkSync(filePath);
+        console.log(`Removed unnecessary config: ${configFile}`);
+      }
     }
   });
   
   // Remove the old cleanup script
   const oldCleanupScript = path.join(__dirname, 'cleanup.js');
   if (fs.existsSync(oldCleanupScript)) {
-    fs.unlinkSync(oldCleanupScript);
-    console.log('Removed old cleanup.js script');
+    if (isDryRun) {
+      console.log(`[DRY-RUN] Would remove old cleanup.js script`);
+    } else {
+      fs.unlinkSync(oldCleanupScript);
+      console.log('Removed old cleanup.js script');
+    }
   }
   
   console.log('Cleanup completed!');
@@ -153,7 +184,7 @@ Terminal Wellbeing AI Project Management Script
 Usage: node scripts/manage.js [command]
 
 Commands:
-  cleanup    - Clean up project files (remove .bak files, rename .new files)
+  cleanup [--dry-run] - Clean up project files (remove .bak files, rename .new files)
   dev        - Start development server
   build      - Build for production
   test       - Run tests
