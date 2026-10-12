@@ -42,11 +42,13 @@ This backlog follows the **breadth-then-depth** and **ai-ready context** standar
 
 ---
 
-## [EPIC] P1 — Environment & Documentation Hotfixes
+## [EPIC] P1 — Documentation Upgrades & Drift Fixes
 
 - [ ] [P1][BUG] **`run.sh` references old nested doc path** — `--backlog` greps `docs/planning/backlog.md`, but backlog now lives at `docs/backlog.md`.
   - [ ] [TASK] Locate references to `docs/planning/backlog.md` in `run.sh` and replace them with `docs/backlog.md`.
   - [ ] [TASK] Remove the obsolete `scripts/run.sh` file and point all `npm` scripts to the root `run.sh` file.
+
+## [EPIC] P1 — Environment Variables & Secrets Validation
 
 - [ ] [P1][BUG] **`.env.example` missing `VITE_NHS_API_KEY`** — `nhs-client.ts:15` requires the key but it is not documented.
   - [ ] [TASK] Append `VITE_NHS_API_KEY=` to `.env.example`.
@@ -148,16 +150,16 @@ This backlog follows the **breadth-then-depth** and **ai-ready context** standar
 
 ---
 
-## [EPIC] Blocked on external input (see `doubts.md`)
+## [EPIC] P3 — Local Encryption & Secure Multi-Tenant Persistence [HIGH-RISK]
 
-- [BLOCKER] [TASK] Analyze DB schema integration for persistent chat history [HIGH-RISK]
-  - [BLOCKER] [TASK] Define the exact SQL schema for chat history in a new document `docs/db-schema.md`.
-  - [BLOCKER] [TASK] Write a raw SQL or ORM migration script for creating the tables.
-  - [BLOCKER] [DEBT] Research and document DB scaling and latency concerns for storing large amounts of text.
-  - [BLOCKER] [TASK] Review and document Row-Level Security (RLS) rules required for tenant isolation.
+- [BLOCKER] [TASK] Analyze IndexedDB schema integration for persistent local chat history [HIGH-RISK]
+  - [BLOCKER] [TASK] Define the exact IndexedDB schema for chat history in a new document `docs/db-schema.md`.
+  - [BLOCKER] [TASK] Write an IndexedDB migration script (using Dexie.js or idb) for creating the object stores.
+  - [BLOCKER] [DEBT] Research and document IndexedDB quota limits and latency concerns for storing large amounts of text locally.
+  - [BLOCKER] [TASK] Review and document local AES-GCM encryption requirements to ensure multi-profile isolation on shared devices.
 
-- [BLOCKER] [TASK] Implement OAuth for user session storage [HIGH-RISK]
-  - [BLOCKER] [TASK] Create NextAuth.js or Auth.js configuration file with GitHub and Google providers.
-  - [BLOCKER] [TASK] Create API routes for secure token endpoints.
-  - [BLOCKER] [DEBT] Implement robust token refresh and expiry handling logic.
-  - [BLOCKER] [TASK] Perform a security audit of the login flow and redirect mechanisms.
+- [BLOCKER] [TASK] Implement WebAuthn (Passkeys) for secure local session unlocking [HIGH-RISK]
+  - [BLOCKER] [TASK] Create WebAuthn configuration utilizing the Web Authentication API for local biometrics/PINs.
+  - [BLOCKER] [TASK] Create local credential management routines for secure credential generation.
+  - [BLOCKER] [DEBT] Implement robust local session timeout and automatic locking logic.
+  - [BLOCKER] [TASK] Perform a security audit of the WebAuthn flow and local fallback mechanisms.
