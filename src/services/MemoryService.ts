@@ -135,6 +135,8 @@ export class MemoryService {
       }
       logger.info('Privacy mode enabled for MemoryService. Memories cleared.');
     } else {
+      this.initialized = false;
+      this.initializationPromise = null;
       await this.initialize();
     }
   }

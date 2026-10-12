@@ -40,6 +40,16 @@ describe('EmergencyService', () => {
         expect(result.isCritical).toBe(true);
     });
 
+    it('should correctly detect critical symptoms matching mixed-case inputs with uppercase keyword in configuration', () => {
+        const input1 = "Hard TO brEathe";
+        const result1 = emergencyService.checkCriticalSymptoms(input1);
+        expect(result1.isCritical).toBe(true);
+
+        const input2 = "ChEst PaIn";
+        const result2 = emergencyService.checkCriticalSymptoms(input2);
+        expect(result2.isCritical).toBe(true);
+    });
+
     it('should return isCritical: false for normal inputs', () => {
         const input = "I just want to talk about my day";
         const result = emergencyService.checkCriticalSymptoms(input);

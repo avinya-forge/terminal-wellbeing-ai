@@ -25,4 +25,4 @@ the dependent tasks.
 - [QUESTION] What is the SLA for review of archived tier-1 / tier-2
   conversations? No `markReviewed` UI exists yet.
 - [QUESTION] Confirm intended panic shortcut: release notes mention
-  `Ctrl+P` but `useKeyboardShortcuts` binds `Ctrl+Shift+P`.
+  `Ctrl+Shift+P` and `useKeyboardShortcuts` binds `Ctrl+Shift+P`. (Confirmed)

@@ -35,6 +35,29 @@ describe('MemoryService', () => {
     }
   });
 
+  it('should reload memories when privacy mode is toggled off', async () => {
+    // Start with a memory
+    await service.addMemory('test content', 'user');
+    expect(service.getMemoryCount()).toBe(1);
+
+    // Toggle privacy mode on -> memories cleared from memory and from localStorage
+    const initializeSpy = jest.spyOn(service, 'initialize');
+
+    await service.setPrivacyMode(true);
+    expect(service.getMemoryCount()).toBe(0);
+
+    // Put something directly into localStorage to simulate pre-existing data or mock
+    const fakeMemories = JSON.stringify([{ id: '1', content: 'persisted', timestamp: new Date().toISOString(), embedding: [], type: 'user', tags: [] }]);
+    window.localStorage.setItem('wellbeing_long_term_memory', fakeMemories);
+
+    await service.setPrivacyMode(false);
+    expect(initializeSpy).toHaveBeenCalled();
+
+    // In our test, encryption might cause it to try and decrypt, but if it fails it falls back to plaintext if valid JSON
+    expect(service.getMemoryCount()).toBeGreaterThan(0);
+    expect(service.getMemories()[0].content).toBe('persisted');
+  });
+
   it('should retrieve relevant context', async () => {
     // Add Memory 1
     mockCalculateEmbedding.mockResolvedValueOnce([1, 0, 0]);
