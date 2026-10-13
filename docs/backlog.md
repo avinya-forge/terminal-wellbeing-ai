@@ -147,17 +147,3 @@ This backlog follows the **breadth-then-depth** and **ai-ready context** standar
 - [ ] [TASK] Add a unit test verifying that every theme in the `THEMES` constant has exactly the same set of CSS variable keys as the default theme.
 
 ---
-
-## [EPIC] Blocked on external input (see `doubts.md`)
-
-- [BLOCKER] [TASK] Analyze DB schema integration for persistent chat history [HIGH-RISK]
-  - [BLOCKER] [TASK] Define the exact SQL schema for chat history in a new document `docs/db-schema.md`.
-  - [BLOCKER] [TASK] Write a raw SQL or ORM migration script for creating the tables.
-  - [BLOCKER] [DEBT] Research and document DB scaling and latency concerns for storing large amounts of text.
-  - [BLOCKER] [TASK] Review and document Row-Level Security (RLS) rules required for tenant isolation.
-
-- [BLOCKER] [TASK] Implement OAuth for user session storage [HIGH-RISK]
-  - [BLOCKER] [TASK] Create NextAuth.js or Auth.js configuration file with GitHub and Google providers.
-  - [BLOCKER] [TASK] Create API routes for secure token endpoints.
-  - [BLOCKER] [DEBT] Implement robust token refresh and expiry handling logic.
-  - [BLOCKER] [TASK] Perform a security audit of the login flow and redirect mechanisms.

@@ -151,13 +151,9 @@
 ### ❌ known issues
 - **coverage deficit:** total coverage sits at ~75%, missing the 95% mandate. this is tracked extensively in the backlog for the next milestone.
 
----
-
-## v2.1.0-alpha — Epic Implementations
-
 > **internal milestone.** Added NHS routing fallbacks, rate limiting, terminal re-engineering, documentation, and achieved 95% test coverage.
 
-### ✅ What's Working
+### ✅ what's also working
 - **NHS API Fallback**: Implemented an in-memory `FallbackCache` to gracefully serve previous responses if the NHS API fails.
 - **API Rate Limiting**: Added `TokenBucket` rate limiter to the NHS API client to prevent excessive requests (limit 10 per minute).
 - **Terminal UI Re-engineering**:
