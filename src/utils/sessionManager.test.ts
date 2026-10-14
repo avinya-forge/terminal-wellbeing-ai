@@ -16,11 +16,17 @@ import {
 import { journalService } from '../services/JournalService';
 import { analyzeText } from './analysis';
 import { MOODS } from '../constants/moods';
+import { safetyTriageService } from '../services/SafetyTriageService';
 
 jest.mock('../services/JournalService');
 jest.mock('../services/MemoryService');
 jest.mock('./analysis');
 jest.mock('../services/LoggerService');
+jest.mock('../services/SafetyTriageService', () => ({
+  safetyTriageService: {
+    getArchivedConversations: jest.fn()
+  }
+}));
 
 describe('sessionManager', () => {
   beforeEach(() => {
@@ -162,8 +168,9 @@ describe('sessionManager', () => {
   });
 
   describe('exports', () => {
-    it('should exportSessionData correctly', () => {
+    it('should exportSessionData correctly and include archives when privacy is off', () => {
       (journalService.getNotes as jest.Mock).mockReturnValue([{ id: '1', content: 'note', timestamp: '2023' }]);
+      (safetyTriageService.getArchivedConversations as jest.Mock).mockReturnValue([{ id: 'arch1', tier: 'UNSAFE' }]);
       startSession();
       const exported = exportSessionData();
       const parsed = JSON.parse(exported);
@@ -171,6 +178,16 @@ describe('sessionManager', () => {
       expect(parsed).toHaveProperty('profile');
       expect(parsed).toHaveProperty('currentSession');
       expect(parsed).toHaveProperty('journal');
+      expect(parsed).toHaveProperty('archivedConversations');
+    });
+
+    it('should exportSessionData without archives when privacy is on', async () => {
+      (safetyTriageService.getArchivedConversations as jest.Mock).mockReturnValue([{ id: 'arch1', tier: 'UNSAFE' }]);
+      await setPrivacyMode(true);
+      startSession();
+      const exported = exportSessionData();
+      const parsed = JSON.parse(exported);
+      expect(parsed).not.toHaveProperty('archivedConversations');
     });
 
     it('should exportProfileData correctly', () => {
@@ -182,6 +199,9 @@ describe('sessionManager', () => {
 
     it('should exportSessionMarkdown correctly', () => {
       (journalService.getNotes as jest.Mock).mockReturnValue([{ id: '1', content: 'my note', timestamp: '2023' }]);
+      (safetyTriageService.getArchivedConversations as jest.Mock).mockReturnValue([
+        { id: 'arch1', tier: 'UNSAFE', timestamp: '2023', matchedSignal: 'test', messages: [{ role: 'user', content: 'msg1' }] }
+      ]);
       startSession();
       const md = exportSessionMarkdown();
       expect(md).toContain('# Wellbeing Session Export');
@@ -189,6 +209,18 @@ describe('sessionManager', () => {
       expect(md).toContain('## Current Session');
       expect(md).toContain('## Journal Notes');
       expect(md).toContain('my note');
+      expect(md).toContain('## Archived Conversations');
+      expect(md).toContain('msg1');
+    });
+
+    it('should exportSessionMarkdown without archives when privacy is on', async () => {
+      (safetyTriageService.getArchivedConversations as jest.Mock).mockReturnValue([
+        { id: 'arch1', tier: 'UNSAFE', timestamp: '2023', matchedSignal: 'test', messages: [] }
+      ]);
+      await setPrivacyMode(true);
+      startSession();
+      const md = exportSessionMarkdown();
+      expect(md).not.toContain('## Archived Conversations');
     });
 
     it('should exportSessionMarkdown correctly without active session', () => {

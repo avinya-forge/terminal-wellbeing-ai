@@ -15,7 +15,8 @@ export async function fetchNHSEndpoint<T = unknown>(endpoint: string, options?: 
   const apiKey = getEnv('VITE_NHS_API_KEY');
 
   if (!apiKey) {
-    throw new Error('Missing NHS API key');
+    logger.warn(`Missing NHS API key. Using fallback cache for endpoint: ${endpoint}`);
+    return nhsFallbackCache.get<T>(endpoint) as T;
   }
 
   const isRateLimited = !nhsApiRateLimiter.consume(1);

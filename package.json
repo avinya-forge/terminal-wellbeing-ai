@@ -14,7 +14,8 @@
     "preview": "vite preview",
     "ci": "npm run lint && npm test && npm run build",
     "manage": "node scripts/manage.js",
-    "generate:icons": "node scripts/generate-pwa-icons.mjs"
+    "generate:icons": "node scripts/generate-pwa-icons.mjs",
+    "release": "node scripts/release.js"
   },
   "dependencies": {
     "@huggingface/transformers": "3.8.1",

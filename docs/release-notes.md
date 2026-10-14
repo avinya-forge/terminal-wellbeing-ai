@@ -189,7 +189,7 @@
 - scroll-to-bottom races typewriter — implemented `onscrolltobottom` synchronization with typewriter animation
 - long ai responses break horizontal layout on narrow screens — added `maxwidth: 100%` and `overflow-wrap: anywhere`
 - `/help` output is not readable — improved mobile formatting with indentation
-- panic overlay (ctrl+p / `/panic`) — tab focus not trapped; escape doesn't close
+- panic overlay (Ctrl+Shift+P / `/panic`) — tab focus not trapped; escape doesn't close
 - theme persistence broken — `/theme` saves to localstorage but `applytheme()` reads wrong key on reload
 - privacy mode doesn't suppress localstorage — `uselocalstorage` still writes when privacy is on
 

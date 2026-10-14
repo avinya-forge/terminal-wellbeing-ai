@@ -1,6 +1,7 @@
 import { fetchNHSEndpoint } from './nhs-client';
 import { getEnv } from '@/utils/env';
 import { nhsFallbackCache } from './fallback-cache';
+import { logger } from './LoggerService';
 
 jest.mock('@/utils/env', () => ({
   getEnv: jest.fn()
@@ -48,10 +49,15 @@ describe('fetchNHSEndpoint', () => {
     expect(result).toEqual({ status: 'cached' });
   });
 
-  it('throws an error if VITE_NHS_API_KEY is missing', async () => {
+  it('logs a warning and returns from cache if VITE_NHS_API_KEY is missing', async () => {
     (getEnv as jest.Mock).mockReturnValue(undefined);
+    jest.spyOn(nhsFallbackCache, 'get').mockReturnValue({ mock: 'data' });
+    const warnSpy = jest.spyOn(logger, 'warn').mockImplementation(() => {});
 
-    await expect(fetchNHSEndpoint('test')).rejects.toThrow('Missing NHS API key');
+    const result = await fetchNHSEndpoint('test');
+    expect(warnSpy).toHaveBeenCalledWith('Missing NHS API key. Using fallback cache for endpoint: test');
+    expect(result).toEqual({ mock: 'data' });
+    jest.restoreAllMocks();
   });
 
   it('fetches from the correct NHS endpoint with valid headers', async () => {

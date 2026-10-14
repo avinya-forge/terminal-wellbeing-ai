@@ -18,7 +18,7 @@ npm run build
 ## Pulse-Table
 | Milestone | Version | Phase | Status | Debt% |
 |---|---|---|---|---|
-| demo 2 | v2.1.6 | S3 [EVOLVE/ALIGN] | go | >95% coverage |
+| demo 2 | v2.1.12 | S3 [EVOLVE/ALIGN] | go | >95% coverage |
 
 ## Visual-Index
 - [vision](./docs/vision.md)
