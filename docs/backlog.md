@@ -65,9 +65,9 @@ This backlog follows the **breadth-then-depth** and **ai-ready context** standar
 
 ## [EPIC] P1 — Core State & Privacy Bugs
 
-- [ ] [P1][BUG] **`MemoryService.setPrivacyMode(false)` does not restore memories** — `initialize()` short-circuits because `this.initialized === true`.
-  - [ ] [TASK] Update `src/services/MemoryService.ts` inside `setPrivacyMode` to reset `this.initialized = false` and `this.initializationPromise = null` before re-calling `this.initialize()`.
-  - [ ] [TASK] Create a test case in `src/services/MemoryService.test.ts` that explicitly calls `setPrivacyMode(true)`, then `setPrivacyMode(false)`, and asserts that `loadMemories` is executed and memories are successfully reloaded.
+- [x] [P1][BUG] **`MemoryService.setPrivacyMode(false)` does not restore memories** — `initialize()` short-circuits because `this.initialized === true`.
+  - [x] [TASK] Update `src/services/MemoryService.ts` inside `setPrivacyMode` to reset `this.initialized = false` and `this.initializationPromise = null` before re-calling `this.initialize()`.
+  - [x] [TASK] Create a test case in `src/services/MemoryService.test.ts` that explicitly calls `setPrivacyMode(true)`, then `setPrivacyMode(false)`, and asserts that `loadMemories` is executed and memories are successfully reloaded.
 
 ---
 
