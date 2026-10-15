@@ -3,6 +3,7 @@ import { analyzeText } from './analysis';
 import { Message } from '../types/Message';
 import { journalService } from '../services/JournalService';
 import { memoryService } from '../services/MemoryService';
+import { safetyTriageService } from '../services/SafetyTriageService';
 import { MOODS } from '../constants/moods';
 import { logger } from '../services/LoggerService';
 
@@ -225,12 +226,17 @@ export function getUserProfile(): UserProfile {
 }
 
 export function exportSessionData(): string {
-  const data = {
+  const data: Record<string, unknown> = {
     generatedAt: new Date().toISOString(),
     profile: currentProfile,
     currentSession: currentSession,
     journal: journalService.getNotes()
   };
+
+  if (!currentProfile.privacyMode) {
+    data.archivedConversations = safetyTriageService.getArchivedConversations();
+  }
+
   return JSON.stringify(data, null, 2);
 }
 
@@ -263,6 +269,21 @@ export function exportSessionMarkdown(): string {
       md += `### ${new Date(note.timestamp).toLocaleString()}\n`;
       md += `${note.content}\n\n`;
     });
+  }
+
+  if (!currentProfile.privacyMode) {
+    const archives = safetyTriageService.getArchivedConversations();
+    if (archives && archives.length > 0) {
+      md += `## Archived Conversations\n`;
+      archives.forEach(archive => {
+        md += `### Archive ID: ${archive.id} (Tier: ${archive.tier})\n`;
+        md += `- **Timestamp:** ${new Date(archive.timestamp).toLocaleString()}\n`;
+        md += `- **Matched Signal:** ${archive.matchedSignal}\n\n`;
+        archive.messages.forEach(msg => {
+          md += `**${msg.role}:** ${msg.content}\n\n`;
+        });
+      });
+    }
   }
 
   return md;

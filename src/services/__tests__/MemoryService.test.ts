@@ -138,10 +138,29 @@ describe('MemoryService', () => {
     });
 
     it('should re-initialize when privacy mode disabled', async () => {
+      // Setup encrypted storage with some memories
+      const testMemories = [{ id: '1', content: 'test', type: 'user', timestamp: '2023', embedding: [] }];
+      localStorage.setItem('wellbeing_encryption_key', 'existing-key');
+      localStorage.setItem('wellbeing_long_term_memory', JSON.stringify(testMemories));
+
+      // We will pretend decryptData fails to fallback to plaintext JSON.parse
+      const encryptionUtils = await import('../../utils/encryption');
+      (encryptionUtils.decryptData as jest.Mock).mockRejectedValueOnce(new Error('Decrypt fail'));
+
       await memoryService.setPrivacyMode(true);
+      expect(memoryService.getMemories()).toHaveLength(0);
+
       const initSpy = jest.spyOn(memoryService, 'initialize');
+
+      // Because we mock getLocalStorage to just be a memory object,
+      // setting privacy to true cleared wellbeing_long_term_memory.
+      // We need to re-seed the storage simulating returning from a fresh session or retaining storage
+      localStorage.setItem('wellbeing_long_term_memory', JSON.stringify(testMemories));
+
       await memoryService.setPrivacyMode(false);
       expect(initSpy).toHaveBeenCalled();
+      expect(memoryService.getMemories()).toHaveLength(1);
+      expect(memoryService.getMemories()[0].content).toBe('test');
     });
   });
 
