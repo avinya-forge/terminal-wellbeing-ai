@@ -126,7 +126,6 @@ This backlog follows the **breadth-then-depth** and **ai-ready context** standar
 
 ## [EPIC] P2 — Test coverage gap closure
 
-- [ ] [TASK] Write unit tests in `src/utils/themes.test.ts` that iterate through the `THEMES` object and assert that `applyTheme` sets the correct CSS variables on the document root.
 - [ ] [TASK] Write unit tests for `getHelpResponse` in `src/data/responses.test.ts` that mock the user agent or screen size to test both the mobile and desktop formatting branches.
 - [ ] [TASK] Write unit tests for `postProcessResponse` in `src/utils/ai-helpers.test.ts` to verify it correctly collapses repeating lines and collapses 3+ consecutive newlines into 2.
 - [ ] [TASK] Write unit tests in `src/services/AIModelService.test.ts` that mock a backend failure, verify fallback to local models, and then verify fallback to static responses.
