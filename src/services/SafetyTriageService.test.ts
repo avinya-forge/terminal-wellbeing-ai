@@ -75,6 +75,8 @@ describe('SafetyTriageService', () => {
             expect(result.tier).toBe('IMMEDIATE_EMERGENCY');
             const result2 = service.triage("i want to kill myself", emptyHistory);
             expect(result2.tier).toBe('IMMEDIATE_EMERGENCY');
+            const result3 = service.triage("I WANT TO kILL MySelf", emptyHistory);
+            expect(result3.tier).toBe('IMMEDIATE_EMERGENCY');
         });
 
         it('archives the conversation on tier-1 match', () => {
