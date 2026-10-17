@@ -42,11 +42,13 @@ This backlog follows the **breadth-then-depth** and **ai-ready context** standar
 
 ---
 
-## [EPIC] P1 — Environment & Documentation Hotfixes
+## [EPIC] P1 — Documentation Upgrades & Drift Fixes
 
 - [ ] [P1][BUG] **`run.sh` references old nested doc path** — `--backlog` greps `docs/planning/backlog.md`, but backlog now lives at `docs/backlog.md`.
   - [ ] [TASK] Locate references to `docs/planning/backlog.md` in `run.sh` and replace them with `docs/backlog.md`.
   - [ ] [TASK] Remove the obsolete `scripts/run.sh` file and point all `npm` scripts to the root `run.sh` file.
+
+## [EPIC] P1 — Environment Variables & Secrets Validation
 
 - [ ] [P1][BUG] **`.env.example` missing `VITE_NHS_API_KEY`** — `nhs-client.ts:15` requires the key but it is not documented.
   - [ ] [TASK] Append `VITE_NHS_API_KEY=` to `.env.example`.
@@ -146,3 +148,17 @@ This backlog follows the **breadth-then-depth** and **ai-ready context** standar
 - [ ] [TASK] Add a unit test verifying that every theme in the `THEMES` constant has exactly the same set of CSS variable keys as the default theme.
 
 ---
+
+## [EPIC] P3 — Local Encryption & Secure Multi-Tenant Persistence [HIGH-RISK]
+
+- [ ] [TASK] Analyze IndexedDB schema integration for persistent local chat history [HIGH-RISK]
+  - [ ] [TASK] Define the exact IndexedDB schema for chat history in a new document `docs/db-schema.md`.
+  - [ ] [TASK] Write an IndexedDB migration script (using Dexie.js or idb) for creating the object stores.
+  - [ ] [DEBT] Research and document IndexedDB quota limits and latency concerns for storing large amounts of text locally.
+  - [ ] [TASK] Review and document local AES-GCM encryption requirements to ensure multi-profile isolation on shared devices.
+
+- [ ] [TASK] Implement WebAuthn (Passkeys) for secure local session unlocking [HIGH-RISK]
+  - [ ] [TASK] Create WebAuthn configuration utilizing the Web Authentication API for local biometrics/PINs.
+  - [ ] [TASK] Create local credential management routines for secure credential generation.
+  - [ ] [DEBT] Implement robust local session timeout and automatic locking logic.
+  - [ ] [TASK] Perform a security audit of the WebAuthn flow and local fallback mechanisms.
