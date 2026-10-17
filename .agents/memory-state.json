@@ -1,24 +1,35 @@
 {
-  "last_updated": "2026-06-03T19:49:00Z",
-  "project": "Vishwa-Vani",
+  "last_updated": "2026-10-17T12:00:00Z",
+  "project": "terminal-wellbeing-ai",
   "architecture": {
-    "framework": "Next.js 16, React 19",
-    "patterns": ["Server Components", "Tailwind 4", "SQLite WASM", "TypeScript strict"],
-    "data": ["JSON shards", "SQLite lake files", "NVF 1.0 format"]
+    "framework": "React, Vite, TypeScript, Tailwind CSS",
+    "patterns": [
+      "Retro Terminal CLI Emulator (WebBeing.sh)",
+      "Strict Local-First Privacy Mode",
+      "Multi-Tier Clinical Safety Triage",
+      "NHS API Client with Fallback Cache",
+      "Panic Mode Overlay & Focus Trapping"
+    ],
+    "data": [
+      "Clinical Safety Guidelines (clinical_guidelines.json)",
+      "LocalStorage Encrypted State",
+      "IndexedDB Local Session Store (Dexie.js)",
+      "WebAuthn Passkey Credentials"
+    ]
   },
   "current_sprint": {
-    "priority_gate": "STABILITY GATE - EPIC 7",
+    "priority_gate": "P0 SAFETY & LOCAL ENCRYPTION GATE",
     "active_tasks": [
-      "BUG-069",
-      "BUG-070",
-      "BUG-071"
+      "emergency-guidelines-verification",
+      "safety-tier-triage-audit",
+      "local-encryption-dexie-schema"
     ]
   },
   "memory_pointers": {
-    "rules": ".agents/rules/code-style-guide.md",
+    "rules": "CLAUDE.md",
     "backlog": "docs/backlog.md",
     "release_notes": "docs/release-notes.md",
     "vision": "docs/vision.md",
-    "blueprint": "docs/architecture/blueprint.md"
+    "clinical_safety": "clinical_guidelines.json"
   }
 }
