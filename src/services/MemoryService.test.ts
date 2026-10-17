@@ -119,6 +119,28 @@ describe('MemoryService', () => {
     expect(service.getMemoryCount()).toBe(1);
   });
 
+  it('should reload memories when privacy mode is toggled off', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const loadMemoriesSpy = jest.spyOn(service as any, 'loadMemories');
+
+    // Turn ON privacy mode (wipes everything in current instance and localStorage)
+    await service.setPrivacyMode(true);
+
+    // Simulate preexisting data (e.g., from another tab or previous run)
+    // Note: since the mock storage clears on privacy mode = true, we inject after.
+    const mockMemories = [{ id: 'mock', content: 'restored', timestamp: '2025-01-01', embedding: [], type: 'user', tags: [] }];
+    window.localStorage.setItem('wellbeing_long_term_memory', JSON.stringify(mockMemories));
+
+    // Turn OFF privacy mode (should reset initialized flag and trigger load)
+    await service.setPrivacyMode(false);
+
+    // Verify
+    expect(loadMemoriesSpy).toHaveBeenCalled();
+    expect(service.getMemoryCount()).toBe(1);
+
+    loadMemoriesSpy.mockRestore();
+  });
+
   it('should ignore empty content', async () => {
     const entry1 = await service.addMemory('', 'user');
     expect(entry1).toBeNull();
