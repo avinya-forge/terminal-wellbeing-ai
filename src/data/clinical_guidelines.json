@@ -35,7 +35,7 @@
                 "goodbye forever",
                 "i won't be here tomorrow"
             ],
-            "response_template": "IMMEDIATE_EMERGENCY_CONTACT",
+            "response_template": "⚠️  [IMMEDIATE SAFETY ALERT]\n\nWhat you've shared sounds like an emergency. Please reach out right now:\n\n  🇬🇧 UK  — Call 999 (emergency) or 116 123 (Samaritans, free, 24/7)\n                Text SHOUT to 85258\n  🇺🇸 US  — Call or text 988 (Suicide & Crisis Lifeline, 24/7)\n                Text HOME to 741741 (Crisis Text Line)\n  🌍 International — https://www.findahelpline.com\n\nYou matter. Please reach out to someone right now.",
             "contacts": {
                 "UK": {
                     "emergency": "999",

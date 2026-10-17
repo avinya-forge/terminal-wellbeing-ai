@@ -27,55 +27,55 @@ This backlog follows the **breadth-then-depth** and **ai-ready context** standar
 
 ## [EPIC] P0 — Critical Safety Bugs (Ship-Stoppers)
 
-- [ ] [P0][BUG] **Tier-1 emergency keyword case mismatch** — `SafetyTriageService.triage()` calls `message.toLowerCase()` but `clinical_guidelines.json` Tier-1 keywords contain capital `I`.
-  - [ ] [TASK] Update `SafetyTriageService` constructor to map over all `tier1_immediate_emergency`, `tier2_unsafe_territory`, and `tier3_high_sensitivity` keyword lists and transform them using `.toLowerCase()`. (Loc: `src/services/SafetyTriageService.ts:74-78`).
-  - [ ] [TASK] Write specific unit tests in `src/services/SafetyTriageService.test.ts` to assert that triage correctly identifies keywords even when the input contains a mix of uppercase and lowercase letters.
-  - [ ] [TASK] Update `EmergencyService.checkCriticalSymptoms` to map over the keywords from `clinicalGuidelines.safety_tiers.tier1_immediate_emergency.keywords` and transform them using `.toLowerCase()`. (Loc: `src/services/EmergencyService.ts:30-32`).
-  - [ ] [TASK] Write a validation script or build-time assertion that parses `clinical_guidelines.json` and throws an error if any keyword contains uppercase characters, ensuring future additions comply.
+- [x] [P0][BUG] **Tier-1 emergency keyword case mismatch** — `SafetyTriageService.triage()` calls `message.toLowerCase()` but `clinical_guidelines.json` Tier-1 keywords contain capital `I`.
+  - [x] [TASK] Update `SafetyTriageService` constructor to map over all `tier1_immediate_emergency`, `tier2_unsafe_territory`, and `tier3_high_sensitivity` keyword lists and transform them using `.toLowerCase()`. (Loc: `src/services/SafetyTriageService.ts:74-78`).
+  - [x] [TASK] Write specific unit tests in `src/services/SafetyTriageService.test.ts` to assert that triage correctly identifies keywords even when the input contains a mix of uppercase and lowercase letters.
+  - [x] [TASK] Update `EmergencyService.checkCriticalSymptoms` to map over the keywords from `clinicalGuidelines.safety_tiers.tier1_immediate_emergency.keywords` and transform them using `.toLowerCase()`. (Loc: `src/services/EmergencyService.ts:30-32`).
+  - [x] [TASK] Write a validation script or build-time assertion that parses `clinical_guidelines.json` and throws an error if any keyword contains uppercase characters, ensuring future additions comply.
 
 ## [EPIC] P0 — Critical System Bugs (Ship-Stoppers)
 
-- [ ] [P0][BUG] **`scripts/manage.js cleanup` deletes essential files** — current cleanup() removes all `.sh` files and removes `tsconfig.node.json`.
-  - [ ] [TASK] Modify the `unnecessaryConfigs` array in `scripts/manage.js` (line ~125) to remove `tsconfig.node.json` from the list of files to be deleted.
-  - [ ] [TASK] Replace the `.sh` file deletion logic (which currently uses a glob `/\.(ps1|sh)$/`) with a hardcoded list of specifically targeted legacy scripts (e.g., `cleanup.sh` or `setup-ai-settings.sh`) to prevent accidental deletion of `run.sh` or user scripts.
-  - [ ] [TASK] Implement a `--dry-run` flag in `scripts/manage.js` that prints out the files to be deleted without actually deleting them.
+- [x] [P0][BUG] **`scripts/manage.js cleanup` deletes essential files** — current cleanup() removes all `.sh` files and removes `tsconfig.node.json`.
+  - [x] [TASK] Modify the `unnecessaryConfigs` array in `scripts/manage.js` (line ~125) to remove `tsconfig.node.json` from the list of files to be deleted.
+  - [x] [TASK] Replace the `.sh` file deletion logic (which currently uses a glob `/\.(ps1|sh)$/`) with a hardcoded list of specifically targeted legacy scripts (e.g., `cleanup.sh` or `setup-ai-settings.sh`) to prevent accidental deletion of `run.sh` or user scripts.
+  - [x] [TASK] Implement a `--dry-run` flag in `scripts/manage.js` that prints out the files to be deleted without actually deleting them.
 
 ---
 
 ## [EPIC] P1 — Environment & Documentation Hotfixes
 
-- [ ] [P1][BUG] **`run.sh` references old nested doc path** — `--backlog` greps `docs/planning/backlog.md`, but backlog now lives at `docs/backlog.md`.
-  - [ ] [TASK] Locate references to `docs/planning/backlog.md` in `run.sh` and replace them with `docs/backlog.md`.
-  - [ ] [TASK] Remove the obsolete `scripts/run.sh` file and point all `npm` scripts to the root `run.sh` file.
+- [x] [P1][BUG] **`run.sh` references old nested doc path** — `--backlog` greps `docs/planning/backlog.md`, but backlog now lives at `docs/backlog.md`.
+  - [x] [TASK] Locate references to `docs/planning/backlog.md` in `run.sh` and replace them with `docs/backlog.md`.
+  - [x] [TASK] Remove the obsolete `scripts/run.sh` file and point all `npm` scripts to the root `run.sh` file.
 
-- [ ] [P1][BUG] **`.env.example` missing `VITE_NHS_API_KEY`** — `nhs-client.ts:15` requires the key but it is not documented.
-  - [ ] [TASK] Append `VITE_NHS_API_KEY=` to `.env.example`.
-  - [ ] [TASK] Add a comment above the new line in `.env.example` explaining that this key is obtained from the NHS developer portal.
-  - [ ] [TASK] Modify `nhs-client.ts` to explicitly check for the presence of `VITE_NHS_API_KEY`. If missing, log a structured warning via `LoggerService` and fallback to local cache immediately without throwing an exception.
+- [x] [P1][BUG] **`.env.example` missing `VITE_NHS_API_KEY`** — `nhs-client.ts:15` requires the key but it is not documented.
+  - [x] [TASK] Append `VITE_NHS_API_KEY=` to `.env.example`.
+  - [x] [TASK] Add a comment above the new line in `.env.example` explaining that this key is obtained from the NHS developer portal.
+  - [x] [TASK] Modify `nhs-client.ts` to explicitly check for the presence of `VITE_NHS_API_KEY`. If missing, log a structured warning via `LoggerService` and fallback to local cache immediately without throwing an exception.
 
-- [ ] [P1][BUG] **Version drift between README and `package.json`** — README badge shows `v2.1.6`, `package.json` says `2.1.12`.
-  - [ ] [TASK] Update the version badge markdown in `README.md` from `v2.1.6` to `v2.1.12`.
-  - [ ] [TASK] Create a `release` npm script in `package.json` that automates bumping the version across `package.json`, `README.md`, and appending a template to `release-notes.md`.
+- [x] [P1][BUG] **Version drift between README and `package.json`** — README badge shows `v2.1.6`, `package.json` says `2.1.12`.
+  - [x] [TASK] Update the version badge markdown in `README.md` from `v2.1.6` to `v2.1.12`.
+  - [x] [TASK] Create a `release` npm script in `package.json` that automates bumping the version across `package.json`, `README.md`, and appending a template to `release-notes.md`.
 
-- [ ] [P1][BUG] **Docs panic shortcut inconsistency** — older release notes mention `Ctrl+P` but actual binding is `Ctrl+Shift+P`.
-  - [ ] [TASK] Search and replace `Ctrl+P` with `Ctrl+Shift+P` in `docs/release-notes.md` to accurately reflect the actual keybinding.
-  - [ ] [TASK] Verify and resolve the intent documented in `doubts.md` with stakeholders to confirm whether `Ctrl+Shift+P` is the final desired shortcut.
+- [x] [P1][BUG] **Docs panic shortcut inconsistency** — older release notes mention `Ctrl+P` but actual binding is `Ctrl+Shift+P`.
+  - [x] [TASK] Search and replace `Ctrl+P` with `Ctrl+Shift+P` in `docs/release-notes.md` to accurately reflect the actual keybinding.
+  - [x] [TASK] Verify and resolve the intent documented in `doubts.md` with stakeholders to confirm whether `Ctrl+Shift+P` is the final desired shortcut.
 
 ---
 
 ## [EPIC] P1 — Core State & Privacy Bugs
 
-- [ ] [P1][BUG] **`MemoryService.setPrivacyMode(false)` does not restore memories** — `initialize()` short-circuits because `this.initialized === true`.
-  - [ ] [TASK] Update `src/services/MemoryService.ts` inside `setPrivacyMode` to reset `this.initialized = false` and `this.initializationPromise = null` before re-calling `this.initialize()`.
-  - [ ] [TASK] Create a test case in `src/services/MemoryService.test.ts` that explicitly calls `setPrivacyMode(true)`, then `setPrivacyMode(false)`, and asserts that `loadMemories` is executed and memories are successfully reloaded.
+- [x] [P1][BUG] **`MemoryService.setPrivacyMode(false)` does not restore memories** — `initialize()` short-circuits because `this.initialized === true`.
+  - [x] [TASK] Update `src/services/MemoryService.ts` inside `setPrivacyMode` to reset `this.initialized = false` and `this.initializationPromise = null` before re-calling `this.initialize()`.
+  - [x] [TASK] Create a test case in `src/services/MemoryService.test.ts` that explicitly calls `setPrivacyMode(true)`, then `setPrivacyMode(false)`, and asserts that `loadMemories` is executed and memories are successfully reloaded.
 
 ---
 
 ## [EPIC] P2 — Safety pipeline hardening
 
-- [ ] [TASK] Create a utility function `normalizeKeyword` in `SafetyTriageService.ts` that takes a string, applies `.toLowerCase()`, `.trim()`, and removes duplicate spaces.
+- [x] [TASK] Create a utility function `normalizeKeyword` in `SafetyTriageService.ts` that takes a string, applies `.toLowerCase()`, `.trim()`, and removes duplicate spaces.
 - [ ] [TASK] Create a GitHub Action workflow file `.github/workflows/lint-keywords.yml` to automatically lint `clinical_guidelines.json` for uppercase letters and duplicates on PRs.
-- [ ] [TASK] Extract the `EMERGENCY_RESPONSE` text from `SafetyTriageService.ts` and add it as a new field `response_template` under `tier1_immediate_emergency` in `clinical_guidelines.json`. Modify the code to read it from there.
+- [x] [TASK] Extract the `EMERGENCY_RESPONSE` text from `SafetyTriageService.ts` and add it as a new field `response_template` under `tier1_immediate_emergency` in `clinical_guidelines.json`. Modify the code to read it from there.
 - [ ] [TASK] Create a new protected route/page `/admin/archives` in the React frontend that displays the contents of `twa_archived_conversations` from `localStorage` for offline review.
 - [ ] [TASK] Add unit tests in `SafetyTriageService.test.ts` using a library like `fast-check` to fuzz inputs with random capitalization and leading/trailing whitespace.
 - [ ] [TASK] Update `docs/system-design.md` to include a section detailing the offline review process and the usage of the `markReviewed` function.
@@ -84,7 +84,7 @@ This backlog follows the **breadth-then-depth** and **ai-ready context** standar
 
 ## [EPIC] P2 — Adaptive model routing reliability
 
-- [ ] [TASK] Modify `BackendClient.ts:45-49` so that when `options.model` is provided, the returned object includes a mock `ToneProfile` object (with neutral/distressed/complex/brief set to 0) to prevent undefined property errors downstream.
+- [x] [TASK] Modify `BackendClient.ts:45-49` so that when `options.model` is provided, the returned object includes a mock `ToneProfile` object (with neutral/distressed/complex/brief set to 0) to prevent undefined property errors downstream.
 - [ ] [TASK] Write an end-to-end test in Playwright (`e2e/routing.spec.ts`) that submits a tier-3 sensitive message, intercepts the HF API network request, and asserts that the URL matches the Zephyr 7B model endpoint.
 - [ ] [TASK] Implement a maximum retry count and exponential backoff in `AIModelService.initializeModel` so that after 3 failed attempts, it throws an error instead of looping indefinitely.
 

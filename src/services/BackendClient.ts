@@ -54,7 +54,12 @@ export class BackendClient {
 
         // ── 2. Model selection — tone + safety tier aware ─────────────────────
         const selection = options.model
-            ? { modelId: options.model, modelName: options.model, reason: 'Explicit override' }
+            ? {
+                modelId: options.model,
+                modelName: options.model,
+                reason: 'Explicit override',
+                tone: { distressed: 0, complex: 0, brief: 0, neutral: 0 }
+              }
             : selectModel(prompt, triage.tier);
 
         const model = selection.modelId;

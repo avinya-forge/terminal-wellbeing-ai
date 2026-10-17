@@ -41,24 +41,16 @@ export interface ArchivedConversation {
     reviewedAt?: string;
 }
 
+// ─── Utility ──────────────────────────────────────────────────────────────────
+
+export function normalizeKeyword(kw: string): string {
+    return kw.toLowerCase().trim().replace(/\s+/g, ' ');
+}
+
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const ARCHIVE_KEY = 'twa_archived_conversations';
 const MAX_ARCHIVE_ENTRIES = 100; // cap storage usage
-
-const EMERGENCY_RESPONSE = `
-⚠️  [IMMEDIATE SAFETY ALERT]
-
-What you've shared sounds like an emergency. Please reach out right now:
-
-  🇬🇧 UK  — Call 999 (emergency) or 116 123 (Samaritans, free, 24/7)
-                Text SHOUT to 85258
-  🇺🇸 US  — Call or text 988 (Suicide & Crisis Lifeline, 24/7)
-                Text HOME to 741741 (Crisis Text Line)
-  🌍 International — https://www.findahelpline.com
-
-You matter. Please reach out to someone right now.
-`.trim();
 
 // ─── Service ──────────────────────────────────────────────────────────────────
 
@@ -69,13 +61,15 @@ export class SafetyTriageService {
     private tier2Keywords: string[];
     private tier3Keywords: string[];
     private tier2SafeHandoff: string;
+    private tier1Response: string;
 
     private constructor() {
         const t = guidelines.safety_tiers;
-        this.tier1Keywords = t.tier1_immediate_emergency.keywords.map(kw => kw.toLowerCase());
-        this.tier2Keywords = t.tier2_unsafe_territory.keywords.map(kw => kw.toLowerCase());
-        this.tier3Keywords = t.tier3_high_sensitivity.keywords.map(kw => kw.toLowerCase());
+        this.tier1Keywords = t.tier1_immediate_emergency.keywords.map(normalizeKeyword);
+        this.tier2Keywords = t.tier2_unsafe_territory.keywords.map(normalizeKeyword);
+        this.tier3Keywords = t.tier3_high_sensitivity.keywords.map(normalizeKeyword);
         this.tier2SafeHandoff = t.tier2_unsafe_territory.safe_handoff_message;
+        this.tier1Response = t.tier1_immediate_emergency.response_template;
     }
 
     public static getInstance(): SafetyTriageService {
@@ -92,7 +86,7 @@ export class SafetyTriageService {
         message: string,
         conversationHistory: Array<{ role: string; content: string }>
     ): TriageResult {
-        const lower = message.toLowerCase();
+        const lower = normalizeKeyword(message);
 
         // ── Tier 1: Immediate Emergency ──────────────────────────────────────────
         const t1Hit = this.tier1Keywords.find(kw => lower.includes(kw));
@@ -102,7 +96,7 @@ export class SafetyTriageService {
             return {
                 tier: 'IMMEDIATE_EMERGENCY',
                 haltInference: true,
-                safeResponse: EMERGENCY_RESPONSE,
+                safeResponse: this.tier1Response,
                 matchedSignal: t1Hit,
                 archived: true,
             };

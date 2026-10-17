@@ -12,7 +12,17 @@ jest.mock('../data/clinical_guidelines.json', () => ({
     safety_tiers: {
         tier1_immediate_emergency: {
             keywords: ['I want to kill myself', 'ending my life tonight', 'overdose', 'taken too many pills'],
-            response_template: 'IMMEDIATE_EMERGENCY_CONTACT',
+            response_template: `⚠️  [IMMEDIATE SAFETY ALERT]
+
+What you've shared sounds like an emergency. Please reach out right now:
+
+  🇬🇧 UK  — Call 999 (emergency) or 116 123 (Samaritans, free, 24/7)
+                Text SHOUT to 85258
+  🇺🇸 US  — Call or text 988 (Suicide & Crisis Lifeline, 24/7)
+                Text HOME to 741741 (Crisis Text Line)
+  🌍 International — https://www.findahelpline.com
+
+You matter. Please reach out to someone right now.`,
         },
         tier2_unsafe_territory: {
             keywords: ['how do I hurt myself', 'best way to die', 'methods of suicide'],
