@@ -143,8 +143,6 @@ This backlog follows the **breadth-then-depth** and **ai-ready context** standar
 - [ ] [TASK] Create a new npm script `"lint:keywords": "node scripts/verify_keywords.js"` that executes the JSON-casing validation script.
 - [ ] [TASK] Extract hardcoded timeouts (like 15000, 30000) from components/services into `src/config/ai-constants.ts` and import them where needed.
 - [ ] [TASK] Run a global search for `console.error` and `console.warn` across `src/` and replace them with `logger.error` or `logger.warn` calls.
-- [ ] [TASK] Review all files in `src/commands/handlers/` and add standard one-line JSDoc comments to all exported functions according to conventions.
-- [ ] [TASK] Delete `TerminalOutput.test.tsx.snap` (or similar snapshot files) if snapshot testing is no longer used or the snapshot is unused.
 - [ ] [TASK] Add a unit test verifying that every theme in the `THEMES` constant has exactly the same set of CSS variable keys as the default theme.
 
 ---
@@ -154,11 +152,11 @@ This backlog follows the **breadth-then-depth** and **ai-ready context** standar
 - [ ] [TASK] Analyze IndexedDB schema integration for persistent local chat history [HIGH-RISK]
   - [ ] [TASK] Define the exact IndexedDB schema for chat history in a new document `docs/db-schema.md`.
   - [ ] [TASK] Write an IndexedDB migration script (using Dexie.js or idb) for creating the object stores.
-  - [ ] [DEBT] Research and document IndexedDB quota limits and latency concerns for storing large amounts of text locally.
+  - [ ] [TASK] Research and document IndexedDB quota limits and latency concerns for storing large amounts of text locally.
   - [ ] [TASK] Review and document local AES-GCM encryption requirements to ensure multi-profile isolation on shared devices.
 
 - [ ] [TASK] Implement WebAuthn (Passkeys) for secure local session unlocking [HIGH-RISK]
   - [ ] [TASK] Create WebAuthn configuration utilizing the Web Authentication API for local biometrics/PINs.
   - [ ] [TASK] Create local credential management routines for secure credential generation.
-  - [ ] [DEBT] Implement robust local session timeout and automatic locking logic.
+  - [ ] [TASK] Implement robust local session timeout and automatic locking logic.
   - [ ] [TASK] Perform a security audit of the WebAuthn flow and local fallback mechanisms.

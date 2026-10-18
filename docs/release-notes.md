@@ -1,19 +1,28 @@
 # release notes
 
 ## v2.1.12
-- [x] [EPIC] Demo 2 Finalization [M3]
-  - [x] Verify Demo 2 visual bugs are resolved
-  - [x] Ensure test coverage is >95%
-- [x] [EPIC] Improve MemoryService Test Coverage
-  - [x] Increase coverage for MemoryService
-- [x] [EPIC] Adaptive Model Routing Overrides
-  - [x] Handle safety tier overrides in ModelRouter
-- [x] [EPIC] Documentation SSOT pass [M3]
-  - [x] Empty / debris docs from prior nested layout: Populate vision.md, arch.md, decisions.md, conventions.md, overview.md, coverage.md, test-cases.md, roadmap.md, map.md, habits.md, hygiene.md, metrics.md, agent-standards.md.
-  - [x] Flatten `docs/` into a single directory.
-  - [x] Update README's Visual-Index to flat doc paths.
-- [x] [EPIC] Test coverage gap closure
-  - [x] [TASK] Write unit tests in `src/utils/themes.test.ts` that iterate through the `THEMES` object and assert that `applyTheme` sets the correct CSS variables on the document root.
+
+### Security & Triage
+- [x] [BUG] Tier-1 emergency keyword case mismatch — update `SafetyTriageService.ts` and `EmergencyService.ts` to transform keyword lists using `.toLowerCase()`.
+- [x] [TASK] Write a validation script (`scripts/verify_keywords.js`) that parses `clinical_guidelines.json` and throws an error if any keyword contains uppercase characters.
+- [x] [TASK] Handle safety tier overrides in ModelRouter.
+
+### UI/UX
+- [x] [BUG] Verify Demo 2 visual bugs are resolved.
+
+### Testing & Documentation
+- [x] [TASK] Ensure test coverage is >95%.
+- [x] [TASK] Write specific unit tests in `src/services/SafetyTriageService.test.ts` to assert case-insensitivity.
+- [x] [TASK] Increase coverage for MemoryService.
+- [x] [TASK] Write unit tests in `src/utils/themes.test.ts` that iterate through the `THEMES` object and assert that `applyTheme` sets the correct CSS variables on the document root.
+- [x] [BUG] `scripts/manage.js cleanup` deletes essential files.
+- [x] [TASK] Modify `unnecessaryConfigs` in `scripts/manage.js` to remove `tsconfig.node.json`.
+- [x] [TASK] Target specific scripts instead of glob pattern for `.sh` file deletion.
+- [x] [TASK] Implement `--dry-run` flag in `scripts/manage.js`.
+- [x] [BUG] `run.sh` references old nested doc path `docs/planning/backlog.md` instead of `docs/backlog.md`.
+- [x] [TASK] Empty / debris docs from prior nested layout: Populate vision.md, arch.md, decisions.md, conventions.md, overview.md, coverage.md, test-cases.md, roadmap.md, map.md, habits.md, hygiene.md, metrics.md, agent-standards.md.
+- [x] [TASK] Flatten `docs/` into a single directory.
+- [x] [TASK] Update README's Visual-Index to flat doc paths.
 
 ## v2.1.9
 - [x] [EPIC] System Audit & Tech Debt Remediation [M3]
