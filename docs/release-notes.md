@@ -1,6 +1,8 @@
 # release notes
 
 ## v2.1.12
+- [x] [EPIC] Core State & Privacy Bugs
+  - [x] Fix `MemoryService.setPrivacyMode(false)` not restoring memories
 - [x] [EPIC] Demo 2 Finalization [M3]
   - [x] Verify Demo 2 visual bugs are resolved
   - [x] Ensure test coverage is >95%
