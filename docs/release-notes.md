@@ -1,6 +1,32 @@
 # release notes
 
 ## v2.1.12
+- [x] [EPIC] P0 — Critical Safety Bugs (Ship-Stoppers)
+  - [x] [P0][BUG] **Tier-1 emergency keyword case mismatch** — `SafetyTriageService.triage()` calls `message.toLowerCase()` but `clinical_guidelines.json` Tier-1 keywords contain capital `I`.
+    - [x] [TASK] Update `SafetyTriageService` constructor to map over all `tier1_immediate_emergency`, `tier2_unsafe_territory`, and `tier3_high_sensitivity` keyword lists and transform them using `.toLowerCase()`. (Loc: `src/services/SafetyTriageService.ts:74-78`).
+    - [x] [TASK] Write specific unit tests in `src/services/SafetyTriageService.test.ts` to assert that triage correctly identifies keywords even when the input contains a mix of uppercase and lowercase letters.
+    - [x] [TASK] Update `EmergencyService.checkCriticalSymptoms` to map over the keywords from `clinicalGuidelines.safety_tiers.tier1_immediate_emergency.keywords` and transform them using `.toLowerCase()`. (Loc: `src/services/EmergencyService.ts:30-32`).
+    - [x] [TASK] Write a validation script or build-time assertion that parses `clinical_guidelines.json` and throws an error if any keyword contains uppercase characters, ensuring future additions comply.
+- [x] [EPIC] P0 — Critical System Bugs (Ship-Stoppers)
+  - [x] [P0][BUG] **`scripts/manage.js cleanup` deletes essential files** — current cleanup() removes all `.sh` files and removes `tsconfig.node.json`.
+    - [x] [TASK] Modify the `unnecessaryConfigs` array in `scripts/manage.js` (line ~125) to remove `tsconfig.node.json` from the list of files to be deleted.
+    - [x] [TASK] Replace the `.sh` file deletion logic (which currently uses a glob `/\.(ps1|sh)$/`) with a hardcoded list of specifically targeted legacy scripts (e.g., `cleanup.sh` or `setup-ai-settings.sh`) to prevent accidental deletion of `run.sh` or user scripts.
+    - [x] [TASK] Implement a `--dry-run` flag in `scripts/manage.js` that prints out the files to be deleted without actually deleting them.
+- [x] [EPIC] P1 — Documentation Upgrades & Drift Fixes
+  - [x] [P1][BUG] **`run.sh` references old nested doc path** — `--backlog` greps `docs/planning/backlog.md`, but backlog now lives at `docs/backlog.md`.
+    - [x] [TASK] Locate references to `docs/planning/backlog.md` in `run.sh` and replace them with `docs/backlog.md`.
+    - [x] [TASK] Remove the obsolete `scripts/run.sh` file and point all `npm` scripts to the root `run.sh` file.
+- [x] [EPIC] P1 — Environment Variables & Secrets Validation
+  - [x] [P1][BUG] **`.env.example` missing `VITE_NHS_API_KEY`** — `nhs-client.ts:15` requires the key but it is not documented.
+    - [x] [TASK] Append `VITE_NHS_API_KEY=` to `.env.example`.
+    - [x] [TASK] Add a comment above the new line in `.env.example` explaining that this key is obtained from the NHS developer portal.
+    - [x] [TASK] Modify `nhs-client.ts` to explicitly check for the presence of `VITE_NHS_API_KEY`. If missing, log a structured warning via `LoggerService` and fallback to local cache immediately without throwing an exception.
+  - [x] [P1][BUG] **Version drift between README and `package.json`** — README badge shows `v2.1.6`, `package.json` says `2.1.12`.
+    - [x] [TASK] Update the version badge markdown in `README.md` from `v2.1.6` to `v2.1.12`.
+    - [x] [TASK] Create a `release` npm script in `package.json` that automates bumping the version across `package.json`, `README.md`, and appending a template to `release-notes.md`.
+  - [x] [P1][BUG] **Docs panic shortcut inconsistency** — older release notes mention `Ctrl+P` but actual binding is `Ctrl+Shift+P`.
+    - [x] [TASK] Search and replace `Ctrl+P` with `Ctrl+Shift+P` in `docs/release-notes.md` to accurately reflect the actual keybinding.
+    - [x] [TASK] Verify and resolve the intent documented in `doubts.md` with stakeholders to confirm whether `Ctrl+Shift+P` is the final desired shortcut.
 - [x] [EPIC] Core State & Privacy Bugs
   - [x] Fix `MemoryService.setPrivacyMode(false)` not restoring memories
 - [x] [EPIC] Demo 2 Finalization [M3]
